@@ -1,7 +1,7 @@
 USE_DEBUG = NO
 USE_64BIT = NO
 USE_UNICODE = NO
-USE_CLANG = NO
+USE_CLANG = YES
 # sadly, cygwin mingw does not support gdiplus...
 USE_CYGWIN = NO
 
@@ -28,13 +28,10 @@ endif
 LiFLAGS = -Ider_libs
 CFLAGS += -Ider_libs
 
-CSRC=term_demo.cpp config.cpp
+CSRC=gtstuff.cpp config.cpp
 
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
-der_libs/vlistview.cpp \
-der_libs/cterminal.cpp \
-der_libs/terminal.cpp \
 der_libs/statbar.cpp \
 der_libs/winmsgs.cpp 
 
@@ -42,7 +39,7 @@ LINTFILES=lintdefs.cpp lintdefs.ref.h
 
 OBJS = $(CSRC:.cpp=.o) rc.o
 
-BASE=terminal
+BASE=gtstuff
 BIN=$(BASE).exe
 
 LIBS=
@@ -90,17 +87,9 @@ rc.o: $(BASE).rc
 
 # DO NOT DELETE
 
-term_demo.o: resource.h der_libs/common.h der_libs/commonw.h term_demo.h
-term_demo.o: der_libs/statbar.h der_libs/cterminal.h der_libs/vlistview.h
-term_demo.o: der_libs/terminal.h der_libs/winmsgs.h
-config.o: der_libs/common.h term_demo.h
+gtstuff.o: resource.h der_libs/common.h der_libs/commonw.h gtstuff.h config.h
+gtstuff.o: der_libs/statbar.h der_libs/winmsgs.h
+config.o: der_libs/common.h config.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
-der_libs/vlistview.o: der_libs/common.h der_libs/commonw.h
-der_libs/vlistview.o: der_libs/vlistview.h
-der_libs/cterminal.o: der_libs/common.h der_libs/commonw.h
-der_libs/cterminal.o: der_libs/cterminal.h der_libs/vlistview.h
-der_libs/terminal.o: der_libs/common.h der_libs/commonw.h
-der_libs/terminal.o: der_libs/cterminal.h der_libs/vlistview.h
-der_libs/terminal.o: der_libs/terminal.h der_libs/winmsgs.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h

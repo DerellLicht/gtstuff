@@ -1,8 +1,6 @@
 //****************************************************************************
-//  Copyright (c) 2008-2026  Daniel D Miller
+//  Copyright (c) 2008-2026  Derell Licht
 //  config.cpp - manage configuration data file
-//
-//  Produced and Directed by:  Dan Miller
 //****************************************************************************
 //  Filename will be same as executable, but will have .ini extensions.
 //  Config file will be stored in same location as executable file.
@@ -17,7 +15,7 @@
 #include <memory>
 
 #include "common.h"
-#include "term_demo.h"
+#include "config.h"
 
 uint window_left = 500 ;
 uint window_top = 200 ;

@@ -1,13 +1,13 @@
 //****************************************************************************
 //  Copyright (c) 1985-2026  Daniel D Miller
-//  Demo program for terminal class
+//  Demo program for resizeable-dialog applications
 //
 //  Written by:  Dan Miller
 //****************************************************************************
 
 #define  USE_WIDTH_RESIZE
 
-static const char *Version = "Terminal program, Version 1.01" ;
+static const char *Version = "GTstuff program, Version 1.01" ;
 
 #include <windows.h>
 #include <stdio.h>   //  vsprintf, sprintf, which supports %f
@@ -15,10 +15,9 @@ static const char *Version = "Terminal program, Version 1.01" ;
 #include "resource.h"
 #include "common.h"
 #include "commonw.h"
-#include "term_demo.h"
+#include "gtstuff.h"
+#include "config.h"
 #include "statbar.h"
-#include "cterminal.h" 
-#include "terminal.h" 
 #include "winmsgs.h"
 
 //***********************************************************************
@@ -78,65 +77,6 @@ static uint min_application_window_width = 0;
 //*******************************************************************
 //  *** END Claude resize data block
 //*******************************************************************
-//*****************************************************************
-//lint -esym(756, attrib_table_t)
-typedef struct attrib_table_s {
-   COLORREF fgnd ;
-   COLORREF bgnd ;
-} attrib_table_t ;
-
-//****************************************************************************
-//lint -esym(749, TERM_INFO, TERM_QUERY)
-//  indices into term_atable[]
-// enum {
-enum class eTermAttr : uint8_t {
-TERM_NORMAL = 0,
-TERM_INFO,
-TERM_QUERY,
-TERM_PLAYER_HIT,
-TERM_MONSTER_HIT,
-TERM_RUNESTAFF,
-TERM_DEATH,
-TERM_ATMOSPHERE
-} ;
-
-#define  NUM_TERM_ATTR_ENTRIES   8
-static attrib_table_t term_atable[NUM_TERM_ATTR_ENTRIES] = {
-   { WIN_CYAN,    WIN_BLACK },   // TERM_NORMAL 
-   { WIN_BCYAN,   WIN_GREY },    // TERM_INFO
-   { WIN_YELLOW,  WIN_BLUE },    // TERM_QUERY
-   { WIN_RED,     WIN_BLACK },   // TERM_PLAYER_HIT
-   { WIN_BLUE,    WIN_BLACK },   // TERM_MONSTER_HIT
-   { WIN_GREY,    WIN_BLACK },   // TERM_RUNESTAFF
-   { WIN_BBLUE,   WIN_BLACK },   // TERM_DEATH
-   { WIN_GREEN,   WIN_BLACK }    // TERM_ATMOSPHERE
-} ;
-
-//****************************************************************************
-static void set_local_terminal_colors(void)
-{
-   COLORREF std_bgnd = GetSysColor(COLOR_WINDOW) ;
-   term_atable[(uint) eTermAttr::TERM_NORMAL].fgnd = GetSysColor(COLOR_WINDOWTEXT) ;
-   term_atable[(uint) eTermAttr::TERM_NORMAL].bgnd = std_bgnd ;
-
-   //  set standard background for other color sets which use it
-   term_atable[(uint) eTermAttr::TERM_PLAYER_HIT].bgnd = std_bgnd ;
-   term_atable[(uint) eTermAttr::TERM_MONSTER_HIT].bgnd = std_bgnd ;
-   term_atable[(uint) eTermAttr::TERM_RUNESTAFF].bgnd = std_bgnd ;
-   term_atable[(uint) eTermAttr::TERM_DEATH].bgnd = std_bgnd ;
-   term_atable[(uint) eTermAttr::TERM_ATMOSPHERE].bgnd = std_bgnd ;
-}
-
-//********************************************************************
-static void set_term_attr(uint atidx)
-{
-   if (atidx >= NUM_TERM_ATTR_ENTRIES) {
-      syslog("set_term_attr: invalid index %u\n", atidx) ;
-      return ;
-   }
-   term_set_attr(term_atable[atidx].fgnd, term_atable[atidx].bgnd) ;
-}
-
 //*******************************************************************
 //lint -esym(714, status_message)
 //lint -esym(759, status_message)
@@ -172,77 +112,6 @@ static uint get_terminal_top(void)
    }
    return local_ctrl_top ;
 }  //lint !e715
-
-//********************************************************************
-//lint -esym(714, termout)
-//lint -esym(759, termout)
-//lint -esym(765, termout)
-int termout(const char *fmt, ...)
-{
-   char consoleBuffer[MAX_TERM_CHARS + 1];
-   va_list al; //lint !e522
-
-   va_start(al, fmt);   //lint !e1055 !e530
-   vsprintf(consoleBuffer, fmt, al);   //lint !e64
-   set_term_attr((uint) eTermAttr::TERM_NORMAL);
-   term_put(consoleBuffer);
-   va_end(al);
-   return 1;
-}
-
-//********************************************************************
-//lint -esym(714, term_append)
-//lint -esym(759, term_append)
-//lint -esym(765, term_append)
-int term_append(const char *fmt, ...)
-{
-   char consoleBuffer[MAX_TERM_CHARS + 1];
-   va_list al; //lint !e522
-
-   va_start(al, fmt);   //lint !e1055 !e530
-   vsprintf(consoleBuffer, fmt, al);   //lint !e64
-   set_term_attr((uint) eTermAttr::TERM_NORMAL) ;
-   term_append(consoleBuffer);
-   va_end(al);
-   return 1;
-}
-
-//********************************************************************
-//lint -esym(714, term_replace)
-//lint -esym(759, term_replace)
-//lint -esym(765, term_replace)
-int term_replace(const char *fmt, ...)
-{
-   char consoleBuffer[MAX_TERM_CHARS + 1];
-   va_list al; //lint !e522
-
-   va_start(al, fmt);   //lint !e1055 !e530
-   vsprintf(consoleBuffer, fmt, al);   //lint !e64
-   set_term_attr((uint) eTermAttr::TERM_NORMAL) ;
-   term_replace(consoleBuffer);
-   va_end(al);
-   return 1;
-}
-
-//********************************************************************
-//  this *cannot* be called with a color attribute;
-//  it must be called with an index into term_atable[] !!
-//********************************************************************
-//lint -esym(714, put_color_msg)
-//lint -esym(759, put_color_msg)
-//lint -esym(765, put_color_msg)
-int put_color_msg(uint idx, const char *fmt, ...)
-{
-   char consoleBuffer[MAX_TERM_CHARS + 1];
-   va_list al; //lint !e522
-
-   va_start(al, fmt);   //lint !e1055 !e530
-   vsprintf(consoleBuffer, fmt, al);   //lint !e64
-   set_term_attr(idx) ;
-   term_put(consoleBuffer);
-   va_end(al);
-   return 1;
-}
 
 //***********************************************************************
 //  setting main menu, breaks status bar !!
@@ -395,18 +264,8 @@ static void do_init_dialog(HWND hwnd)
 #endif
 
    //****************************************************************
-   //  create/configure terminal
+   //  create/configure working space
    //****************************************************************
-   setup_terminal_window(hwnd, MainStatusBar->height(), IDB_ADD_LINE, IDC_TERMINAL);
-   set_local_terminal_colors() ;
-   
-   sprintf(msgstr, "terminal size: columns=%u, rows=%u",
-      term_get_columns(), term_get_rows());
-   status_message(msgstr);
-   termout(msgstr);
-   
-   sprintf(msgstr, "monitor dimens: %ux%u pixels", get_screen_width(), get_screen_height());
-   termout(msgstr);
    
    //  restore previously-saved window size/position from the .ini file. 
    restore_dialog_settings(hwnd);
@@ -421,7 +280,7 @@ static void do_init_dialog(HWND hwnd)
 static void resize_font_dialog()
 {
    RECT myRect ;
-   char msgstr[81] ;
+   // char msgstr[81] ;
    // syslog("resize terminal, drag=%s\n", (resize_on_drag) ? "true" : "false") ;
 
    //  if resizing on drag-and-drop, re-read main-dialog size
@@ -460,7 +319,7 @@ static void resize_font_dialog()
    cyClient = new_window_height ;
 #endif
 
-   int dy_offset = get_dy_offset() ;
+   // int dy_offset = get_dy_offset() ;
 
    MainStatusBar->MoveToBottom(cxClient, cyClient-1) ;
 #ifdef USE_WIDTH_RESIZE
@@ -470,13 +329,13 @@ static void resize_font_dialog()
       update_statusbar_parts() ;
    }
 #endif
-   //  resize the terminal (cols)
-   int dyi = (int) cyClient - dy_offset - (int) get_terminal_top() - MainStatusBar->height() ;
-   term_resize(cxClient, dyi);
+   //  resize the working space
+   // int dyi = (int) cyClient - dy_offset - (int) get_terminal_top() - MainStatusBar->height() ;
+   // term_resize(cxClient, dyi);
    
-   sprintf(msgstr, "terminal size: columns=%u, rows=%u",
-      term_get_columns(), term_get_rows());
-   status_message(msgstr);
+   // sprintf(msgstr, "terminal size: columns=%u, rows=%u",
+   //    term_get_columns(), term_get_rows());
+   // status_message(msgstr);
    // termout(msgstr);
    
    save_cfg_file();
@@ -600,8 +459,6 @@ static bool do_getminmaxinfo(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPar
 //***********************************************************************
 static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-   static uint line_num = 0 ;
-
    //***************************************************
    //  debug: log all windows messages
    //***************************************************
@@ -634,8 +491,8 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       do_init_dialog(hwnd) ;
       return TRUE;
 
-   case WM_NOTIFY:
-      return term_notify(hwnd, lParam) ;
+   // case WM_NOTIFY:
+   //    return term_notify(hwnd, lParam) ;
 
    case WM_EXITSIZEMOVE:
       {
@@ -684,11 +541,6 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       case BN_CLICKED:
          switch(target) {
          
-         case IDB_ADD_LINE:
-            line_num++ ;
-            put_color_msg((line_num % 8), "Line number %u", line_num) ;
-            break ;
-            
          case IDB_CLOSE:
             PostMessageA(hwnd, WM_CLOSE, 0, 0);
             break;
