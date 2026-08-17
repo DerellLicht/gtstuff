@@ -31,12 +31,16 @@ static HWND hwndGFrame = nullptr ;
 uint cxClient = 0 ;
 uint cyClient = 0 ;
 
+// static HMENU hMainMenu = NULL ;
+
+// static CStatusBar *MainStatusBar = NULL;
 static std::unique_ptr<CStatusBar> MainStatusBar {};
 
 //*******************************************************************
 //  *** BEGIN Claude resize data block
 //*******************************************************************
-//  width/height of graphics frame
+
+//  frame dimensions for graphics frame
 uint cxGFrame = 0 ;
 uint cyGFrame = 0 ;
 
@@ -85,7 +89,7 @@ static uint min_application_window_width = 0;
 // dialog's client edge. Both stay constant afterward; resize_gframe() re-solves
 // the frame's width from them and the current cxClient on every resize, the
 // same way MainStatusBar spans cxClient. Top/bottom don't need captured
-// anchors -- they're re-derived each time from get_controls_bottom() and
+// anchors -- they're re-derived each time from get_terminal_top() and
 // MainStatusBar->height(), which are already the authoritative values for
 // "bottom of button row" and "top of status bar".
 static int gframe_left = 0;
@@ -99,6 +103,17 @@ static int gframe_right_margin = 0;
 // flag lets TermProc's WM_PAINT case do the real first draw once, on the
 // dialog's genuine first paint, when it's actually on screen.
 static bool gframe_drawn_once = false;
+
+// Claude 08/17/26 - hook for free-running (continuously self-updating) demo
+// pages, called from WinMain's idle loop whenever the message queue is
+// empty. A page selects itself as free-running by pointing this at its own
+// per-frame update function (which should draw directly via a fresh
+// GetDC(hwndGFrame)/ReleaseDC each call -- NOT via Invalidate+UpdateWindow,
+// that's for "redraw everything from current state", not per-frame
+// animation) and should set it back to nullptr when the page is left. A
+// static page (drawn once, same as everything so far) never touches this --
+// it stays nullptr, meaning "nothing to do on idle".
+static void (*gframe_freerun_update)(void) = nullptr;
 
 //*******************************************************************
 //  *** END Claude resize data block
@@ -118,7 +133,17 @@ void status_message(uint idx, char *msgstr)
 }
 
 //****************************************************************************
-static uint get_controls_bottom(void)
+//  small font-dependent layout fudge factor; shared by do_init_dialog's
+//  min-height calculation and resize_dialog_and_workspace's live layout so the two
+//  stay consistent with each other.
+//****************************************************************************
+static int get_dy_offset(void)
+{
+   return 0 ;
+}
+
+//****************************************************************************
+static uint get_terminal_top(void)
 {
    static uint local_ctrl_top = 0 ;
    if (local_ctrl_top == 0) {
@@ -245,11 +270,18 @@ static void draw_gframe_contents(void)
    if (rect.right <= rect.left  ||  rect.bottom <= rect.top) {
       return ;   //  nothing to draw yet (frame not sized)
    }
-   cxGFrame = rect.right ;
-   cyGFrame = rect.bottom ;
+
+   //  Claude 08/17/26 - GetClientRect() always returns left=0, top=0 by
+   //  definition (client coordinates are relative to the client area's own
+   //  origin), so right/bottom *are* the frame's width/height. This is the
+   //  one place that needs to know that -- every draw call below already
+   //  works in hwndGFrame's own coordinate space, so gfuncs.cpp routines
+   //  never need to see it. Set here (and only here) so cxGFrame/cyGFrame
+   //  are guaranteed current on every repaint, without a separate sync step.
+   cxGFrame = (uint) rect.right ;
+   cyGFrame = (uint) rect.bottom ;
 
    HDC hdc = GetDC(hwndGFrame) ;
-   // syslog("dgc: L%u R%u, T%u B%u\n", rect.left, rect.right, rect.top, rect.bottom);
 
    //  clear the interior first -- neither the border below nor a plain
    //  static's default painting erase anything meaningful for us, so
@@ -327,7 +359,7 @@ static void resize_gframe(void)
       return ;
    }
 
-   int top    = (int) get_controls_bottom() ;
+   int top    = (int) get_terminal_top() ;
    int bottom = (int) cyClient - (int) MainStatusBar->height() - 3 ;
    int width  = (int) cxClient - gframe_right_margin - gframe_left ;
    int height = bottom - top ;
@@ -403,8 +435,8 @@ static void do_init_dialog(HWND hwnd)
    // the smallest acceptable listview height (MIN_LISTVIEW_VISIBLE_DY)
    // instead of the current one. Computed once, here, and never touched
    // again -- see the comment on the variable itself.
-   min_application_window_height = get_controls_bottom() + MIN_LISTVIEW_VISIBLE_DY
-      + MainStatusBar->height() + (uint) dy_frame ;
+   min_application_window_height = get_terminal_top() + MIN_LISTVIEW_VISIBLE_DY
+      + MainStatusBar->height() + (uint) get_dy_offset() + (uint) dy_frame ;
 
 #ifdef USE_WIDTH_RESIZE
    // Claude 08/16/26 - same shape as min_application_window_height above,
@@ -468,6 +500,8 @@ static void resize_dialog_and_workspace()
    cyClient = new_window_height ;
 #endif
 
+   // int dy_offset = get_dy_offset() ;
+
    MainStatusBar->MoveToBottom(cxClient, cyClient-1) ;
 #ifdef USE_WIDTH_RESIZE
    //  status-bar part boundaries are proportional to cxClient --
@@ -482,7 +516,7 @@ static void resize_dialog_and_workspace()
    resize_gframe() ;
 
    //  resize the working space
-   // int dyi = (int) cyClient - dy_offset - (int) get_controls_bottom() - MainStatusBar->height() ;
+   // int dyi = (int) cyClient - dy_offset - (int) get_terminal_top() - MainStatusBar->height() ;
    // term_resize(cxClient, dyi);
    
    // sprintf(msgstr, "terminal size: columns=%u, rows=%u",
@@ -644,15 +678,36 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       return TRUE;
 
    case WM_PAINT:
-      //  Claude 08/17/26 - see gframe_drawn_once comment: this is the
-      //  earliest point at which hwndGFrame is guaranteed to actually be
-      //  visible, so this is where the first real draw belongs.
+      //  Claude 08/17/26 - BeginPaint/EndPaint must run unconditionally, 
+      //  no matter what cxClient/cyClient are -- that's what validates the
+      //  region and stops Windows from re-sending WM_PAINT. The cxClient/
+      //  cyClient check only guards whether there's anything meaningful to
+      //  paint (currently nothing -- display_current_operation() is still
+      //  commented out below); it must never gate validation itself, or
+      //  this becomes the same idle-loop-starving bug gframe_drawn_once
+      //  was fixing, just for a theoretical cxClient==0 case instead.
+      {
+      PAINTSTRUCT ps;
+      // HDC hdc = 
+      BeginPaint (hwnd, &ps) ;
+      if (cxClient != 0 && cyClient != 0) {
+         // display_current_operation(hwnd) ;
+      }
+      EndPaint (hwnd, &ps) ;
+      }
+      //  see gframe_drawn_once comment: this is the earliest point at which
+      //  hwndGFrame is guaranteed to actually be visible, so this is where
+      //  the first real draw belongs.
       if (!gframe_drawn_once) {
          gframe_drawn_once = true ;
          resize_gframe() ;
       }
       return 0 ;
     
+   // case WM_NOTIFY:
+   //    return term_notify(hwnd, lParam) ;
+
+
    case WM_EXITSIZEMOVE:
       {
       RECT rect ;
@@ -685,7 +740,7 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       return TRUE ;
 #endif
 
-   //******************************************************************************
+   //***********************************************************************************************
    case WM_COMMAND:
       {  //  create local context
       DWORD cmd = HIWORD (wParam) ;
@@ -752,11 +807,38 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
       return 0;
    }
 
+   //  Claude 08/17/26 - PeekMessage-based idle loop, same shape as the
+   //  original gstuff main loop, restoring free-running-page capability
+   //  without WM_TIMER. GetMessage() blocks until a message arrives, which
+   //  is exactly what was preventing idle-time drawing; PeekMessage() with
+   //  PM_REMOVE doesn't block, so when the queue is empty we fall through
+   //  to gframe_freerun_update() instead. IsDialogMessage() still wraps
+   //  everything, same as the old GetMessage() loop, so Tab/Enter/Esc
+   //  navigation and the new menu's mnemonics keep working.
+   //
+   //  gframe_freerun_update is NULL whenever the current page is static
+   //  (drawn once via GFrameSubclassProc's WM_PAINT, same as everything so
+   //  far) -- in that case there's nothing to do on idle, so block via
+   //  WaitMessage() instead of spinning a CPU core for nothing. That's a
+   //  deliberate improvement over the original: gstuff was a dedicated
+   //  full-screen demo where spinning was fine; this app shares the
+   //  machine with whatever else the user is running.
    MSG Msg;
-   while(GetMessage(&Msg, NULL,0,0)) {
-      if(!IsDialogMessage(hwnd, &Msg)) {
-          TranslateMessage(&Msg);
-          DispatchMessage(&Msg);
+   for (;;) {
+      if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+         if (Msg.message == WM_QUIT) {
+            break ;
+         }
+         if (!IsDialogMessage(hwnd, &Msg)) {
+             TranslateMessage(&Msg);
+             DispatchMessage(&Msg);
+         }
+      }
+      else if (gframe_freerun_update != nullptr) {
+         gframe_freerun_update() ;
+      }
+      else {
+         WaitMessage() ;
       }
    }
 
