@@ -1,5 +1,5 @@
 //****************************************************************************
-//  term_demo.h - public declarations for terminal-demo program
+//  gtstuff.h - public declarations for terminal-demo program
 //  
 //  Written by:   Daniel D. Miller
 //****************************************************************************
@@ -22,7 +22,7 @@ extern uint cyClient ;
 //  function prototypes
 //**************************************************************
 
-//  term_demo.cpp
+//  gtstuff.cpp
 void status_message(char *msgstr);
 void status_message(uint idx, char *msgstr);
 

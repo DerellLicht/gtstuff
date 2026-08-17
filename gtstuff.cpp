@@ -100,7 +100,7 @@ static int gframe_right_margin = 0;
 // afterward, once WM_INITDIALOG returns). GetDC() drawing against a window
 // that isn't shown yet has no visible clip region, so any draw attempted
 // during do_init_dialog() has nothing to land on and is silently lost. This
-// flag lets TermProc's WM_PAINT case do the real first draw once, on the
+// flag lets DialogProc's WM_PAINT case do the real first draw once, on the
 // dialog's genuine first paint, when it's actually on screen.
 static bool gframe_drawn_once = false;
 
@@ -515,15 +515,6 @@ static void resize_dialog_and_workspace()
    //  the evaluation X on top of it.
    resize_gframe() ;
 
-   //  resize the working space
-   // int dyi = (int) cyClient - dy_offset - (int) get_terminal_top() - MainStatusBar->height() ;
-   // term_resize(cxClient, dyi);
-   
-   // sprintf(msgstr, "terminal size: columns=%u, rows=%u",
-   //    term_get_columns(), term_get_rows());
-   // status_message(msgstr);
-   // termout(msgstr);
-   
    save_cfg_file();
 }
 
@@ -643,7 +634,7 @@ static bool do_getminmaxinfo(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPar
 }
 
 //***********************************************************************
-static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
    //***************************************************
    //  debug: log all windows messages
@@ -801,7 +792,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
    g_hinst = hInstance;
    load_exec_filename() ;     //  get our executable name
 
-   HWND hwnd = CreateDialog(g_hinst, MAKEINTRESOURCE(IDD_MAIN_DIALOG), NULL, (DLGPROC) TermProc) ;
+   HWND hwnd = CreateDialog(g_hinst, MAKEINTRESOURCE(IDD_MAIN_DIALOG), NULL, (DLGPROC) DialogProc) ;
    if (hwnd == NULL) {
       syslog("CreateDialog: %s\n", get_system_message()) ;
       return 0;
