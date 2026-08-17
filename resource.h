@@ -27,3 +27,8 @@
 #define  IDC_INTRO            602
 #define  IDM_ITEM2            603
 
+//  IDM_MAINMENU (404, above) items -- 900s to stay clear of statbar.h's
+//  600/700-705/800-803
+#define  IDM_ALGO_FIRST       900
+#define  IDM_FILE_CLOSE       901
+

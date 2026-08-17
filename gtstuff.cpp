@@ -25,6 +25,7 @@ static const char *Version = "GTstuff program, Version 1.01" ;
 static HINSTANCE g_hinst = 0;
 
 static HWND hwndMain ;
+static HWND hwndGFrame = nullptr ;
 
 //  both of these fields are used by config.cpp to update ini file
 uint cxClient = 0 ;
@@ -56,7 +57,7 @@ static int dx_frame = 0;   //  window width  - client width
 static int dy_frame = 0;   //  window height - client height
 
 // Claude 08/14/26 - term_window_height tracks the LISTVIEW's current height
-// and gets recalculated on every resize (see resize_font_dialog). It is NOT
+// and gets recalculated on every resize (see resize_dialog_and_workspace). It is NOT
 // a safe floor for WM_GETMINMAXINFO, because by the time a live drag is
 // underway its value has already moved. min_application_window_height is
 // the true floor: computed once in do_init_dialog from the fixed pieces
@@ -74,6 +75,29 @@ static uint min_application_window_height = 0;
 #define  MIN_TERMINAL_VISIBLE_DX   200
 static uint min_application_window_width = 0;
 #endif
+
+// Claude 08/17/26 - resize anchors for hwndGFrame (the SS_BLACKFRAME graphics
+// placeholder). gframe_left and gframe_right_margin are captured once, in
+// do_init_dialog, from the control's as-designed position in the .rc file --
+// gframe_left is the fixed left inset, gframe_right_margin is however much
+// space (if any) the .rc left between the control's right edge and the
+// dialog's client edge. Both stay constant afterward; resize_gframe() re-solves
+// the frame's width from them and the current cxClient on every resize, the
+// same way MainStatusBar spans cxClient. Top/bottom don't need captured
+// anchors -- they're re-derived each time from get_terminal_top() and
+// MainStatusBar->height(), which are already the authoritative values for
+// "bottom of button row" and "top of status bar".
+static int gframe_left = 0;
+static int gframe_right_margin = 0;
+
+// Claude 08/17/26 - CreateDialog() sends WM_INITDIALOG *before* the dialog
+// window is actually shown (even with WS_VISIBLE in the .rc -- it's shown
+// afterward, once WM_INITDIALOG returns). GetDC() drawing against a window
+// that isn't shown yet has no visible clip region, so any draw attempted
+// during do_init_dialog() has nothing to land on and is silently lost. This
+// flag lets TermProc's WM_PAINT case do the real first draw once, on the
+// dialog's genuine first paint, when it's actually on screen.
+static bool gframe_drawn_once = false;
 
 //*******************************************************************
 //  *** END Claude resize data block
@@ -94,7 +118,7 @@ void status_message(uint idx, char *msgstr)
 
 //****************************************************************************
 //  small font-dependent layout fudge factor; shared by do_init_dialog's
-//  min-height calculation and resize_font_dialog's live layout so the two
+//  min-height calculation and resize_dialog_and_workspace's live layout so the two
 //  stay consistent with each other.
 //****************************************************************************
 static int get_dy_offset(void)
@@ -115,20 +139,19 @@ static uint get_terminal_top(void)
 }  //lint !e715
 
 //***********************************************************************
-//  setting main menu, breaks status bar !!
+//  Claude 08/17/26 - the menu is now attached via IDD_MAIN_DIALOG's own
+//  MENU statement in gtstuff.rc, so it exists from CreateDialog() time --
+//  no setup_main_menu()/SetMenu() call needed here at all. That's also why
+//  this doesn't disturb the status bar the way a runtime SetMenu() call
+//  previously did: cxClient/cyClient (below, and in do_init_dialog) are
+//  measured *after* the menu already exists, so they're never stale.
 //***********************************************************************
-// static void setup_main_menu(HWND hwnd)
-// {
-//    hMainMenu = LoadMenu(g_hinst, MAKEINTRESOURCE(IDM_MAINMENU));
-//    SetMenu(hwnd, hMainMenu);
-//    // update_summary_options_menu() ;   //  initial setup
-// }
 
 //****************************************************************************
 //  Claude 08/16/26 - status-bar part boundaries are computed as a proportion
 //  of cxClient. Under fixed width this only ever needs to run once (at init),
 //  but under USE_WIDTH_RESIZE it needs to be redone whenever width changes --
-//  split out of do_init_dialog so resize_font_dialog() can call it too.
+//  split out of do_init_dialog so resize_dialog_and_workspace() can call it too.
 //****************************************************************************
 static void update_statusbar_parts(void)
 {
@@ -196,12 +219,132 @@ static void restore_dialog_settings(HWND hwnd)
    }
 
    //  applying this here (after all child controls exist) triggers
-   //  WM_SIZE synchronously, which runs resize_font_dialog() and lays
+   //  WM_SIZE synchronously, which runs resize_dialog_and_workspace() and lays
    //  out the status bar/listview/etc. for the restored height --
    //  no separate relayout call needed
    SetWindowPos(hwnd, NULL, (int) restored_left, (int) restored_top,
       (int) restored_win_width, (int) restored_win_height, SWP_NOZORDER) ;
 }
+
+//****************************************************************************
+//  Claude 08/17/26 - capture hwndGFrame's as-designed left inset and right
+//  margin, once, from its live position right after it's fetched from the
+//  dialog template. Must run while cxClient still holds the dialog's initial
+//  client width (i.e. before restore_dialog_settings can change it).
+//****************************************************************************
+static void capture_gframe_layout(void)
+{
+   RECT r ;
+   GetWindowRect(hwndGFrame, &r) ;
+   MapWindowPoints(HWND_DESKTOP, hwndMain, (LPPOINT) &r, 2) ;
+   gframe_left         = r.left ;
+   gframe_right_margin = (int) cxClient - r.right ;
+}
+
+//****************************************************************************
+//  Claude 08/17/26 - fills, borders, and marks hwndGFrame's client area.
+//  This is called from GFrameSubclassProc's WM_PAINT below -- see that
+//  function's comment for why hwndGFrame needs to be subclassed at all,
+//  rather than just calling this after every resize.
+//****************************************************************************
+static void draw_gframe_contents(void)
+{
+   RECT rect ;
+   GetClientRect(hwndGFrame, &rect) ;
+   if (rect.right <= rect.left  ||  rect.bottom <= rect.top) {
+      return ;   //  nothing to draw yet (frame not sized)
+   }
+
+   HDC hdc = GetDC(hwndGFrame) ;
+
+   //  clear the interior first -- neither the border below nor a plain
+   //  static's default painting erase anything meaningful for us, so
+   //  without this, old content piles up instead of being replaced.
+   HBRUSH hBrush = CreateSolidBrush(GetSysColor(COLOR_3DFACE)) ;
+   FillRect(hdc, &rect, hBrush) ;
+   DeleteObject(hBrush) ;
+
+   //  the frame border, drawn by us (see .rc note next to IDC_GFRAME for
+   //  why this isn't SS_BLACKFRAME).
+   Box(hdc, rect.left, rect.top, rect.right - 1, rect.bottom - 1, (COLORREF) WIN_BLACK) ;
+
+   //  the evaluation X -- placeholder until real graphics content replaces it
+   LineCR(hdc, rect.left,  rect.top,        rect.right - 1, rect.bottom - 1, WIN_BWHITE) ;
+   LineCR(hdc, rect.left,  rect.bottom - 1, rect.right - 1, rect.top,        WIN_BWHITE) ;
+
+   ReleaseDC(hwndGFrame, hdc) ;
+   GdiFlush() ;   //  commit immediately rather than risk a deferred/batched paint
+}
+
+// Claude 08/17/26 - hwndGFrame's original (Static class) window procedure,
+// saved by SetWindowLongA(GWL_WNDPROC) in do_init_dialog so GFrameSubclassProc
+// below can chain to it for every message it doesn't handle itself.
+static WNDPROC gframe_orig_proc = nullptr ;
+
+//****************************************************************************
+//  Claude 08/17/26 - subclass proc for hwndGFrame.
+//
+//  Why this exists at all: a plain (un-subclassed) child control repaints
+//  itself on Windows' own schedule, completely independent of anything we
+//  do -- window activation, another window dragging over it and away, the
+//  live-resize "settle" pass when the mouse button comes up, etc. all send
+//  it a fresh WM_PAINT. Since hwndGFrame is a bare SS_LEFT static, its
+//  *default* WM_PAINT just erases to background and draws nothing -- so any
+//  of those incidental repaints silently wipes out whatever draw_gframe_
+//  contents() last drew, with no relationship to our own resize_gframe()
+//  calls at all. That's what was causing content to vanish (sometimes
+//  entirely, sometimes just an edge) even well after a resize had finished
+//  and even on first show.
+//
+//  Fix: make our own drawing the control's *actual* WM_PAINT handler, so it
+//  reruns on every repaint Windows asks for, not just the ones we trigger.
+//****************************************************************************
+static LRESULT CALLBACK GFrameSubclassProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+   switch (message) {
+   case WM_PAINT:
+      {
+      PAINTSTRUCT ps ;
+      BeginPaint(hwnd, &ps) ;
+      draw_gframe_contents() ;
+      EndPaint(hwnd, &ps) ;
+      }
+      return 0 ;
+
+   case WM_ERASEBKGND:
+      //  draw_gframe_contents() already fills the interior every time it
+      //  runs (from WM_PAINT above) -- skip the redundant separate erase.
+      return 1 ;
+   }
+   return CallWindowProcA(gframe_orig_proc, hwnd, message, wParam, lParam) ;
+}
+
+//****************************************************************************
+//  Claude 08/17/26 - (re)positions hwndGFrame to fill the space between the
+//  button row and the status bar, spanning cxClient the same way MainStatusBar
+//  does, then forces an immediate repaint through GFrameSubclassProc rather
+//  than waiting for Windows to eventually get around to it on its own.
+//  Called once from do_init_dialog and again from resize_dialog_and_workspace()
+//  on every actual resize. Requires MainStatusBar to already exist.
+//****************************************************************************
+static void resize_gframe(void)
+{
+   if (hwndGFrame == nullptr) {
+      return ;
+   }
+
+   int top    = (int) get_terminal_top() ;
+   int bottom = (int) cyClient - (int) MainStatusBar->height() - 3 ;
+   int width  = (int) cxClient - gframe_right_margin - gframe_left ;
+   int height = bottom - top ;
+   if (width  < 1) { width  = 1 ; }
+   if (height < 1) { height = 1 ; }
+
+   MoveWindow(hwndGFrame, gframe_left, top, width, height, TRUE) ;
+   InvalidateRect(hwndGFrame, NULL, TRUE) ;   //  whole client area, not just the resize delta
+   UpdateWindow(hwndGFrame) ;                 //  process it now -- runs GFrameSubclassProc's WM_PAINT
+}
+
 
 //***********************************************************************
 static void do_init_dialog(HWND hwnd)
@@ -237,9 +380,14 @@ static void do_init_dialog(HWND hwnd)
 
    init_config();
    
+   //  get global handles for graphics components
+   hwndGFrame = GetDlgItem(hwnd, IDC_GFRAME) ;
+   capture_gframe_layout() ;   //  Claude 08/17/26 - must run before cxClient can change
+   //  Claude 08/17/26 - see GFrameSubclassProc's comment for why this is
+   //  necessary rather than just calling draw_gframe_contents() after resizes.
+   gframe_orig_proc = (WNDPROC) SetWindowLongA(hwndGFrame, GWL_WNDPROC, (LONG) GFrameSubclassProc) ;
+
    center_dialog_on_screen(hwnd);
-   //  setting main menu, breaks status bar !!
-   //  setup_main_menu(hwnd) ;
    
    //****************************************************************
    //  create/configure status bar
@@ -249,9 +397,15 @@ static void do_init_dialog(HWND hwnd)
    MainStatusBar->MoveToBottom(cxClient, cyClient) ;
    //  re-position status-bar parts
    update_statusbar_parts() ;
-   
+
+   //  Claude 08/17/26 - size the graphics frame to the initial dialog and
+   //  draw the evaluation X; resize_dialog_and_workspace() keeps this in sync
+   //  from here on, but a live-drag or WM_SIZE isn't guaranteed to fire
+   //  before the dialog is first shown, so do it explicitly here too.
+   resize_gframe() ;
+
    // Claude 08/14/26 - the real, permanent floor for WM_GETMINMAXINFO.
-   // Same shape as resize_font_dialog's live layout math, just solved for
+   // Same shape as resize_dialog_and_workspace's live layout math, just solved for
    // the smallest acceptable listview height (MIN_LISTVIEW_VISIBLE_DY)
    // instead of the current one. Computed once, here, and never touched
    // again -- see the comment on the variable itself.
@@ -278,7 +432,7 @@ static void do_init_dialog(HWND hwnd)
 //  which included the unwanted border area, rather than from
 //  GetClientRect(), which works with get_bottom_line().
 //********************************************************************************************
-static void resize_font_dialog()
+static void resize_dialog_and_workspace()
 {
    RECT myRect ;
    // char msgstr[81] ;
@@ -330,6 +484,11 @@ static void resize_font_dialog()
       update_statusbar_parts() ;
    }
 #endif
+   //  Claude 08/17/26 - re-solve the graphics frame's position/size for the
+   //  new cxClient/cyClient (width and/or height may have moved) and redraw
+   //  the evaluation X on top of it.
+   resize_gframe() ;
+
    //  resize the working space
    // int dyi = (int) cyClient - dy_offset - (int) get_terminal_top() - MainStatusBar->height() ;
    // term_resize(cxClient, dyi);
@@ -364,7 +523,7 @@ static bool do_size(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
    // syslog("do_size: type=%s, lParam dx=%d dy=%d, IsIconic=%d\n",
    //    size_type_name(wParam), (int) LOWORD(lParam), (int) HIWORD(lParam),
    //    (int) IsIconic(hwnd));
-   resize_font_dialog();
+   resize_dialog_and_workspace();
    return true ;
 }
 
@@ -388,7 +547,7 @@ bool do_sizing(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
       case WMSZ_RIGHT:
       case WMSZ_TOP:
       case WMSZ_BOTTOM:
-         resize_font_dialog();
+         resize_dialog_and_workspace();
          return true;
 
       default:
@@ -499,10 +658,18 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
          // display_current_operation(hwnd) ;
          EndPaint (hwnd, &ps) ;
       }
+      //  Claude 08/17/26 - see gframe_drawn_once comment: this is the
+      //  earliest point at which hwndGFrame is guaranteed to actually be
+      //  visible, so this is where the first real draw belongs.
+      if (!gframe_drawn_once) {
+         gframe_drawn_once = true ;
+         resize_gframe() ;
+      }
       return 0 ;
     
    // case WM_NOTIFY:
    //    return term_notify(hwnd, lParam) ;
+
 
    case WM_EXITSIZEMOVE:
       {
@@ -549,10 +716,25 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       case FVIRTKEY:  //  keyboard accelerators: WARNING: same code as CBN_SELCHANGE !!
          //  fall through to BM_CLICKED, which uses same targets
       case BN_CLICKED:
+         //  Claude 08/17/26 - menu-item WM_COMMANDs land here too: a menu
+         //  selection's notification code (HIWORD) is 0, same as BN_CLICKED,
+         //  so IDM_MAINMENU's items (gtstuff.rc) are handled by the same
+         //  switch as the dialog's buttons.
          switch(target) {
          
          case IDB_CLOSE:
+         case IDM_FILE_CLOSE:
             PostMessageA(hwnd, WM_CLOSE, 0, 0);
+            break;
+
+         case IDM_ALGO_FIRST:
+            //  Claude 08/17/26 - placeholder: wire this to the first ported
+            //  gstuff drawing algorithm. Store the selection in a static
+            //  (e.g. "current_demo"), then invalidate/update hwndGFrame the
+            //  same way resize_gframe() does, so GFrameSubclassProc's
+            //  WM_PAINT redraws using the newly-selected algorithm instead
+            //  of the placeholder X.
+            status_message("First Algorithm selected (not yet implemented)") ;
             break;
          } //lint !e744  switch target
          return true;
