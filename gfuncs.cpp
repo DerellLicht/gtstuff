@@ -9,9 +9,6 @@
 //************************************************************************
 
 #include <windows.h>
-// #ifdef _lint
-// #include <stdlib.h>  // rand(), RAND_MAX
-// #endif
 
 #include "common.h"
 #include "gfuncs.h"
@@ -19,12 +16,12 @@
 // #include "ezfont.h"
 // #include "palettes.h"
 
-char tempstr[260] ;
+// char tempstr[260] ;
 
 // int cxClient = 0 ;
 // int cyClient = 0 ;
 
-int maxx, maxy ;
+// int maxx, maxy ;
 
 //  duplicate standard DOS colors
 // unsigned dos_cref[16] = {
@@ -47,14 +44,14 @@ int maxx, maxy ;
 // } ;
 
 //***********************************************************************
-unsigned fill_patterns[6] = {
-   HS_HORIZONTAL,
-   HS_VERTICAL,
-   HS_FDIAGONAL,
-   HS_BDIAGONAL,
-   HS_CROSS,
-   HS_DIAGCROSS
-};
+// unsigned fill_patterns[6] = {
+//    HS_HORIZONTAL,
+//    HS_VERTICAL,
+//    HS_FDIAGONAL,
+//    HS_BDIAGONAL,
+//    HS_CROSS,
+//    HS_DIAGCROSS
+// };
 
 //**************************************************************************
 //  generate random number between 0 and n-1

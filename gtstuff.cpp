@@ -652,12 +652,6 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       return TRUE;
 
    case WM_PAINT:
-      if (cxClient != 0 && cyClient != 0) {
-         PAINTSTRUCT ps;
-         HDC hdc = BeginPaint (hwnd, &ps) ;
-         // display_current_operation(hwnd) ;
-         EndPaint (hwnd, &ps) ;
-      }
       //  Claude 08/17/26 - see gframe_drawn_once comment: this is the
       //  earliest point at which hwndGFrame is guaranteed to actually be
       //  visible, so this is where the first real draw belongs.
@@ -667,10 +661,6 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       }
       return 0 ;
     
-   // case WM_NOTIFY:
-   //    return term_notify(hwnd, lParam) ;
-
-
    case WM_EXITSIZEMOVE:
       {
       RECT rect ;
@@ -703,10 +693,7 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       return TRUE ;
 #endif
 
-   //***********************************************************************************************
-   //  04/16/14 - unfortunately, I cannot use WM_SIZE, nor any other message, to draw my graphics,
-   //  because some other message occurs later and over-writes my work...
-   //***********************************************************************************************
+   //******************************************************************************
    case WM_COMMAND:
       {  //  create local context
       DWORD cmd = HIWORD (wParam) ;

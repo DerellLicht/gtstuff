@@ -94,5 +94,21 @@
    "der_libs/winmsgs.o"
   ],
   "file": "der_libs/winmsgs.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "gfuncs.cpp",
+   "-o",
+   "gfuncs.o"
+  ],
+  "file": "gfuncs.cpp"
  }
 ]
