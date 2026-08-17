@@ -31,6 +31,10 @@
 //lint -esym(759, Demo_Line, random_palette_ref, dump_fire_palette)
 //lint -esym(765, Demo_Line, random_palette_ref, dump_fire_palette)
 
+//  width/height of graphics frame
+extern uint cxGFrame ;
+extern uint cyGFrame ;
+
 // extern int cxClient, cyClient ;
 // extern int maxx, maxy ;
 // extern unsigned dos_cref[16] ;

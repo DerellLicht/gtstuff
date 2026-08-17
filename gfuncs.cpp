@@ -18,8 +18,8 @@
 
 // char tempstr[260] ;
 
-// int cxClient = 0 ;
-// int cyClient = 0 ;
+// int cxGFrame = 0 ;
+// int cyGFrame = 0 ;
 
 // int maxx, maxy ;
 
@@ -115,7 +115,7 @@ void show_message(HWND hwnd, int x, int y, unsigned attr, char *str)
 void Clear_Window(HDC hdc, unsigned Color)
 {
    RECT   rect ;
-   SetRect (&rect, 0, 0, cxClient, cyClient) ;
+   SetRect (&rect, 0, 0, cxGFrame, cyGFrame) ;
    HBRUSH hBrush = CreateSolidBrush (Color) ;
    FillRect (hdc, &rect, hBrush) ;
    DeleteObject (hBrush) ;
@@ -129,7 +129,7 @@ void Clear_Window(HWND hwnd, unsigned Color)
    // RECT rect ;
    HDC hdc = GetDC (hwnd) ;
    Clear_Window(hdc, Color) ;
-   // SetRect (&rect, 0, 0, cxClient, cyClient) ;
+   // SetRect (&rect, 0, 0, cxGFrame, cyGFrame) ;
    // HBRUSH hBrush = CreateSolidBrush (Color) ;
    // FillRect (hdc, &rect, hBrush) ;
    // DeleteObject (hBrush) ;
@@ -153,7 +153,7 @@ COLORREF get_palette_entry(uint Color)
 void Clear_Screen(HDC hdc, BYTE Color)
 {
    RECT   rect ;
-   SetRect (&rect, 0, 0, cxClient, cyClient) ;
+   SetRect (&rect, 0, 0, cxGFrame, cyGFrame) ;
    HBRUSH hBrush = CreateSolidBrush (get_palette_entry(Color)) ;
    FillRect (hdc, &rect, hBrush) ;
    DeleteObject (hBrush) ;
@@ -165,7 +165,7 @@ void Clear_Screen(HDC hdc, BYTE Color)
 void Clear_Screen(HDC hdc)
 {
    RECT   rect ;
-   SetRect (&rect, 0, 0, cxClient, cyClient) ;
+   SetRect (&rect, 0, 0, cxGFrame, cyGFrame) ;
    HBRUSH hBrush = CreateSolidBrush (GetSysColor(COLOR_WINDOW)) ;
    FillRect (hdc, &rect, hBrush) ;
    DeleteObject (hBrush) ;

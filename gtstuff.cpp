@@ -31,14 +31,15 @@ static HWND hwndGFrame = nullptr ;
 uint cxClient = 0 ;
 uint cyClient = 0 ;
 
-// static HMENU hMainMenu = NULL ;
-
-// static CStatusBar *MainStatusBar = NULL;
 static std::unique_ptr<CStatusBar> MainStatusBar {};
 
 //*******************************************************************
 //  *** BEGIN Claude resize data block
 //*******************************************************************
+//  width/height of graphics frame
+uint cxGFrame = 0 ;
+uint cyGFrame = 0 ;
+
 // Claude 08/14/26 - smallest listview height (pixels) we'll allow the
 // live-resize floor to shrink down to, so a few rows stay visible/usable
 // no matter how far the user drags the bottom edge up.
@@ -84,7 +85,7 @@ static uint min_application_window_width = 0;
 // dialog's client edge. Both stay constant afterward; resize_gframe() re-solves
 // the frame's width from them and the current cxClient on every resize, the
 // same way MainStatusBar spans cxClient. Top/bottom don't need captured
-// anchors -- they're re-derived each time from get_terminal_top() and
+// anchors -- they're re-derived each time from get_controls_bottom() and
 // MainStatusBar->height(), which are already the authoritative values for
 // "bottom of button row" and "top of status bar".
 static int gframe_left = 0;
@@ -117,17 +118,7 @@ void status_message(uint idx, char *msgstr)
 }
 
 //****************************************************************************
-//  small font-dependent layout fudge factor; shared by do_init_dialog's
-//  min-height calculation and resize_dialog_and_workspace's live layout so the two
-//  stay consistent with each other.
-//****************************************************************************
-static int get_dy_offset(void)
-{
-   return 0 ;
-}
-
-//****************************************************************************
-static uint get_terminal_top(void)
+static uint get_controls_bottom(void)
 {
    static uint local_ctrl_top = 0 ;
    if (local_ctrl_top == 0) {
@@ -254,8 +245,11 @@ static void draw_gframe_contents(void)
    if (rect.right <= rect.left  ||  rect.bottom <= rect.top) {
       return ;   //  nothing to draw yet (frame not sized)
    }
+   cxGFrame = rect.right ;
+   cyGFrame = rect.bottom ;
 
    HDC hdc = GetDC(hwndGFrame) ;
+   // syslog("dgc: L%u R%u, T%u B%u\n", rect.left, rect.right, rect.top, rect.bottom);
 
    //  clear the interior first -- neither the border below nor a plain
    //  static's default painting erase anything meaningful for us, so
@@ -333,7 +327,7 @@ static void resize_gframe(void)
       return ;
    }
 
-   int top    = (int) get_terminal_top() ;
+   int top    = (int) get_controls_bottom() ;
    int bottom = (int) cyClient - (int) MainStatusBar->height() - 3 ;
    int width  = (int) cxClient - gframe_right_margin - gframe_left ;
    int height = bottom - top ;
@@ -409,8 +403,8 @@ static void do_init_dialog(HWND hwnd)
    // the smallest acceptable listview height (MIN_LISTVIEW_VISIBLE_DY)
    // instead of the current one. Computed once, here, and never touched
    // again -- see the comment on the variable itself.
-   min_application_window_height = get_terminal_top() + MIN_LISTVIEW_VISIBLE_DY
-      + MainStatusBar->height() + (uint) get_dy_offset() + (uint) dy_frame ;
+   min_application_window_height = get_controls_bottom() + MIN_LISTVIEW_VISIBLE_DY
+      + MainStatusBar->height() + (uint) dy_frame ;
 
 #ifdef USE_WIDTH_RESIZE
    // Claude 08/16/26 - same shape as min_application_window_height above,
@@ -474,8 +468,6 @@ static void resize_dialog_and_workspace()
    cyClient = new_window_height ;
 #endif
 
-   // int dy_offset = get_dy_offset() ;
-
    MainStatusBar->MoveToBottom(cxClient, cyClient-1) ;
 #ifdef USE_WIDTH_RESIZE
    //  status-bar part boundaries are proportional to cxClient --
@@ -490,7 +482,7 @@ static void resize_dialog_and_workspace()
    resize_gframe() ;
 
    //  resize the working space
-   // int dyi = (int) cyClient - dy_offset - (int) get_terminal_top() - MainStatusBar->height() ;
+   // int dyi = (int) cyClient - dy_offset - (int) get_controls_bottom() - MainStatusBar->height() ;
    // term_resize(cxClient, dyi);
    
    // sprintf(msgstr, "terminal size: columns=%u, rows=%u",
