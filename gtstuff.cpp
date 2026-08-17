@@ -16,6 +16,7 @@ static const char *Version = "GTstuff program, Version 1.01" ;
 #include "common.h"
 #include "commonw.h"
 #include "gtstuff.h"
+#include "gfuncs.h"
 #include "config.h"
 #include "statbar.h"
 #include "winmsgs.h"
@@ -491,6 +492,15 @@ static LRESULT CALLBACK TermProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
       do_init_dialog(hwnd) ;
       return TRUE;
 
+   case WM_PAINT:
+      if (cxClient != 0 && cyClient != 0) {
+         PAINTSTRUCT ps;
+         HDC hdc = BeginPaint (hwnd, &ps) ;
+         // display_current_operation(hwnd) ;
+         EndPaint (hwnd, &ps) ;
+      }
+      return 0 ;
+    
    // case WM_NOTIFY:
    //    return term_notify(hwnd, lParam) ;
 

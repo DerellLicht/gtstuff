@@ -13,7 +13,8 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICK
 CAPTION "Terminal utility"
 FONT 10, "Times New Roman"
 BEGIN
-   DEFPUSHBUTTON  "Add line to terminal", IDB_ADD_LINE,  10, 5, 100, 12
-   PUSHBUTTON     "Close",                IDB_CLOSE,    115, 5, 100, 12
+   DEFPUSHBUTTON  "Close",                IDB_CLOSE,                          115,  5, 100,  12
+   // PUSHBUTTON  "Add line to terminal", IDB_ADD_LINE,                        10,  5, 100,  12
+   CONTROL         "",                    IDC_GFRAME, "Static", SS_BLACKFRAME, 10, 20, 340, 200
 END
 

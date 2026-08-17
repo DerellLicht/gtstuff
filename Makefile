@@ -28,7 +28,7 @@ endif
 LiFLAGS = -Ider_libs
 CFLAGS += -Ider_libs
 
-CSRC=gtstuff.cpp config.cpp
+CSRC=gtstuff.cpp config.cpp gfuncs.cpp
 
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
@@ -42,13 +42,13 @@ OBJS = $(CSRC:.cpp=.o) rc.o
 BASE=gtstuff
 BIN=$(BASE).exe
 
-LIBS=
+LIBS=-lgdi32 
 #LIBS=-lcomctl32 -lhtmlhelp 
 #LIBS=-lgdi32 -lcomctl32 -lhtmlhelp -lolepro32 -lole32 -luuid
 
 #************************************************************
 %.o: %.cpp
-	$(TOOLS)\$(GNAME) $(CFLAGS) $< -o $@
+	$(TOOLS)/$(GNAME) $(CFLAGS) $< -o $@
 
 #************************************************************
 all: $(BIN)
@@ -80,16 +80,17 @@ depend:
 
 #************************************************************
 $(BASE).exe: $(OBJS)
-	$(TOOLS)\$(GNAME) $(LFLAGS) $(OBJS) -o $@ $(LIBS)
+	$(TOOLS)/$(GNAME) $(LFLAGS) $(OBJS) -o $@ $(LIBS)
 
 rc.o: $(BASE).rc 
 	$(TOOLS)\$(WRNAME) $< -O coff -o $@
 
 # DO NOT DELETE
 
-gtstuff.o: resource.h der_libs/common.h der_libs/commonw.h gtstuff.h config.h
-gtstuff.o: der_libs/statbar.h der_libs/winmsgs.h
+gtstuff.o: resource.h der_libs/common.h der_libs/commonw.h gtstuff.h gfuncs.h
+gtstuff.o: config.h der_libs/statbar.h der_libs/winmsgs.h
 config.o: der_libs/common.h config.h
+gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h
