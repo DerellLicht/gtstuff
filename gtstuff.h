@@ -28,6 +28,7 @@ void status_message(char *msgstr);
 void status_message(uint idx, char *msgstr);
 
 void show_graph_desc(char *desc);
+
 //  Claude 08/17/26 - hwndGFrame itself stays `static` (private) to
 //  gtstuff.cpp -- this getter is the one deliberate crack in that, used
 //  only by graph_object::get_gframe_dc()/release_gframe_dc() in

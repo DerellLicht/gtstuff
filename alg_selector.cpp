@@ -44,20 +44,19 @@ static rect rect0("Palette Boxes") ;
 static pixels pixels0("Pixel-packing") ;
 static colorbars colorbars0("Color Bars") ;
 static xpalette xpalette0("XWindows palette") ;
-
-static sglass sglass0("Stained Glass") ;
-static flames flames0("Fire tricks") ;
-static face_trap faces0("Face traps") ;
-static rainbow rainbow0("Rainbow !!") ;
-ascii ascii0("ASCII Table") ;
-static rcolors rcolors0("rcolors32") ;
-static line_games lgames0("Line Games") ;
-static lines lines0("Lines") ;
-static gpalettes gpalettes0("more palettes") ;
+static bitblt bitblt0("BitBlt demo and options") ;
 static xnpalette xnpalette0("Named XWindows palette") ;
 static xrect xrect0("XWindows Palette Boxes") ;
-static bitblt bitblt0("BitBlt demo and options") ;
+static gpalettes gpalettes0("more palettes") ;
 static triangles triangles0("line triangle") ;
+static rainbow rainbow0("Rainbow !!") ;
+static lines lines0("Lines") ;
+static line_games lgames0("Line Games") ;
+static rcolors rcolors0("rcolors32") ;
+static flames flames0("Fire tricks") ;
+static face_trap faces0("Face traps") ;
+ascii ascii0("ASCII Table") ;
+static sglass sglass0("Stained Glass") ;
 static wincolors wincolors0("Windows Colors") ;
 #endif
 
