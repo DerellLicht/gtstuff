@@ -38,10 +38,6 @@ static HWND hwndGInfo = nullptr ;
 //  both of these fields are used by config.cpp to update ini file
 uint cxClient = 0 ;
 uint cyClient = 0 ;
-int maxx = 0 ;   //  cxClient - 1
-int maxy = 0 ;   //  cyClient - 1
-
-// static HMENU hMainMenu = NULL ;
 
 // static CStatusBar *MainStatusBar = NULL;
 static std::unique_ptr<CStatusBar> MainStatusBar {};
@@ -132,7 +128,7 @@ void status_message(uint idx, char *msgstr)
    MainStatusBar->show_message(idx, msgstr);
 }
 
-void show_graph_desc(char *desc)
+void show_graph_desc(char const *desc)
 {
    SetWindowText(hwndGInfo, desc) ;
 }
@@ -271,6 +267,12 @@ static void capture_gframe_layout(void)
 //  see that function's comment for why hwndGFrame needs to be subclassed at
 //  all, rather than just calling this after every resize.
 //****************************************************************************
+//  Derell Licht note:
+//  I'm not really sure this function belongs here; 
+//  gtstuff.cpp handles just the Windows interface functions;
+//  graphics operations are done in the gobjects or in alg_selector.cpp .
+//  Well, for now, leave it here...
+//****************************************************************************
 static void draw_gframe_contents(void)
 {
    RECT rect ;
@@ -336,11 +338,11 @@ static WNDPROC gframe_orig_proc = nullptr ;
 //  live-resize "settle" pass when the mouse button comes up, etc. all send
 //  it a fresh WM_PAINT. Since hwndGFrame is a bare SS_LEFT static, its
 //  *default* WM_PAINT just erases to background and draws nothing -- so any
-//  of those incidental repaints silently wipes out whatever draw_gframe_
-//  contents() last drew, with no relationship to our own resize_gframe()
-//  calls at all. That's what was causing content to vanish (sometimes
-//  entirely, sometimes just an edge) even well after a resize had finished
-//  and even on first show.
+//  of those incidental repaints silently wipes out whatever 
+//  draw_gframe_contents() last drew, with no relationship to our own 
+//  resize_gframe() calls at all. That's what was causing content to vanish 
+//  (sometimes entirely, sometimes just an edge) even well after a resize 
+//  had finished and even on first show.
 //
 //  Fix: make our own drawing the control's *actual* WM_PAINT handler, so it
 //  reruns on every repaint Windows asks for, not just the ones we trigger.
@@ -412,10 +414,6 @@ static void do_init_dialog(HWND hwnd)
    cxClient = (myRect.right - myRect.left) ;
    cyClient = (myRect.bottom - myRect.top) ;
    
-   //  fields used by certain objects
-   maxx = cxClient - 1 ;
-   maxy = cyClient - 1 ;
-
    // Claude 08/14/26 - measure actual border/caption size once, from live
    // window+client rects, rather than guessing at SM_CXFRAME/SM_CYCAPTION
    // (which can be wrong under theming/DPI). Used to convert client-size
@@ -485,6 +483,19 @@ static void do_init_dialog(HWND hwnd)
    
    //  restore previously-saved window size/position from the .ini file. 
    restore_dialog_settings(hwnd);
+
+   //  Claude 08/17/26 - IDB_CLOSE is the only WS_TABSTOP control in this
+   //  dialog, so the dialog manager gives it default keyboard focus on
+   //  startup, and nothing ever moves focus away from it afterward. That's
+   //  a separate mechanism from IsDialogMessage() (removed from the main
+   //  loop already) -- the built-in Button control class has its own
+   //  internal handling of Space on whichever button currently has focus,
+   //  independent of dialog navigation entirely. Moving focus to hwndGFrame
+   //  (a plain Static, which does nothing with keyboard input at all) is
+   //  what actually stops it. Paired with returning FALSE from
+   //  WM_INITDIALOG below, per the standard convention for a dialog proc
+   //  that sets focus itself instead of letting the system pick a default.
+   SetFocus(hwndGFrame) ;
 }
 
 //********************************************************************************************
@@ -701,7 +712,12 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
    switch(message) {
    case WM_INITDIALOG:
       do_init_dialog(hwnd) ;
-      return TRUE;
+      //  Claude 08/17/26 - FALSE, not TRUE: do_init_dialog() calls
+      //  SetFocus(hwndGFrame) itself (see that function's closing comment),
+      //  so we tell the dialog manager not to override it with its own
+      //  default focus assignment (which would otherwise land back on
+      //  IDB_CLOSE, the only WS_TABSTOP control, undoing the whole point).
+      return FALSE;
 
    case WM_PAINT:
       //  Claude 08/17/26 - BeginPaint/EndPaint must run unconditionally, 
@@ -790,6 +806,7 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
          case IDM_CIRCLES:
          case IDM_SQUARES:
          case IDM_LIGHTNING:
+         case IDM_RECT:
             change_graph_state(target);
             break;
          } //lint !e744  switch target
@@ -833,28 +850,33 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
    //  original gstuff main loop, restoring free-running-page capability
    //  without WM_TIMER. GetMessage() blocks until a message arrives, which
    //  is exactly what was preventing idle-time drawing; PeekMessage() with
-   //  PM_REMOVE doesn't block, so when the queue is empty we fall through
-   //  to gframe_freerun_update() instead. IsDialogMessage() still wraps
-   //  everything, same as the old GetMessage() loop, so Tab/Enter/Esc
-   //  navigation and the new menu's mnemonics keep working.
+   //  PM_REMOVE doesn't block, so when the queue is empty we fall through to
+   //  display_current_operation() instead.
    //
-   //  gframe_freerun_update is NULL whenever the current page is static
-   //  (drawn once via GFrameSubclassProc's WM_PAINT, same as everything so
-   //  far) -- in that case there's nothing to do on idle, so block via
-   //  WaitMessage() instead of spinning a CPU core for nothing. That's a
-   //  deliberate improvement over the original: gstuff was a dedicated
-   //  full-screen demo where spinning was fine; this app shares the
-   //  machine with whatever else the user is running.
+   //  display_current_operation() returning false means nothing needed
+   //  drawing this pass (current page is static and already up to date) --
+   //  block via WaitMessage() instead of spinning a CPU core for nothing.
+   //  That's a deliberate improvement over the original: gstuff was a
+   //  dedicated full-screen demo where spinning was fine; this app shares
+   //  the machine with whatever else the user is running.
+   //
+   //  Claude 08/17/26 - no IsDialogMessage() here: this app has no keyboard
+   //  interface at all by design (a single button, a menu, and the graphics
+   //  frame), and IsDialogMessage() is what was implementing Tab/Enter/Space
+   //  dialog-navigation conventions automatically -- specifically, Space
+   //  activating whatever control currently has keyboard focus (IDB_CLOSE,
+   //  the only tab-stop control in the dialog), which was closing the
+   //  program on every press. Menu mnemonics (Alt+F, etc.) don't depend on
+   //  IsDialogMessage() -- those work through ordinary WM_SYSKEYDOWN/
+   //  WM_SYSCHAR dispatch, so removing this doesn't affect them.
    MSG Msg;
    for (;;) {
       if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
          if (Msg.message == WM_QUIT) {
             break ;
          }
-         if (!IsDialogMessage(hwnd, &Msg)) {
-             TranslateMessage(&Msg);
-             DispatchMessage(&Msg);
-         }
+         TranslateMessage(&Msg);
+         DispatchMessage(&Msg);
       }
       else {
          if (!display_current_operation()) {

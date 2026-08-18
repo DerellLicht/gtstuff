@@ -38,8 +38,8 @@ static u64 ti = 0 ;
 static circles circles0("Psychedelic Raindrops") ;
 static squares squares0("Boxing Lessons") ;
 static polygon polygon0("Temporal Lightning") ;
-#ifndef  RESTRICT_ALGS
 static rect rect0("Palette Boxes") ;
+#ifndef  RESTRICT_ALGS
 static pixels pixels0("Pixel-packing") ;
 static colorbars colorbars0("Color Bars") ;
 static xpalette xpalette0("XWindows palette") ;
@@ -64,9 +64,8 @@ static wincolors wincolors0("Windows Colors") ;
 /************************************************************************/
 typedef struct menu_items_s {
    graph_object *go ;
-   uint     menu_id ;
-   char     *menu_text ;
-   char     *title ;
+   uint          menu_id ;
+   char const   *title ;
    void (*draw_func)(void);
 } menu_items_t, *menu_items_p ;
 
@@ -91,29 +90,29 @@ void draw_intro_graphics(void)
 
 /************************************************************************/
 std::vector<menu_items_t> menu_items {
- { 0,           0,             "  ",              "Graphics demos",         draw_intro_graphics }
-,{ &circles0,   IDM_CIRCLES,   "a: Raindrops ",   "Psychedelic Raindrops",  0 }
-,{ &squares0,   IDM_SQUARES,   "b: Boxes ",       "Boxing Lessons",         0 }
-,{ &polygon0,   IDM_LIGHTNING, "c: Lightning ",    "Temporal Lightning",    0 }
+ { 0,           0,             "Graphics demos",         draw_intro_graphics }
+,{ &circles0,   IDM_CIRCLES,   "Psychedelic Raindrops",  0 }
+,{ &squares0,   IDM_SQUARES,   "Boxing Lessons",         0 }
+,{ &polygon0,   IDM_LIGHTNING, "Temporal Lightning",     0 }
+,{ &rect0,      IDM_RECT,      "Palette Boxes",          0 }
 #ifndef  RESTRICT_ALGS
-,{ &rect0,      0, "d: 3D Boxes ",                 "Palette Boxes",          0 }
-,{ &pixels0,    0, "e: Pixels ",                   "Pixel-packing",          0 }
-,{ &colorbars0, 0, "f: Color Bars ",               "Color Bars",             0 }
-,{ &xpalette0,  0, "g: Observe XWindows Palette ", "XWindows Palette",       0 }
-,{ &bitblt0,    0, "h: bitblt demo ",              "BitBlt demo",            0 }
-,{ &xnpalette0, 0, "i: Named XWindows Palette ",   "Named XWindows Palette", 0 }
-,{ &xrect0,     0, "j: 3D XWindows Boxes ",        "XWindows Palette Boxes", 0 }
-,{ &gpalettes0, 0, "k: more palettes ",            "more palettes",          0 }
-,{ &triangles0, 0, "l: line stuff ",               "line triangle",          0 }
-,{ &rainbow0,   0, "m: Rainbow !!",                "Rainbow !!",             0 }
-,{ &lines0,     0, "n: Lines",                     "Lines",                  0 }
-,{ &lgames0,    0, "o: Line Games",                "Lines Games",            0 }
-,{ &rcolors0,   0, "p: rcolors32",                 "rcolors32",              0 }
-,{ &flames0,    0, "q: Fire tricks",               "Fire tricks",            0 }
-,{ &faces0,     0, "r: Face Traps",                "Face traps",             0 }
-,{ &ascii0,     0, "s: ASCII table",               "ASCII table",            0 }
-,{ &sglass0,    0, "t: Stained Glass",             "Stained Glass",          0 }
-,{ &wincolors0, 0, "u: Windows Colors",            "Windows Colors",         0 }
+,{ &pixels0,    0,             "Pixel-packing",          0 }
+,{ &colorbars0, 0,             "Color Bars",             0 }
+,{ &xpalette0,  0,             "XWindows Palette",       0 }
+,{ &bitblt0,    0,             "BitBlt demo",            0 }
+,{ &xnpalette0, 0,             "Named XWindows Palette", 0 }
+,{ &xrect0,     0,             "XWindows Palette Boxes", 0 }
+,{ &gpalettes0, 0,             "more palettes",          0 }
+,{ &triangles0, 0,             "line triangle",          0 }
+,{ &rainbow0,   0,             "Rainbow !!",             0 }
+,{ &lines0,     0,             "Lines",                  0 }
+,{ &lgames0,    0,             "Lines Games",            0 }
+,{ &rcolors0,   0,             "rcolors32",              0 }
+,{ &flames0,    0,             "Fire tricks",            0 }
+,{ &faces0,     0,             "Face traps",             0 }
+,{ &ascii0,     0,             "ASCII table",            0 }
+,{ &sglass0,    0,             "Stained Glass",          0 }
+,{ &wincolors0, 0,             "Windows Colors",         0 }
 #endif
 } ;
 
@@ -133,6 +132,10 @@ void change_graph_state(uint graph_id)
          return ;         
       }
    }
+   //  we didn't find the requested ID
+   char msgstr[81];
+   sprintf(msgstr, "ERROR: ID %u not found !!", graph_id);
+   show_graph_desc(msgstr);
 }
 
 //***********************************************************************

@@ -31,9 +31,7 @@
 extern uint cxGFrame ;
 extern uint cyGFrame ;
 
-// extern int maxx, maxy ;
 // extern unsigned dos_cref[16] ;
-// extern char tempstr[260] ;
 
 //lint -esym(843, fill_patterns)
 extern unsigned fill_patterns[6] ;

@@ -29,7 +29,7 @@ LiFLAGS = -Ider_libs
 CFLAGS += -Ider_libs
 
 CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp palettes.cpp \
-circles.cpp squares.cpp polygon.cpp
+circles.cpp squares.cpp polygon.cpp rect.cpp
 
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
@@ -92,6 +92,8 @@ palettes.o: palettes.h
 circles.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
 squares.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
 polygon.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
+rect.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+rect.o: alg_selector.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h

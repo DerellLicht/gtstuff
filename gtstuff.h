@@ -18,8 +18,6 @@
 
 extern uint cxClient ;
 extern uint cyClient ;
-extern int maxx ;   //  cxClient - 1
-extern int maxy ;   //  cyClient - 1
 
 //**************************************************************
 //  function prototypes
@@ -29,7 +27,7 @@ extern int maxy ;   //  cyClient - 1
 void status_message(char *msgstr);
 void status_message(uint idx, char *msgstr);
 
-void show_graph_desc(char *desc);
+void show_graph_desc(char const *desc);
 
 //  Claude 08/17/26 - hwndGFrame itself stays `static` (private) to
 //  gtstuff.cpp -- this getter is the one deliberate crack in that, used
