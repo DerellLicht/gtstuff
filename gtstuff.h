@@ -18,6 +18,8 @@
 
 extern uint cxClient ;
 extern uint cyClient ;
+extern int maxx ;   //  cxClient - 1
+extern int maxy ;   //  cyClient - 1
 
 //**************************************************************
 //  function prototypes

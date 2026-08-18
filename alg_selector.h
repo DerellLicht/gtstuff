@@ -3,6 +3,7 @@
 //  Windows-interface module.
 //****************************************************************************
 
+//  used for max width of elements in certain objects
 #define  CONST_SIZE     50
 
 extern int we_should_redraw ;

@@ -38,6 +38,8 @@ static HWND hwndGInfo = nullptr ;
 //  both of these fields are used by config.cpp to update ini file
 uint cxClient = 0 ;
 uint cyClient = 0 ;
+int maxx = 0 ;   //  cxClient - 1
+int maxy = 0 ;   //  cyClient - 1
 
 // static HMENU hMainMenu = NULL ;
 
@@ -409,6 +411,10 @@ static void do_init_dialog(HWND hwnd)
    GetClientRect(hwnd, &myRect) ;
    cxClient = (myRect.right - myRect.left) ;
    cyClient = (myRect.bottom - myRect.top) ;
+   
+   //  fields used by certain objects
+   maxx = cxClient - 1 ;
+   maxy = cyClient - 1 ;
 
    // Claude 08/14/26 - measure actual border/caption size once, from live
    // window+client rects, rather than guessing at SM_CXFRAME/SM_CYCAPTION
