@@ -73,7 +73,7 @@ depend:
 	makedepend $(CFLAGS) $(CSRC)
 
 #************************************************************
-$(BASE).exe: $(OBJS)
+$(BIN): $(OBJS)
 	$(TOOLS)/$(GNAME) $(LFLAGS) $(OBJS) -o $@ $(LIBS)
 
 rc.o: $(BASE).rc 
@@ -87,7 +87,7 @@ config.o: der_libs/common.h config.h
 gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h palettes.h
 alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h
 alg_selector.o: gfuncs.h alg_selector.h
-gobjects.o: der_libs/common.h palettes.h gobjects.h
+gobjects.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
 palettes.o: palettes.h
 circles.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
 squares.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h

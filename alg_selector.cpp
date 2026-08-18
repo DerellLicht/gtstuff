@@ -68,14 +68,31 @@ typedef struct menu_items_s {
    uint     menu_id ;
    char     *menu_text ;
    char     *title ;
-   void (*draw_func)(HWND hwnd);
+   void (*draw_func)(void);
 } menu_items_t, *menu_items_p ;
 
 static menu_items_p miptr = nullptr ;
 /************************************************************************/
 
+//***********************************************************************
+//  Claude 08/17/26 - the "intro" placeholder graphic: an X marking the
+//  frame's extent while no algorithm is selected. Formerly hardcoded into
+//  draw_gframe_contents() (gtstuff.cpp) on every repaint; moved here as
+//  menu_items[0]'s draw_func so it goes through the same dispatch as every
+//  other demo. draw_gframe_contents() still owns fill+border (that's frame
+//  housekeeping, not demo content) -- this just adds the X on top of that.
+//***********************************************************************
+void draw_intro_graphics(void)
+{
+   HDC hdc = graph_object::get_gframe_dc() ;
+   LineCR(hdc, 0, 0,                  (int) cxGFrame - 1, (int) cyGFrame - 1, WIN_BWHITE) ;
+   LineCR(hdc, 0, (int) cyGFrame - 1, (int) cxGFrame - 1, 0,                  WIN_BWHITE) ;
+   graph_object::release_gframe_dc(hdc) ;
+}
+
+/************************************************************************/
 static menu_items_t menu_items[] = {
-{ WIN_BLUE,  0,           0,           "  ",                 "Graphics demos",         0 },
+{ WIN_BLUE,  0,           0,           "  ",                 "Graphics demos",         draw_intro_graphics },
 { WIN_BLUE,  &circles0,   IDM_CIRCLES, "a: Raindrops ",      "Psychedelic Raindrops",  0 },
 { WIN_BLUE,  &squares0,   IDM_SQUARES, "b: Boxes ",          "Boxing Lessons",         0 },
 #ifndef  RESTRICT_ALGS
@@ -103,7 +120,7 @@ static menu_items_t menu_items[] = {
 
 
 //***********************************************************************
-void change_graph_state(HWND hwnd, uint graph_id)
+void change_graph_state(uint graph_id)
 {
    for (uint j=0; menu_items[j].menu_text != 0; j++) {
       if (menu_items[j].menu_id == graph_id) {
@@ -111,6 +128,7 @@ void change_graph_state(HWND hwnd, uint graph_id)
          miptr = &menu_items[demo_state] ;
          show_graph_desc(miptr->title);
          cycle_count = 0 ;
+         we_should_redraw = 1 ;
          ti = proc_time ();
          return ;         
       }
@@ -118,16 +136,29 @@ void change_graph_state(HWND hwnd, uint graph_id)
 }
 
 //***********************************************************************
-bool display_current_operation(HWND hwnd)
+bool display_current_operation(void)
 {
    if (miptr == nullptr) {
       return false;
    }
    if (miptr->go != nullptr) {
-      miptr->go->update_display(hwnd) ;
+      miptr->go->update_display() ;
       we_should_redraw = 0 ;
       return true ;
    } 
+   else if (miptr->draw_func != nullptr) {
+      //  Claude 08/17/26 - draw-once page: only redraw when something has
+      //  flagged it necessary (see draw_gframe_contents() in gtstuff.cpp,
+      //  and change_graph_state() above), then go quiet again -- unlike the
+      //  go != nullptr branch above, which redraws unconditionally every
+      //  idle pass because it's meant to be continuously running.
+      if (we_should_redraw) {
+         (miptr->draw_func)() ;
+         we_should_redraw = 0 ;
+         return true ;
+      }
+      return false ;
+   }
    else {
       we_should_redraw = 0 ;
       return false ;

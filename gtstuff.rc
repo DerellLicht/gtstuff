@@ -34,16 +34,27 @@ CAPTION "Terminal utility"
 MENU IDM_MAINMENU
 FONT 10, "Times New Roman"
 BEGIN
-   LTEXT           "Graph info", IDS_GINFO,  10,  5,  40,  10, SS_SUNKEN
-   LTEXT           " ",          IDC_GINFO,  55,  5, 150,  10, SS_SUNKEN
-   DEFPUSHBUTTON  "Close",       IDB_CLOSE, 210,  5,  40,  11
+   LTEXT           "Graph info:", IDS_GINFO,  10,  6,  37,  10
+   LTEXT           " ",           IDC_GINFO,  50,  5, 150,  10, SS_SUNKEN
+   DEFPUSHBUTTON  "Close",        IDB_CLOSE, 210,  5,  40,  11
    
    //  Claude 08/17/26 - plain static, not SS_BLACKFRAME -- we draw the
    //  frame's fill, border, and content ourselves (see draw_gframe_contents()
    //  in gtstuff.cpp), so this control only needs to reserve screen space and
    //  give us an hwnd/HDC to draw into. SS_LEFT with no text draws nothing on
    //  its own, so there's no risk of its own painting fighting with ours.
+   //
+   //  WS_EX_CLIENTEDGE (trailing exstyle param below) adds a decorative
+   //  sunken 3D edge, drawn by Windows itself as part of this window's
+   //  non-client area (WM_NCPAINT, not our own WM_PAINT -- doesn't interact
+   //  with the subclassing in GFrameSubclassProc at all). GetClientRect()
+   //  automatically excludes it, same as it already does for the thick-frame
+   //  border and caption on hwndMain, so cxGFrame/cyGFrame need no changes --
+   //  and it resizes for free since it's just one property of the same
+   //  window resize_gframe() already tracks, not a second window to keep in
+   //  sync. Rejected the separate-IDC_GBORDER-control idea below for exactly
+   //  that reason.
    // LTEXT           " ",           IDC_GBORDER, 2, 1, 200, 200, 0, WS_EX_CLIENTEDGE
-   CONTROL         "",            IDC_GFRAME, "Static", SS_LEFT,  4, 20, 342, 200
+   CONTROL         "",            IDC_GFRAME, "Static", SS_LEFT,  4, 20, 342, 200, WS_EX_CLIENTEDGE
 END
 

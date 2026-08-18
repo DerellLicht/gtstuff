@@ -4,36 +4,43 @@
 //  Written by:   Derell Licht
 //*****************************************************************************
 
-//lint -e1704  Constructor has private access specification
+#include <string>
 
 class graph_object {
-private:   
-//  make this field protected, rather than private,
-//  so derived classes can access it.
 protected:
-   //  actually, having the title within the graphics object isn't that practical.
-   //  We only want the title redrawn when the entire window is redrawn (WM_PAINT),
-   //  and the graphic object doesn't know about Windows messages, that concept
-   //  is external to the class.
-   //  I'm leaving it in for now, because it's my only example of 
-   //  how derived classes can conditionally call the base-class constructor.
-   //  (Also, I don't feel like going back and editing 20 different files...)
-   char *title ;  // NOLINT
+   std::string title ;
 
 public:
-   graph_object(char *title) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
+   explicit graph_object(std::string title_text) ;
+   //  disable copy operators for this polymorphic base
    graph_object& operator=(const graph_object &src) = delete;
    graph_object(const graph_object&) = delete;
+   //  disable move operators too (rule of five --
+   //  cppcoreguidelines-special-member-functions)
+   graph_object(graph_object&&) = delete;
+   graph_object& operator=(graph_object&&) = delete;
 
-   virtual ~graph_object() {
-      if (title != NULL) {
-         delete[] title ;
-         title = 0 ;
-      }
-      } ;
-   virtual void update_display(HWND hwnd) = 0 ;
+   virtual ~graph_object() = default ;
+   virtual void update_display(void) = 0 ;
+
+protected:
+   //  Claude 08/17/26 - centralized, clip-safe access to hwndGFrame's DC,
+   //  inherited by every subclass -- call get_gframe_dc()/release_gframe_dc()
+   //  exactly like GetDC()/ReleaseDC(), unqualified, from any subclass's
+   //  update_display(). No subclass needs to know hwndGFrame exists at all.
+   //  protected, not public: subclasses need this, nothing outside the
+   //  hierarchy should be calling it. See gobjects.cpp for why the clip
+   //  region has to be re-established on every single call, not just once.
+   static HDC get_gframe_dc(void) ;
+   static void release_gframe_dc(HDC hdc) ;
+
+   //  Claude 08/17/26 - grants draw_intro_graphics() (alg_selector.cpp)
+   //  access to the two methods above, without it being part of the
+   //  graph_object hierarchy at all -- mirrors gstuff's original design,
+   //  where the on-screen main-menu screen wasn't a gobjects subclass
+   //  either. A single, deliberate, named exception -- same philosophy as
+   //  get_hwndGFrame() in gtstuff.h.
+   friend void draw_intro_graphics(void) ;
 } ;
 
 //*******************************************************
@@ -53,14 +60,16 @@ private:
    void box_point (HDC hdc, int ccol, int rrow, int ssiz);
 
 public:
-   sglass(char *title_text) ;
+   sglass(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    sglass& operator=(sglass const &src) = delete;
    sglass(const sglass&) = delete;
+   sglass(sglass&&) = delete;
+   sglass& operator=(sglass&&) = delete;
 
    virtual ~sglass() = default;
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -86,14 +95,16 @@ private:
    void draw_fire_element(HDC hdc, unsigned x, unsigned y, unsigned color);
 
 public:
-   flames(char *title_text) ;
+   flames(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    flames &operator=(const flames &src) = delete;
    flames(const flames&) = delete;
+   flames(flames&&) = delete;
+   flames& operator=(flames&&) = delete;
 
    // ~flames() {} ;
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -127,14 +138,16 @@ private:
    unsigned max_char_width(HDC hdc);
 
 public:
-   face_trap(char *title_text) ;
+   face_trap(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    face_trap &operator=(const face_trap &src) = delete;
    face_trap(const face_trap&) = delete;
+   face_trap(face_trap&&) = delete;
+   face_trap& operator=(face_trap&&) = delete;
 
    // ~faces() {} ;
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 
@@ -150,14 +163,16 @@ private:
    void update_gtimer(HDC hdc);
 
 public:
-   rainbow(char *title_text) ;
+   rainbow(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    rainbow &operator=(const rainbow &src) = delete;
    rainbow(const rainbow&) = delete;
+   rainbow(rainbow&&) = delete;
+   rainbow& operator=(rainbow&&) = delete;
 
    // ~faces() {} ;
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
    void update_boundaries(unsigned xClient, unsigned yClient);
 } ;
 
@@ -171,13 +186,15 @@ private:
    unsigned color ;
 
 public:
-   pixels(char *title_text) ;
+   pixels(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    pixels &operator=(const pixels &src) = delete;
    pixels(const pixels&) = delete;
+   pixels(pixels&&) = delete;
+   pixels& operator=(pixels&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -185,13 +202,15 @@ class ascii: public graph_object {
 private:
 
 public:
-   ascii(char *title_text) ;
+   ascii(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    ascii &operator=(const ascii &src) = delete;
    ascii(const ascii&) = delete;
+   ascii(ascii&&) = delete;
+   ascii& operator=(ascii&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
    void set_font_name(char *new_font_name);
    char *get_font_name(void);
 } ;
@@ -205,13 +224,15 @@ private:
    unsigned columns ;
 
 public:
-   rcolors(char *title_text) ;
+   rcolors(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    rcolors &operator=(const rcolors &src) = delete;
    rcolors(const rcolors&) = delete;
+   rcolors(rcolors&&) = delete;
+   rcolors& operator=(rcolors&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 /************************************************************************/
@@ -250,9 +271,11 @@ public:
    //  for classes with pointer members
    line_games &operator=(const line_games &src) = delete;
    line_games(const line_games&) = delete;
+   line_games(line_games&&) = delete;
+   line_games& operator=(line_games&&) = delete;
 
-   line_games(char *title_text) ;
-   void update_display(HWND hwnd) ;
+   line_games(std::string title_text) ;
+   void update_display(void) override ;
    void update_line_algorithm(void);
 } ;
 
@@ -262,13 +285,15 @@ private:
    unsigned orient ;  //  0=horiz, 1=vert
 
 public:
-   lines(char *title_text) ;
+   lines(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    lines &operator=(const lines &src) = delete;
    lines(const lines&) = delete;
+   lines(lines&&) = delete;
+   lines& operator=(lines&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -276,13 +301,15 @@ class gpalettes: public graph_object {
 private:
 
 public:
-   gpalettes(char *title_text) ;
+   gpalettes(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    gpalettes &operator=(const gpalettes &src) = delete;
    gpalettes(const gpalettes&) = delete;
+   gpalettes(gpalettes&&) = delete;
+   gpalettes& operator=(gpalettes&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -290,13 +317,15 @@ class xnpalette: public graph_object {
 private:
 
 public:
-   xnpalette(char *title_text) ;
+   xnpalette(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    xnpalette &operator=(const xnpalette &src) = delete;
    xnpalette(const xnpalette&) = delete;
+   xnpalette(xnpalette&&) = delete;
+   xnpalette& operator=(xnpalette&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -304,13 +333,15 @@ class xpalette: public graph_object {
 private:
 
 public:
-   xpalette(char *title_text) ;
+   xpalette(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    xpalette &operator=(const xpalette &src) = delete;
    xpalette(const xpalette&) = delete;
+   xpalette(xpalette&&) = delete;
+   xpalette& operator=(xpalette&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -321,13 +352,15 @@ private:
    void Solid_XRect(HDC hdc, int xl, int yu, int xr, int yl, int Color);
 
 public:
-   xrect(char *title_text) ;
+   xrect(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    xrect &operator=(const xrect &src) = delete;
    xrect(const xrect&) = delete;
+   xrect(xrect&&) = delete;
+   xrect& operator=(xrect&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -335,13 +368,15 @@ class rect: public graph_object {
 private:
 
 public:
-   rect(char *title_text) ;
+   rect(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    rect &operator=(const rect &src) = delete;
    rect(const rect&) = delete;
+   rect(rect&&) = delete;
+   rect& operator=(rect&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -349,13 +384,15 @@ class polygon: public graph_object {
 private:
 
 public:
-   polygon(char *title_text) ;
+   polygon(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    polygon &operator=(const polygon &src) = delete;
    polygon(const polygon&) = delete;
+   polygon(polygon&&) = delete;
+   polygon& operator=(polygon&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -363,13 +400,15 @@ class squares: public graph_object {
 private:
 
 public:
-   squares(char *title_text) ;
+   squares(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    squares &operator=(const squares &src) = delete;
    squares(const squares&) = delete;
+   squares(squares&&) = delete;
+   squares& operator=(squares&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -377,13 +416,15 @@ class circles: public graph_object {
 private:
 
 public:
-   circles(char *title_text) ;
+   circles(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    circles &operator=(const circles &src) = delete;
    circles(const circles&) = delete;
+   circles(circles&&) = delete;
+   circles& operator=(circles&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -391,13 +432,15 @@ class colorbars: public graph_object {
 private:
 
 public:
-   colorbars(char *title_text) ;
+   colorbars(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    colorbars &operator=(const colorbars &src) = delete;
    colorbars(const colorbars&) = delete;
+   colorbars(colorbars&&) = delete;
+   colorbars& operator=(colorbars&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -408,13 +451,15 @@ private:
    void Concentric_Rect(HDC hdc, int l, int t, int width, int height);
 
 public:
-   bitblt(char *title_text) ;
+   bitblt(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    bitblt &operator=(const bitblt &src) = delete;
    bitblt(const bitblt&) = delete;
+   bitblt(bitblt&&) = delete;
+   bitblt& operator=(bitblt&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -422,13 +467,15 @@ class triangles: public graph_object {
 private:
 
 public:
-   triangles(char *title_text) ;
+   triangles(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    triangles &operator=(const triangles &src) = delete;
    triangles(const triangles&) = delete;
+   triangles(triangles&&) = delete;
+   triangles& operator=(triangles&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;
 
 //*******************************************************
@@ -436,11 +483,13 @@ class wincolors: public graph_object {
 private:
 
 public:
-   wincolors(char *title_text) ;
+   wincolors(std::string title_text) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    wincolors &operator=(const wincolors &src) = delete;
    wincolors(const wincolors&) = delete;
+   wincolors(wincolors&&) = delete;
+   wincolors& operator=(wincolors&&) = delete;
 
-   void update_display(HWND hwnd) ;
+   void update_display(void) override ;
 } ;

@@ -27,6 +27,12 @@ static HINSTANCE g_hinst = 0;
 
 static HWND hwndMain ;
 static HWND hwndGFrame = nullptr ;
+
+//  Claude 08/17/26 - see the comment on this prototype in gtstuff.h
+HWND get_hwndGFrame(void)
+{
+   return hwndGFrame ;
+}
 static HWND hwndGInfo = nullptr ;
 
 //  both of these fields are used by config.cpp to update ini file
@@ -255,10 +261,13 @@ static void capture_gframe_layout(void)
 }
 
 //****************************************************************************
-//  Claude 08/17/26 - fills, borders, and marks hwndGFrame's client area.
-//  This is called from GFrameSubclassProc's WM_PAINT below -- see that
-//  function's comment for why hwndGFrame needs to be subclassed at all,
-//  rather than just calling this after every resize.
+//  Claude 08/17/26 - fills and borders hwndGFrame's client area. This is
+//  frame housekeeping only -- actual demo content (including the intro
+//  placeholder X, now menu_items[0]'s draw_func in alg_selector.cpp) is
+//  drawn separately, dispatched by display_current_operation() from
+//  WinMain's idle loop. Called from GFrameSubclassProc's WM_PAINT below --
+//  see that function's comment for why hwndGFrame needs to be subclassed at
+//  all, rather than just calling this after every resize.
 //****************************************************************************
 static void draw_gframe_contents(void)
 {
@@ -291,12 +300,24 @@ static void draw_gframe_contents(void)
    //  why this isn't SS_BLACKFRAME).
    Box(hdc, rect.left, rect.top, rect.right - 1, rect.bottom - 1, (COLORREF) WIN_BLACK) ;
 
-   //  the evaluation X -- placeholder until real graphics content replaces it
-   LineCR(hdc, rect.left,  rect.top,        rect.right - 1, rect.bottom - 1, WIN_BWHITE) ;
-   LineCR(hdc, rect.left,  rect.bottom - 1, rect.right - 1, rect.top,        WIN_BWHITE) ;
-
    ReleaseDC(hwndGFrame, hdc) ;
    GdiFlush() ;   //  commit immediately rather than risk a deferred/batched paint
+
+   //  Claude 08/17/26 - the canvas above just got wiped, regardless of why
+   //  this ran (an actual resize via resize_gframe(), or any other
+   //  incidental repaint -- window uncovered, restored from minimized,
+   //  etc.). Flag that whatever's currently selected needs to redraw, same
+   //  as change_graph_state() does on a menu switch.
+   //
+   //  Claude 08/17/26 - deliberately NOT also calling
+   //  display_current_operation() directly here: tried that (see
+   //  conversation history), but for a continuously-running demo it means
+   //  every single WM_SIZE during a live drag does wipe-then-one-frame,
+   //  which looks worse than the blank-during-drag this reverts to. A
+   //  blank frame during an active resize is an accepted tradeoff --
+   //  resizing isn't a continuous-use mode, and content resumes the instant
+   //  the drag ends and the idle loop gets a turn again.
+   we_should_redraw = 1 ;
 }
 
 // Claude 08/17/26 - hwndGFrame's original (Static class) window procedure,
@@ -423,10 +444,19 @@ static void do_init_dialog(HWND hwnd)
    //  re-position status-bar parts
    update_statusbar_parts() ;
 
+   //  Claude 08/17/26 - select the intro page (menu_items[0]) at startup,
+   //  same as clicking a menu item would -- establishes miptr/demo_state so
+   //  display_current_operation() has something to dispatch to once the
+   //  idle loop starts. Without this, miptr stays nullptr until the user's
+   //  first menu click and nothing draws in the meantime.
+   change_graph_state(0) ;
+
    //  Claude 08/17/26 - size the graphics frame to the initial dialog and
-   //  draw the evaluation X; resize_dialog_and_workspace() keeps this in sync
-   //  from here on, but a live-drag or WM_SIZE isn't guaranteed to fire
-   //  before the dialog is first shown, so do it explicitly here too.
+   //  fill/border it; resize_dialog_and_workspace() keeps this in sync from
+   //  here on, but a live-drag or WM_SIZE isn't guaranteed to fire before
+   //  the dialog is first shown, so do it explicitly here too. Actual demo
+   //  content (the intro X, initially) is drawn separately, once the idle
+   //  loop starts -- see draw_gframe_contents()'s comment.
    resize_gframe() ;
 
    // Claude 08/14/26 - the real, permanent floor for WM_GETMINMAXINFO.
@@ -681,7 +711,7 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
       // HDC hdc = 
       BeginPaint (hwnd, &ps) ;
       if (cxClient != 0 && cyClient != 0) {
-         // display_current_operation(hwnd) ;
+         // display_current_operation() ;
       }
       EndPaint (hwnd, &ps) ;
       }
@@ -753,15 +783,7 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
 
          case IDM_CIRCLES:
          case IDM_SQUARES:
-            //  Claude 08/17/26 - placeholder: wire this to the first ported
-            //  gstuff drawing algorithm. Store the selection in a static
-            //  (e.g. "current_demo"), then invalidate/update hwndGFrame the
-            //  same way resize_gframe() does, so GFrameSubclassProc's
-            //  WM_PAINT redraws using the newly-selected algorithm instead
-            //  of the placeholder X.
-            // status_message("First Algorithm selected (not yet implemented)") ;
-            //  this is hwnd for the program - title bar
-            change_graph_state(hwnd, target);
+            change_graph_state(target);
             break;
          } //lint !e744  switch target
          return true;
@@ -828,7 +850,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
          }
       }
       else {
-         if (!display_current_operation(hwndGFrame)) {
+         if (!display_current_operation()) {
             WaitMessage() ;
          }
       }

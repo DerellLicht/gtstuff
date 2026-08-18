@@ -1,5 +1,5 @@
 //****************************************************************************
-//  gtstuff.h - public declarations for terminal-demo program
+//  gtstuff.h - public declarations for graphics program
 //  
 //  Written by:   Daniel D. Miller
 //****************************************************************************
@@ -18,6 +18,7 @@
 
 extern uint cxClient ;
 extern uint cyClient ;
+
 //**************************************************************
 //  function prototypes
 //**************************************************************
@@ -25,5 +26,12 @@ extern uint cyClient ;
 //  gtstuff.cpp
 void status_message(char *msgstr);
 void status_message(uint idx, char *msgstr);
+
 void show_graph_desc(char *desc);
+//  Claude 08/17/26 - hwndGFrame itself stays `static` (private) to
+//  gtstuff.cpp -- this getter is the one deliberate crack in that, used
+//  only by graph_object::get_gframe_dc()/release_gframe_dc() in
+//  gobjects.cpp. Nothing else should call it; algorithm subclasses should
+//  never see an HWND at all, only the HDC those two functions hand back.
+HWND get_hwndGFrame(void) ;
 

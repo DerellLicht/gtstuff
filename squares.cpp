@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <utility>      //  std::move
 
 #include "common.h"     //  u8, etc
 #include "palettes.h"   //  24-bit palette functions
@@ -9,15 +10,15 @@
 #define  MAX_BOX_EDGE   100
 
 //***********************************************************************
-squares::squares(char *title_text) 
-: graph_object(title_text) 
+squares::squares(std::string title_text) 
+: graph_object(std::move(title_text)) 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 { 
 }
 
 //************************************************************************
-void squares::update_display(HWND hwnd)
+void squares::update_display(void)
 {
    HBRUSH hBrush ;
    HDC    hdc ;
@@ -35,7 +36,7 @@ void squares::update_display(HWND hwnd)
    else
       hBrush = CreateHatchBrush (fill_patterns[random_int(6)], random_colorref()) ;
 
-   hdc = GetDC (hwnd) ;
+   hdc = get_gframe_dc() ;
    SetBkColor(hdc, random_colorref()) ;
 
    xl = random_int(cxGFrame) ;
@@ -51,7 +52,7 @@ void squares::update_display(HWND hwnd)
    SetRect (&rect, xl, yl, xr, yu) ;
    FillRect (hdc, &rect, hBrush) ;
    Box(hdc, xl, yl, xr, yu, (COLORREF) 0) ;
-   ReleaseDC (hwnd, hdc) ;
+   release_gframe_dc(hdc) ;
 
    DeleteObject (hBrush) ;
 }
