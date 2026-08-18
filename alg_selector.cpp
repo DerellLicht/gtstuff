@@ -12,6 +12,7 @@
 #include <windows.h>
 #include <stdio.h>   //  sprintf, for %*s syntax
 #include <math.h>
+#include <vector>
 
 #include "common.h"     //  u8, etc
 #include "resource.h"  
@@ -19,11 +20,8 @@
 #include "palettes.h"   //  24-bit palette functions - required by gobjects.h
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
-// #include "keywin32.h"
 #include "alg_selector.h"       //  demo declarations
-// #include "ezfont.h"
 
-int demo_state = 0 ;
 int we_should_redraw = 1 ;
 int pause_the_race = 0 ;
 unsigned use_solid_pattern = 0 ;
@@ -62,6 +60,7 @@ static wincolors wincolors0("Windows Colors") ;
 #endif
 // NOLINTEND(bugprone-throwing-static-initialization)
 
+
 /************************************************************************/
 typedef struct menu_items_s {
    graph_object *go ;
@@ -91,41 +90,42 @@ void draw_intro_graphics(void)
 }
 
 /************************************************************************/
-static menu_items_t menu_items[] = {
-{ 0,           0,           "  ",                 "Graphics demos",         draw_intro_graphics },
-{ &circles0,   IDM_CIRCLES, "a: Raindrops ",      "Psychedelic Raindrops",  0 },
-{ &squares0,   IDM_SQUARES, "b: Boxes ",          "Boxing Lessons",         0 },
+std::vector<menu_items_t> menu_items {
+ { 0,           0,           "  ",                 "Graphics demos",         draw_intro_graphics }
+,{ &circles0,   IDM_CIRCLES, "a: Raindrops ",      "Psychedelic Raindrops",  0 }
+,{ &squares0,   IDM_SQUARES, "b: Boxes ",          "Boxing Lessons",         0 }
 #ifndef  RESTRICT_ALGS
-{ &polygon0,   0, "c: Lightning ",                "Temporal Lightning",     0 },
-{ &rect0,      0, "d: 3D Boxes ",                 "Palette Boxes",          0 },
-{ &pixels0,    0, "e: Pixels ",                   "Pixel-packing",          0 },
-{ &colorbars0, 0, "f: Color Bars ",               "Color Bars",             0 },
-{ &xpalette0,  0, "g: Observe XWindows Palette ", "XWindows Palette",       0 },
-{ &bitblt0,    0, "h: bitblt demo ",              "BitBlt demo",            0 },
-{ &xnpalette0, 0, "i: Named XWindows Palette ",   "Named XWindows Palette", 0 },
-{ &xrect0,     0, "j: 3D XWindows Boxes ",        "XWindows Palette Boxes", 0 },
-{ &gpalettes0, 0, "k: more palettes ",            "more palettes",          0 },
-{ &triangles0, 0, "l: line stuff ",               "line triangle",          0 },
-{ &rainbow0,   0, "m: Rainbow !!",                "Rainbow !!",             0 },
-{ &lines0,     0, "n: Lines",                     "Lines",                  0 },
-{ &lgames0,    0, "o: Line Games",                "Lines Games",            0 },
-{ &rcolors0,   0, "p: rcolors32",                 "rcolors32",              0 },
-{ &flames0,    0, "q: Fire tricks",               "Fire tricks",            0 },
-{ &faces0,     0, "r: Face Traps",                "Face traps",             0 },
-{ &ascii0,     0, "s: ASCII table",               "ASCII table",            0 },
-{ &sglass0,    0, "t: Stained Glass",             "Stained Glass",          0 },
-{ &wincolors0, 0, "u: Windows Colors",            "Windows Colors",         0 },
+,{ &polygon0,   0, "c: Lightning ",                "Temporal Lightning",     0 }
+,{ &rect0,      0, "d: 3D Boxes ",                 "Palette Boxes",          0 }
+,{ &pixels0,    0, "e: Pixels ",                   "Pixel-packing",          0 }
+,{ &colorbars0, 0, "f: Color Bars ",               "Color Bars",             0 }
+,{ &xpalette0,  0, "g: Observe XWindows Palette ", "XWindows Palette",       0 }
+,{ &bitblt0,    0, "h: bitblt demo ",              "BitBlt demo",            0 }
+,{ &xnpalette0, 0, "i: Named XWindows Palette ",   "Named XWindows Palette", 0 }
+,{ &xrect0,     0, "j: 3D XWindows Boxes ",        "XWindows Palette Boxes", 0 }
+,{ &gpalettes0, 0, "k: more palettes ",            "more palettes",          0 }
+,{ &triangles0, 0, "l: line stuff ",               "line triangle",          0 }
+,{ &rainbow0,   0, "m: Rainbow !!",                "Rainbow !!",             0 }
+,{ &lines0,     0, "n: Lines",                     "Lines",                  0 }
+,{ &lgames0,    0, "o: Line Games",                "Lines Games",            0 }
+,{ &rcolors0,   0, "p: rcolors32",                 "rcolors32",              0 }
+,{ &flames0,    0, "q: Fire tricks",               "Fire tricks",            0 }
+,{ &faces0,     0, "r: Face Traps",                "Face traps",             0 }
+,{ &ascii0,     0, "s: ASCII table",               "ASCII table",            0 }
+,{ &sglass0,    0, "t: Stained Glass",             "Stained Glass",          0 }
+,{ &wincolors0, 0, "u: Windows Colors",            "Windows Colors",         0 }
 #endif
-{ 0, 0, 0, 0, 0 }} ;
+} ;
 
 
 //***********************************************************************
 void change_graph_state(uint graph_id)
 {
-   for (uint j=0; menu_items[j].menu_text != 0; j++) {
-      if (menu_items[j].menu_id == graph_id) {
-         demo_state = j ;
-         miptr = &menu_items[demo_state] ;
+   for(auto &mentry : menu_items) {
+      if (mentry.menu_id == graph_id) {
+         // demo_state = j ;
+         // miptr = &menu_items[demo_state] ;
+         miptr = &mentry ;
          show_graph_desc(miptr->title);
          cycle_count = 0 ;
          we_should_redraw = 1 ;
