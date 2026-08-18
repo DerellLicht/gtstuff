@@ -118,6 +118,7 @@ std::vector<menu_items_t> menu_items {
 
 //**************************************************************************
 //  notes on how we_should_redraw is used:
+//  
 //  The flag is set after resize/redraw (in gtstuff.cpp),
 //  or when a new gobject is selected (via change_graph_state()).
 //  
