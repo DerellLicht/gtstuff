@@ -116,8 +116,19 @@ std::vector<menu_items_t> menu_items {
 #endif
 } ;
 
-
-//***********************************************************************
+//**************************************************************************
+//  notes on how we_should_redraw is used:
+//  The flag is set after resize/redraw (in gtstuff.cpp),
+//  or when a new gobject is selected (via change_graph_state()).
+//  
+//  The flag is cleared by display_current_operation()
+//  after the first call to the drawing function is executed.
+//  After that, display_current_operation() will continue to be executed
+//  repeatedly from the message-handler loop.
+//  gobjects which intend to execute just once, will check
+//  we_should_redraw and return without action if it is false.
+//  gobjects which are *not* execute-once objects, simply ignore the flag.
+//**************************************************************************
 void change_graph_state(uint graph_id)
 {
    for(auto &mentry : menu_items) {
