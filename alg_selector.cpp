@@ -36,6 +36,7 @@ static u64 ti = 0 ;
 //***********************************************************************
 //  instantiate each of the classes
 //***********************************************************************
+// NOLINTBEGIN(bugprone-throwing-static-initialization)
 static circles circles0("Psychedelic Raindrops") ;
 static squares squares0("Boxing Lessons") ;
 #ifndef  RESTRICT_ALGS
@@ -59,10 +60,10 @@ ascii ascii0("ASCII Table") ;
 static sglass sglass0("Stained Glass") ;
 static wincolors wincolors0("Windows Colors") ;
 #endif
+// NOLINTEND(bugprone-throwing-static-initialization)
 
 /************************************************************************/
 typedef struct menu_items_s {
-   unsigned menu_attr ;
    graph_object *go ;
    uint     menu_id ;
    char     *menu_text ;
@@ -91,31 +92,31 @@ void draw_intro_graphics(void)
 
 /************************************************************************/
 static menu_items_t menu_items[] = {
-{ WIN_BLUE,  0,           0,           "  ",                 "Graphics demos",         draw_intro_graphics },
-{ WIN_BLUE,  &circles0,   IDM_CIRCLES, "a: Raindrops ",      "Psychedelic Raindrops",  0 },
-{ WIN_BLUE,  &squares0,   IDM_SQUARES, "b: Boxes ",          "Boxing Lessons",         0 },
+{ 0,           0,           "  ",                 "Graphics demos",         draw_intro_graphics },
+{ &circles0,   IDM_CIRCLES, "a: Raindrops ",      "Psychedelic Raindrops",  0 },
+{ &squares0,   IDM_SQUARES, "b: Boxes ",          "Boxing Lessons",         0 },
 #ifndef  RESTRICT_ALGS
-{ WIN_BLUE,  &polygon0,   0, "c: Lightning ",                "Temporal Lightning",     0 },
-{ WIN_BLUE,  &rect0,      0, "d: 3D Boxes ",                 "Palette Boxes",          0 },
-{ WIN_BLUE,  &pixels0,    0, "e: Pixels ",                   "Pixel-packing",          0 },
-{ WIN_BLUE,  &colorbars0, 0, "f: Color Bars ",               "Color Bars",             0 },
-{ WIN_BLUE,  &xpalette0,  0, "g: Observe XWindows Palette ", "XWindows Palette",       0 },
-{ WIN_BLUE,  &bitblt0,    0, "h: bitblt demo ",              "BitBlt demo",            0 },
-{ WIN_BLUE,  &xnpalette0, 0, "i: Named XWindows Palette ",   "Named XWindows Palette", 0 },
-{ WIN_BLUE,  &xrect0,     0, "j: 3D XWindows Boxes ",        "XWindows Palette Boxes", 0 },
-{ WIN_BLUE,  &gpalettes0, 0, "k: more palettes ",            "more palettes",          0 },
-{ WIN_BLUE,  &triangles0, 0, "l: line stuff ",               "line triangle",          0 },
-{ WIN_BLUE,  &rainbow0,   0, "m: Rainbow !!",                "Rainbow !!",             0 },
-{ WIN_BLUE,  &lines0,     0, "n: Lines",                     "Lines",                  0 },
-{ WIN_BLUE,  &lgames0,    0, "o: Line Games",                "Lines Games",            0 },
-{ WIN_BLUE,  &rcolors0,   0, "p: rcolors32",                 "rcolors32",              0 },
-{ WIN_BLUE,  &flames0,    0, "q: Fire tricks",               "Fire tricks",            0 },
-{ WIN_BLUE,  &faces0,     0, "r: Face Traps",                "Face traps",             0 },
-{ WIN_BLUE,  &ascii0,     0, "s: ASCII table",               "ASCII table",            0 },
-{ WIN_BLUE,  &sglass0,    0, "t: Stained Glass",             "Stained Glass",          0 },
-{ WIN_BLUE,  &wincolors0, 0, "u: Windows Colors",            "Windows Colors",         0 },
+{ &polygon0,   0, "c: Lightning ",                "Temporal Lightning",     0 },
+{ &rect0,      0, "d: 3D Boxes ",                 "Palette Boxes",          0 },
+{ &pixels0,    0, "e: Pixels ",                   "Pixel-packing",          0 },
+{ &colorbars0, 0, "f: Color Bars ",               "Color Bars",             0 },
+{ &xpalette0,  0, "g: Observe XWindows Palette ", "XWindows Palette",       0 },
+{ &bitblt0,    0, "h: bitblt demo ",              "BitBlt demo",            0 },
+{ &xnpalette0, 0, "i: Named XWindows Palette ",   "Named XWindows Palette", 0 },
+{ &xrect0,     0, "j: 3D XWindows Boxes ",        "XWindows Palette Boxes", 0 },
+{ &gpalettes0, 0, "k: more palettes ",            "more palettes",          0 },
+{ &triangles0, 0, "l: line stuff ",               "line triangle",          0 },
+{ &rainbow0,   0, "m: Rainbow !!",                "Rainbow !!",             0 },
+{ &lines0,     0, "n: Lines",                     "Lines",                  0 },
+{ &lgames0,    0, "o: Line Games",                "Lines Games",            0 },
+{ &rcolors0,   0, "p: rcolors32",                 "rcolors32",              0 },
+{ &flames0,    0, "q: Fire tricks",               "Fire tricks",            0 },
+{ &faces0,     0, "r: Face Traps",                "Face traps",             0 },
+{ &ascii0,     0, "s: ASCII table",               "ASCII table",            0 },
+{ &sglass0,    0, "t: Stained Glass",             "Stained Glass",          0 },
+{ &wincolors0, 0, "u: Windows Colors",            "Windows Colors",         0 },
 #endif
-{ 0, 0, 0, 0, 0, 0 }} ;
+{ 0, 0, 0, 0, 0 }} ;
 
 
 //***********************************************************************

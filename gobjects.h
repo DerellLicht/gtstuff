@@ -8,7 +8,7 @@
 
 class graph_object {
 protected:
-   std::string title ;
+   std::string title ;  // NOLINT(cppcoreguidelines-non-private-member-variables-in-classes)
 
 public:
    explicit graph_object(std::string title_text) ;
@@ -55,6 +55,7 @@ public:
    circles(const circles&) = delete;
    circles(circles&&) = delete;
    circles& operator=(circles&&) = delete;
+   ~circles() override = default;
 
    void update_display(void) override ;
 } ;
@@ -71,6 +72,7 @@ public:
    squares(const squares&) = delete;
    squares(squares&&) = delete;
    squares& operator=(squares&&) = delete;
+   ~squares() override = default;
 
    void update_display(void) override ;
 } ;
@@ -87,6 +89,7 @@ public:
    polygon(const polygon&) = delete;
    polygon(polygon&&) = delete;
    polygon& operator=(polygon&&) = delete;
+   ~polygon() override = default;
 
    void update_display(void) override ;
 } ;
@@ -103,6 +106,7 @@ public:
    rect(const rect&) = delete;
    rect(rect&&) = delete;
    rect& operator=(rect&&) = delete;
+   ~rect() override = default;
 
    void update_display(void) override ;
 } ;
@@ -124,6 +128,7 @@ public:
    pixels(const pixels&) = delete;
    pixels(pixels&&) = delete;
    pixels& operator=(pixels&&) = delete;
+   ~pixels() override = default;
 
    void update_display(void) override ;
 } ;
@@ -140,6 +145,7 @@ public:
    colorbars(const colorbars&) = delete;
    colorbars(colorbars&&) = delete;
    colorbars& operator=(colorbars&&) = delete;
+   ~colorbars() override = default;
 
    void update_display(void) override ;
 } ;
@@ -156,6 +162,7 @@ public:
    xpalette(const xpalette&) = delete;
    xpalette(xpalette&&) = delete;
    xpalette& operator=(xpalette&&) = delete;
+   ~xpalette() override = default;
 
    void update_display(void) override ;
 } ;
@@ -175,6 +182,7 @@ public:
    bitblt(const bitblt&) = delete;
    bitblt(bitblt&&) = delete;
    bitblt& operator=(bitblt&&) = delete;
+   ~bitblt() override = default;
 
    void update_display(void) override ;
 } ;
@@ -191,6 +199,7 @@ public:
    xnpalette(const xnpalette&) = delete;
    xnpalette(xnpalette&&) = delete;
    xnpalette& operator=(xnpalette&&) = delete;
+   ~xnpalette() override = default;
 
    void update_display(void) override ;
 } ;
@@ -210,6 +219,7 @@ public:
    xrect(const xrect&) = delete;
    xrect(xrect&&) = delete;
    xrect& operator=(xrect&&) = delete;
+   ~xrect() override = default;
 
    void update_display(void) override ;
 } ;
@@ -226,6 +236,7 @@ public:
    gpalettes(const gpalettes&) = delete;
    gpalettes(gpalettes&&) = delete;
    gpalettes& operator=(gpalettes&&) = delete;
+   ~gpalettes() override = default;
 
    void update_display(void) override ;
 } ;
@@ -242,6 +253,7 @@ public:
    triangles(const triangles&) = delete;
    triangles(triangles&&) = delete;
    triangles& operator=(triangles&&) = delete;
+   ~triangles() override = default;
 
    void update_display(void) override ;
 } ;
@@ -265,8 +277,8 @@ public:
    rainbow(const rainbow&) = delete;
    rainbow(rainbow&&) = delete;
    rainbow& operator=(rainbow&&) = delete;
+   ~rainbow() override = default;
 
-   // ~faces() {} ;
    void update_display(void) override ;
    void update_boundaries(unsigned xClient, unsigned yClient);
 } ;
@@ -284,6 +296,7 @@ public:
    lines(const lines&) = delete;
    lines(lines&&) = delete;
    lines& operator=(lines&&) = delete;
+   ~lines() override = default;
 
    void update_display(void) override ;
 } ;
@@ -326,6 +339,7 @@ public:
    line_games(const line_games&) = delete;
    line_games(line_games&&) = delete;
    line_games& operator=(line_games&&) = delete;
+   ~line_games() override = default;
 
    line_games(std::string title_text) ;
    void update_display(void) override ;
@@ -348,6 +362,7 @@ public:
    rcolors(const rcolors&) = delete;
    rcolors(rcolors&&) = delete;
    rcolors& operator=(rcolors&&) = delete;
+   ~rcolors() override = default;
 
    void update_display(void) override ;
 } ;
@@ -382,8 +397,8 @@ public:
    flames(const flames&) = delete;
    flames(flames&&) = delete;
    flames& operator=(flames&&) = delete;
+   ~flames() override = default;
 
-   // ~flames() {} ;
    void update_display(void) override ;
 } ;
 
@@ -425,8 +440,8 @@ public:
    face_trap(const face_trap&) = delete;
    face_trap(face_trap&&) = delete;
    face_trap& operator=(face_trap&&) = delete;
+   ~face_trap() override = default;
 
-   // ~faces() {} ;
    void update_display(void) override ;
 } ;
 
@@ -443,6 +458,7 @@ public:
    ascii(const ascii&) = delete;
    ascii(ascii&&) = delete;
    ascii& operator=(ascii&&) = delete;
+   ~ascii() override = default;
 
    void update_display(void) override ;
    void set_font_name(char *new_font_name);
@@ -474,7 +490,7 @@ public:
    sglass(sglass&&) = delete;
    sglass& operator=(sglass&&) = delete;
 
-   virtual ~sglass() = default;
+   ~sglass() override = default;
    void update_display(void) override ;
 } ;
 
@@ -490,6 +506,7 @@ public:
    wincolors(const wincolors&) = delete;
    wincolors(wincolors&&) = delete;
    wincolors& operator=(wincolors&&) = delete;
+   ~wincolors() override = default;
 
    void update_display(void) override ;
 } ;
