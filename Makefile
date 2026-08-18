@@ -29,7 +29,8 @@ LiFLAGS = -Ider_libs
 CFLAGS += -Ider_libs
 
 CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp palettes.cpp \
-circles.cpp squares.cpp polygon.cpp rect.cpp pixels.cpp colorbars.cpp
+circles.cpp squares.cpp polygon.cpp rect.cpp pixels.cpp colorbars.cpp xpalette.cpp \
+rgb_data.cpp bitblt.cpp xnpalette.cpp
 
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
@@ -98,6 +99,13 @@ pixels.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 pixels.o: alg_selector.h
 colorbars.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 colorbars.o: alg_selector.h
+xpalette.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+xpalette.o: alg_selector.h rgb_data.h
+rgb_data.o: rgb_data.h
+bitblt.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+bitblt.o: alg_selector.h
+xnpalette.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+xnpalette.o: alg_selector.h rgb_data.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h

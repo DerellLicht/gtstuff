@@ -52,10 +52,10 @@ static polygon polygon0("Temporal Lightning") ;
 static rect rect0("Palette Boxes") ;
 static pixels pixels0("Pixel-packing") ;
 static colorbars colorbars0("Color Bars") ;
-#ifndef  RESTRICT_ALGS
 static xpalette xpalette0("XWindows palette") ;
 static bitblt bitblt0("BitBlt demo and options") ;
 static xnpalette xnpalette0("Named XWindows palette") ;
+#ifndef  RESTRICT_ALGS
 static xrect xrect0("XWindows Palette Boxes") ;
 static gpalettes gpalettes0("more palettes") ;
 static triangles triangles0("line triangle") ;
@@ -97,10 +97,10 @@ std::vector<menu_items_t> menu_items {
 ,{ &rect0,      IDM_RECT,      "Palette Boxes",          0 }
 ,{ &pixels0,    IDM_PIXELS,    "Pixel-packing",          0 }
 ,{ &colorbars0, IDM_CLRBARS,   "Color Bars",             0 }
+,{ &xpalette0,  IDM_XPAL,      "XWindows Palette",       0 }
+,{ &bitblt0,    IDM_BITBLT,    "BitBlt demo",            0 }
+,{ &xnpalette0, IDM_XNPAL,     "Named XWindows Palette", 0 }
 #ifndef  RESTRICT_ALGS
-,{ &xpalette0,  0,             "XWindows Palette",       0 }
-,{ &bitblt0,    0,             "BitBlt demo",            0 }
-,{ &xnpalette0, 0,             "Named XWindows Palette", 0 }
 ,{ &xrect0,     0,             "XWindows Palette Boxes", 0 }
 ,{ &gpalettes0, 0,             "more palettes",          0 }
 ,{ &triangles0, 0,             "line triangle",          0 }

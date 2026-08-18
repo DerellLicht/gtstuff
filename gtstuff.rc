@@ -16,14 +16,16 @@ IDM_MAINMENU MENU
 BEGIN
    POPUP "File"
    BEGIN
-      MENUITEM "Circles",    IDM_CIRCLES
-      MENUITEM "Squares",    IDM_SQUARES
-      MENUITEM "Lightning",  IDM_LIGHTNING
-      MENUITEM "Rectangle",  IDM_RECT
-      MENUITEM "Pixels",     IDM_PIXELS
-      MENUITEM "Color Bars", IDM_CLRBARS
+      MENUITEM "Circles",         IDM_CIRCLES
+      MENUITEM "Squares",         IDM_SQUARES
+      MENUITEM "Lightning",       IDM_LIGHTNING
+      MENUITEM "Rectangle",       IDM_RECT
+      MENUITEM "Pixels",          IDM_PIXELS
+      MENUITEM "Color Bars",      IDM_CLRBARS
+      MENUITEM "XWin Palette",    IDM_XPAL
+      MENUITEM "Named X Palette", IDM_XNPAL
       MENUITEM SEPARATOR
-      MENUITEM "Close",      IDM_FILE_CLOSE
+      MENUITEM "Close",           IDM_FILE_CLOSE
    END
 END
 
