@@ -31,6 +31,17 @@ static u64 ti = 0 ;
 
 #define  RESTRICT_ALGS
 
+/************************************************************************/
+typedef struct menu_items_s {
+   graph_object *go ;
+   uint          menu_id ;
+   char const   *title ;
+   void (*draw_func)(void);
+} menu_items_t, *menu_items_p ;
+
+static menu_items_p miptr = nullptr ;
+/************************************************************************/
+
 //***********************************************************************
 //  instantiate each of the classes
 //***********************************************************************
@@ -39,9 +50,9 @@ static circles circles0("Psychedelic Raindrops") ;
 static squares squares0("Boxing Lessons") ;
 static polygon polygon0("Temporal Lightning") ;
 static rect rect0("Palette Boxes") ;
-#ifndef  RESTRICT_ALGS
 static pixels pixels0("Pixel-packing") ;
 static colorbars colorbars0("Color Bars") ;
+#ifndef  RESTRICT_ALGS
 static xpalette xpalette0("XWindows palette") ;
 static bitblt bitblt0("BitBlt demo and options") ;
 static xnpalette xnpalette0("Named XWindows palette") ;
@@ -60,17 +71,6 @@ static wincolors wincolors0("Windows Colors") ;
 #endif
 // NOLINTEND(bugprone-throwing-static-initialization)
 
-
-/************************************************************************/
-typedef struct menu_items_s {
-   graph_object *go ;
-   uint          menu_id ;
-   char const   *title ;
-   void (*draw_func)(void);
-} menu_items_t, *menu_items_p ;
-
-static menu_items_p miptr = nullptr ;
-/************************************************************************/
 
 //***********************************************************************
 //  Claude 08/17/26 - the "intro" placeholder graphic: an X marking the
@@ -95,9 +95,9 @@ std::vector<menu_items_t> menu_items {
 ,{ &squares0,   IDM_SQUARES,   "Boxing Lessons",         0 }
 ,{ &polygon0,   IDM_LIGHTNING, "Temporal Lightning",     0 }
 ,{ &rect0,      IDM_RECT,      "Palette Boxes",          0 }
+,{ &pixels0,    IDM_PIXELS,    "Pixel-packing",          0 }
+,{ &colorbars0, IDM_CLRBARS,   "Color Bars",             0 }
 #ifndef  RESTRICT_ALGS
-,{ &pixels0,    0,             "Pixel-packing",          0 }
-,{ &colorbars0, 0,             "Color Bars",             0 }
 ,{ &xpalette0,  0,             "XWindows Palette",       0 }
 ,{ &bitblt0,    0,             "BitBlt demo",            0 }
 ,{ &xnpalette0, 0,             "Named XWindows Palette", 0 }

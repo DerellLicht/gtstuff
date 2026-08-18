@@ -22,3 +22,5 @@
 #define  IDM_SQUARES          902
 #define  IDM_LIGHTNING        903
 #define  IDM_RECT             904
+#define  IDM_PIXELS           905
+#define  IDM_CLRBARS          906

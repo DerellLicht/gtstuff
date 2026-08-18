@@ -21,7 +21,6 @@ circles::circles(std::string title_text)
 void circles::update_display(void)
 {
    HBRUSH hBrush ;
-   HDC    hdc ;
    int x, y, w ;
 
    // if (pause_the_race)
@@ -33,7 +32,8 @@ void circles::update_display(void)
       // hBrush = CreateSolidBrush (random_palette_ref()) ;
    else
       hBrush = CreateHatchBrush (fill_patterns[random_int(6)], random_colorref()) ;
-   hdc = get_gframe_dc() ;
+      
+   HDC hdc = get_gframe_dc() ;
    SetBkColor(hdc, random_colorref()) ;
    HGDIOBJ hOldBrush = SelectObject(hdc, hBrush) ;
 
