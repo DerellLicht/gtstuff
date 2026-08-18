@@ -27,21 +27,16 @@
 #define  ROP_OR    SRCPAINT
 #define  ROP_XOR   SRCINVERT
 
-//lint -esym(714, Demo_Line, random_palette_ref, dump_fire_palette)
-//lint -esym(759, Demo_Line, random_palette_ref, dump_fire_palette)
-//lint -esym(765, Demo_Line, random_palette_ref, dump_fire_palette)
-
 //  width/height of graphics frame
 extern uint cxGFrame ;
 extern uint cyGFrame ;
 
-// extern int cxClient, cyClient ;
 // extern int maxx, maxy ;
 // extern unsigned dos_cref[16] ;
 // extern char tempstr[260] ;
 
 //lint -esym(843, fill_patterns)
-// extern unsigned fill_patterns[6] ;
+extern unsigned fill_patterns[6] ;
 
 //  demo.c
 void show_message(HWND hwnd, int x, int y, unsigned attr, char *str);

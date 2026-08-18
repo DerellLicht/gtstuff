@@ -13,15 +13,7 @@
 #include "common.h"
 #include "gfuncs.h"
 #include "gtstuff.h"
-// #include "ezfont.h"
-// #include "palettes.h"
-
-// char tempstr[260] ;
-
-// int cxGFrame = 0 ;
-// int cyGFrame = 0 ;
-
-// int maxx, maxy ;
+#include "palettes.h"
 
 //  duplicate standard DOS colors
 // unsigned dos_cref[16] = {
@@ -44,14 +36,14 @@
 // } ;
 
 //***********************************************************************
-// unsigned fill_patterns[6] = {
-//    HS_HORIZONTAL,
-//    HS_VERTICAL,
-//    HS_FDIAGONAL,
-//    HS_BDIAGONAL,
-//    HS_CROSS,
-//    HS_DIAGCROSS
-// };
+unsigned fill_patterns[6] = {
+   HS_HORIZONTAL,
+   HS_VERTICAL,
+   HS_FDIAGONAL,
+   HS_BDIAGONAL,
+   HS_CROSS,
+   HS_DIAGCROSS
+};
 
 //**************************************************************************
 //  generate random number between 0 and n-1
@@ -73,26 +65,12 @@
 // (which uses lower-order bits)."                                    
 //**************************************************************************
 #if 0
-int random_int(int n)
-{
-   //  turn random number into a floating-point percentage
-   double d = (double) rand() / (RAND_MAX + 1.0) ;
-   //  then calculate result as that random percentage of the target value
-   return (int) (n * d) ;
-}
-
 //**************************************************************************
 //  turn random number into a floating-point percentage
 //**************************************************************************
 double random_part(void)
 {
    return (double) rand() / (RAND_MAX + 1.0) ;
-}
-
-/************************************************************************/
-COLORREF random_colorref(void)
-{
-   return RGB(random_int(256), random_int(256), random_int(256)) ;
 }
 
 /************************************************************************/
@@ -110,6 +88,20 @@ void show_message(HWND hwnd, int x, int y, unsigned attr, char *str)
    ReleaseDC (hwnd, hdc) ;
 }
 #endif
+
+int random_int(int n)
+{
+   //  turn random number into a floating-point percentage
+   double d = (double) rand() / (RAND_MAX + 1.0) ;
+   //  then calculate result as that random percentage of the target value
+   return (int) (n * d) ;
+}
+
+/************************************************************************/
+COLORREF random_colorref(void)
+{
+   return RGB(random_int(256), random_int(256), random_int(256)) ;
+}
 
 /************************************************************************/
 void Clear_Window(HDC hdc, unsigned Color)
@@ -134,14 +126,6 @@ void Clear_Window(HWND hwnd, unsigned Color)
    // FillRect (hdc, &rect, hBrush) ;
    // DeleteObject (hBrush) ;
    ReleaseDC (hwnd, hdc) ;
-}
-
-/************************************************************************/
-// this will eventually be integrated with the palette code in gstuff
-/************************************************************************/
-COLORREF get_palette_entry(uint Color)
-{
-   return WIN_GREEN ;
 }
 
 /************************************************************************/

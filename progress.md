@@ -1,10 +1,9 @@
 ## next steps in developing this program
 
-- convert gfuncs.cpp to use hwndGFrame references, rather than dialog references.
-  Note: cxClient/cyClient are not valid here.
+- the graphic algorithms over-write the controls bar at top of screen (but *not* the menu)
 
-- add clipping region to graphics frame; this *also* resizes with dialog
+- space-bar terminates the program...
 
-- draw X within graphics frame, to provide visibility to resize operations
+- find a way to pause the rolling... maybe click on screen ?
 
- 
+- moving partially off-screen, causes the startup image to draw

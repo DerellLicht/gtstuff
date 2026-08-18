@@ -1,7 +1,7 @@
 #include <windows.h>
 #include "resource.h"
 
-WINWIZICO       ICON    "scroll.ico"
+GTSTUFF_ICO       ICON    "scroll.ico"
 
 //*******************************************************************
 //  main-dialog menu bar
@@ -16,9 +16,10 @@ IDM_MAINMENU MENU
 BEGIN
    POPUP "&File"
    BEGIN
-      MENUITEM "&First Algorithm",  IDM_ALGO_FIRST
+      MENUITEM "&Circles",  IDM_CIRCLES
+      MENUITEM "&Squares",  IDM_SQUARES
       MENUITEM SEPARATOR
-      MENUITEM "&Close",            IDM_FILE_CLOSE
+      MENUITEM "&Close",    IDM_FILE_CLOSE
    END
 END
 
@@ -33,13 +34,16 @@ CAPTION "Terminal utility"
 MENU IDM_MAINMENU
 FONT 10, "Times New Roman"
 BEGIN
-   DEFPUSHBUTTON  "Close",                IDB_CLOSE,                          115,  5, 100,  12
-   // PUSHBUTTON  "Add line to terminal", IDB_ADD_LINE,                        10,  5, 100,  12
+   LTEXT           "Graph info", IDS_GINFO,  10,  5,  40,  10, SS_SUNKEN
+   LTEXT           " ",          IDC_GINFO,  55,  5, 150,  10, SS_SUNKEN
+   DEFPUSHBUTTON  "Close",       IDB_CLOSE, 210,  5,  40,  11
+   
    //  Claude 08/17/26 - plain static, not SS_BLACKFRAME -- we draw the
    //  frame's fill, border, and content ourselves (see draw_gframe_contents()
    //  in gtstuff.cpp), so this control only needs to reserve screen space and
    //  give us an hwnd/HDC to draw into. SS_LEFT with no text draws nothing on
    //  its own, so there's no risk of its own painting fighting with ours.
-   CONTROL         "",                    IDC_GFRAME, "Static", SS_LEFT,  4, 20, 342, 200
+   // LTEXT           " ",           IDC_GBORDER, 2, 1, 200, 200, 0, WS_EX_CLIENTEDGE
+   CONTROL         "",            IDC_GFRAME, "Static", SS_LEFT,  4, 20, 342, 200
 END
 

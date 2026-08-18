@@ -28,14 +28,13 @@ endif
 LiFLAGS = -Ider_libs
 CFLAGS += -Ider_libs
 
-CSRC=gtstuff.cpp config.cpp gfuncs.cpp
+CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp palettes.cpp \
+circles.cpp squares.cpp
 
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
 der_libs/statbar.cpp \
 der_libs/winmsgs.cpp 
-
-LINTFILES=lintdefs.cpp lintdefs.ref.h 
 
 OBJS = $(CSRC:.cpp=.o) rc.o
 
@@ -43,8 +42,6 @@ BASE=gtstuff
 BIN=$(BASE).exe
 
 LIBS=-lgdi32 
-#LIBS=-lcomctl32 -lhtmlhelp 
-#LIBS=-lgdi32 -lcomctl32 -lhtmlhelp -lolepro32 -lole32 -luuid
 
 #************************************************************
 %.o: %.cpp
@@ -72,9 +69,6 @@ cppc:
 check:
 	cmd /C "d:\llvm\bin\clang-tidy.exe $(CSRC)"
 
-lint:
-	cmd /C "c:\lint9\lint-nt +v -width(160,4) $(LiFLAGS) -ic:\lint9 mingw.lnt -os(_lint.tmp) $(LINTFILES) $(CSRC)"
-
 depend:
 	makedepend $(CFLAGS) $(CSRC)
 
@@ -88,9 +82,15 @@ rc.o: $(BASE).rc
 # DO NOT DELETE
 
 gtstuff.o: resource.h der_libs/common.h der_libs/commonw.h gtstuff.h gfuncs.h
-gtstuff.o: config.h der_libs/statbar.h der_libs/winmsgs.h
+gtstuff.o: alg_selector.h config.h der_libs/statbar.h der_libs/winmsgs.h
 config.o: der_libs/common.h config.h
-gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h
+gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h palettes.h
+alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h
+alg_selector.o: gfuncs.h alg_selector.h
+gobjects.o: der_libs/common.h palettes.h gobjects.h
+palettes.o: palettes.h
+circles.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
+squares.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h

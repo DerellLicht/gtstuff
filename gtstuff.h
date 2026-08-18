@@ -25,4 +25,5 @@ extern uint cyClient ;
 //  gtstuff.cpp
 void status_message(char *msgstr);
 void status_message(uint idx, char *msgstr);
+void show_graph_desc(char *desc);
 

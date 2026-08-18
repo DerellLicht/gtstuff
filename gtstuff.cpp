@@ -17,6 +17,7 @@ static const char *Version = "GTstuff program, Version 1.01" ;
 #include "commonw.h"
 #include "gtstuff.h"
 #include "gfuncs.h"
+#include "alg_selector.h"
 #include "config.h"
 #include "statbar.h"
 #include "winmsgs.h"
@@ -26,6 +27,7 @@ static HINSTANCE g_hinst = 0;
 
 static HWND hwndMain ;
 static HWND hwndGFrame = nullptr ;
+static HWND hwndGInfo = nullptr ;
 
 //  both of these fields are used by config.cpp to update ini file
 uint cxClient = 0 ;
@@ -104,20 +106,10 @@ static int gframe_right_margin = 0;
 // dialog's genuine first paint, when it's actually on screen.
 static bool gframe_drawn_once = false;
 
-// Claude 08/17/26 - hook for free-running (continuously self-updating) demo
-// pages, called from WinMain's idle loop whenever the message queue is
-// empty. A page selects itself as free-running by pointing this at its own
-// per-frame update function (which should draw directly via a fresh
-// GetDC(hwndGFrame)/ReleaseDC each call -- NOT via Invalidate+UpdateWindow,
-// that's for "redraw everything from current state", not per-frame
-// animation) and should set it back to nullptr when the page is left. A
-// static page (drawn once, same as everything so far) never touches this --
-// it stays nullptr, meaning "nothing to do on idle".
-static void (*gframe_freerun_update)(void) = nullptr;
-
 //*******************************************************************
 //  *** END Claude resize data block
 //*******************************************************************
+
 //*******************************************************************
 //lint -esym(714, status_message)
 //lint -esym(759, status_message)
@@ -130,6 +122,11 @@ void status_message(char *msgstr)
 void status_message(uint idx, char *msgstr)
 {
    MainStatusBar->show_message(idx, msgstr);
+}
+
+void show_graph_desc(char *desc)
+{
+   SetWindowText(hwndGInfo, desc) ;
 }
 
 //****************************************************************************
@@ -380,8 +377,8 @@ static void do_init_dialog(HWND hwnd)
    wsprintfA(msgstr, "%s", Version) ;
    SetWindowTextA(hwnd, msgstr) ;
 
-   SetClassLongA(hwnd, GCL_HICON,   (LONG) LoadIcon(g_hinst, (LPCTSTR)WINWIZICO));
-   SetClassLongA(hwnd, GCL_HICONSM, (LONG) LoadIcon(g_hinst, (LPCTSTR)WINWIZICO));
+   SetClassLongA(hwnd, GCL_HICON,   (LONG) LoadIcon(g_hinst, (LPCTSTR)GTSTUFF_ICO));
+   SetClassLongA(hwnd, GCL_HICONSM, (LONG) LoadIcon(g_hinst, (LPCTSTR)GTSTUFF_ICO));
 
    hwndMain = hwnd ;
    get_monitor_dimens(hwnd);
@@ -408,6 +405,8 @@ static void do_init_dialog(HWND hwnd)
    
    //  get global handles for graphics components
    hwndGFrame = GetDlgItem(hwnd, IDC_GFRAME) ;
+   hwndGInfo  = GetDlgItem(hwnd, IDC_GINFO) ;
+   
    capture_gframe_layout() ;   //  Claude 08/17/26 - must run before cxClient can change
    //  Claude 08/17/26 - see GFrameSubclassProc's comment for why this is
    //  necessary rather than just calling draw_gframe_contents() after resizes.
@@ -752,14 +751,17 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
             PostMessageA(hwnd, WM_CLOSE, 0, 0);
             break;
 
-         case IDM_ALGO_FIRST:
+         case IDM_CIRCLES:
+         case IDM_SQUARES:
             //  Claude 08/17/26 - placeholder: wire this to the first ported
             //  gstuff drawing algorithm. Store the selection in a static
             //  (e.g. "current_demo"), then invalidate/update hwndGFrame the
             //  same way resize_gframe() does, so GFrameSubclassProc's
             //  WM_PAINT redraws using the newly-selected algorithm instead
             //  of the placeholder X.
-            status_message("First Algorithm selected (not yet implemented)") ;
+            // status_message("First Algorithm selected (not yet implemented)") ;
+            //  this is hwnd for the program - title bar
+            change_graph_state(hwnd, target);
             break;
          } //lint !e744  switch target
          return true;
@@ -788,7 +790,7 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
 //***********************************************************************
 //lint -esym(1784, WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
-   {
+{
    g_hinst = hInstance;
    load_exec_filename() ;     //  get our executable name
 
@@ -825,11 +827,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
              DispatchMessage(&Msg);
          }
       }
-      else if (gframe_freerun_update != nullptr) {
-         gframe_freerun_update() ;
-      }
       else {
-         WaitMessage() ;
+         if (!display_current_operation(hwndGFrame)) {
+            WaitMessage() ;
+         }
       }
    }
 

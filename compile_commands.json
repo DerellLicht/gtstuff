@@ -110,5 +110,85 @@
    "gfuncs.o"
   ],
   "file": "gfuncs.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "alg_selector.cpp",
+   "-o",
+   "alg_selector.o"
+  ],
+  "file": "alg_selector.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "gobjects.cpp",
+   "-o",
+   "gobjects.o"
+  ],
+  "file": "gobjects.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "palettes.cpp",
+   "-o",
+   "palettes.o"
+  ],
+  "file": "palettes.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "circles.cpp",
+   "-o",
+   "circles.o"
+  ],
+  "file": "circles.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "squares.cpp",
+   "-o",
+   "squares.o"
+  ],
+  "file": "squares.cpp"
  }
 ]
