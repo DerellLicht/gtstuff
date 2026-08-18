@@ -46,27 +46,8 @@ unsigned fill_patterns[6] = {
 };
 
 //**************************************************************************
-//  generate random number between 0 and n-1
-//**************************************************************************
-// In Numerical Recipes in C: The Art of Scientific Computing (William H. 
-// Press, Brian P. Flannery, Saul A. Teukolsky, William T. Vetterling;
-// New York: Cambridge University Press, 1990 (1st ed, p. 207)),      
-// the following comments are made:                                   
-//                                                                    
-// "If you want to generate a random integer between 1 and 10,        
-// you should always do it by                                         
-//                                                                    
-//    j=1+(int) (10.0*rand()/(RAND_MAX+1.0));                         
-//                                                                    
-// and never by anything resembling                                   
-//                                                                    
-//    j=1+((int) (1000000.0*rand()) % 10);                            
-//                                                                    
-// (which uses lower-order bits)."                                    
-//**************************************************************************
-#if 0
-//**************************************************************************
 //  turn random number into a floating-point percentage
+//  this is used by rainbow
 //**************************************************************************
 double random_part(void)
 {
@@ -80,15 +61,6 @@ COLORREF random_palette_ref(void)
 }
 
 /************************************************************************/
-void show_message(HWND hwnd, int x, int y, unsigned attr, char *str)
-{
-   HDC hdc = GetDC (hwnd) ;
-   SelectObject (hdc, GetStockObject (SYSTEM_FIXED_FONT)) ;
-   dprints(hdc, x, y, attr, str) ;
-   ReleaseDC (hwnd, hdc) ;
-}
-#endif
-
 int random_int(int n)
 {
    //  turn random number into a floating-point percentage

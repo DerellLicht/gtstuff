@@ -38,10 +38,9 @@ extern uint cyGFrame ;
 //lint -esym(843, fill_patterns)
 extern unsigned fill_patterns[6] ;
 
-//  demo.c
-void show_message(HWND hwnd, int x, int y, unsigned attr, char *str);
-int  random_int(int n);
-double random_part(void);
+//  gfuncs.cpp
+int      random_int(int n);
+double   random_part(void);
 COLORREF random_colorref(void);
 COLORREF random_palette_ref(void);
 

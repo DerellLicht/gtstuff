@@ -18,8 +18,9 @@ BEGIN
    BEGIN
       MENUITEM "&Circles",  IDM_CIRCLES
       MENUITEM "&Squares",  IDM_SQUARES
+      MENUITEM "&Lightning",IDM_LIGHTNING
       MENUITEM SEPARATOR
-      MENUITEM "&Close",    IDM_FILE_CLOSE
+      MENUITEM "c&Lose",    IDM_FILE_CLOSE
    END
 END
 

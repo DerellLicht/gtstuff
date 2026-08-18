@@ -5,7 +5,6 @@
 
 #define  CONST_SIZE     50
 
-// extern int demo_state ;
 extern int we_should_redraw ;
 extern int pause_the_race ;
 extern unsigned use_solid_pattern ;

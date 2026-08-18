@@ -37,8 +37,8 @@ static u64 ti = 0 ;
 // NOLINTBEGIN(bugprone-throwing-static-initialization)
 static circles circles0("Psychedelic Raindrops") ;
 static squares squares0("Boxing Lessons") ;
-#ifndef  RESTRICT_ALGS
 static polygon polygon0("Temporal Lightning") ;
+#ifndef  RESTRICT_ALGS
 static rect rect0("Palette Boxes") ;
 static pixels pixels0("Pixel-packing") ;
 static colorbars colorbars0("Color Bars") ;
@@ -91,11 +91,11 @@ void draw_intro_graphics(void)
 
 /************************************************************************/
 std::vector<menu_items_t> menu_items {
- { 0,           0,           "  ",                 "Graphics demos",         draw_intro_graphics }
-,{ &circles0,   IDM_CIRCLES, "a: Raindrops ",      "Psychedelic Raindrops",  0 }
-,{ &squares0,   IDM_SQUARES, "b: Boxes ",          "Boxing Lessons",         0 }
+ { 0,           0,             "  ",              "Graphics demos",         draw_intro_graphics }
+,{ &circles0,   IDM_CIRCLES,   "a: Raindrops ",   "Psychedelic Raindrops",  0 }
+,{ &squares0,   IDM_SQUARES,   "b: Boxes ",       "Boxing Lessons",         0 }
+,{ &polygon0,   IDM_LIGHTNING, "c: Lightning ",    "Temporal Lightning",    0 }
 #ifndef  RESTRICT_ALGS
-,{ &polygon0,   0, "c: Lightning ",                "Temporal Lightning",     0 }
 ,{ &rect0,      0, "d: 3D Boxes ",                 "Palette Boxes",          0 }
 ,{ &pixels0,    0, "e: Pixels ",                   "Pixel-packing",          0 }
 ,{ &colorbars0, 0, "f: Color Bars ",               "Color Bars",             0 }
