@@ -36,15 +36,9 @@ void circles::update_display(HWND hwnd)
    SetBkColor(hdc, random_colorref()) ;
    SelectObject(hdc, hBrush) ;
 
-   // FillRect (hdc, &rect, hBrush) ;
-   // x = rand() % cxClient ;
-   // y = rand() % cyClient ;
    x = random_int(cxGFrame) ;
    y = random_int(cyGFrame) ;
    if (!use_solid_pattern) {
-      // w = rand() % 100 ;
-      // r = (min(cxClient, cyClient) * 4 / 10) ;
-      // r = min(r, 60) ;
       w = 1 + random_int(MAX_CIRCLE_DIAM) ;
    } else {
       w = CONST_SIZE / 2 ;
