@@ -1893,8 +1893,6 @@ rgb_t dac_table28[256] = {
 
 static unsigned const pentries28 = 256 ;
 //************************************************************************
-#define  TOTAL_PALETTE_ENTRIES   29
-
 static palette_record_t const palette_records[TOTAL_PALETTE_ENTRIES] = {
 { fname0,  &dac_table0[0],  pentries0 },
 { fname1,  &dac_table1[0],  pentries1 },
@@ -1963,6 +1961,15 @@ COLORREF get_palette_entry(unsigned Color)
       // DAC_Table1[Color].green,
       // DAC_Table1[Color].blue
       ) ;
+}
+
+//************************************************************************
+char const *get_palette_name(unsigned record)
+{
+   if (record >= TOTAL_PALETTE_ENTRIES)
+      return nullptr ;
+   
+   return palette_records[record].name ;
 }
 
 /************************************************************************/

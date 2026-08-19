@@ -13,10 +13,14 @@
 #define  IDC_GINFO            307
 #define  IDC_GFRAME           308
 #define  IDC_GBORDER          309
+#define  IDC_PALETTES         310
+#define  IDS_PALETTE          311
+#define  IDC_PALETTE          312
+#define  IDC_PALNAME          313
+#define  IDC_PALETTESPIN      314
 
 //  Derell: this is no longer required... I pushed the statbar IDs up to 50,000
-//  IDM_MAINMENU (404, above) items -- 900s to stay clear of statbar.h's
-//  600/700-705/800-803
+//  IDM_MAINMENU (404, above) items -- 900s to stay clear of statbar.h's 600/700-705/800-803
 #define  IDM_FILE_CLOSE       900
 #define  IDM_CIRCLES          901
 #define  IDM_SQUARES          902

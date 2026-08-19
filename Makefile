@@ -44,7 +44,7 @@ OBJS = $(CSRC:.cpp=.o) rc.o
 BASE=gtstuff
 BIN=$(BASE).exe
 
-LIBS=-lgdi32 
+LIBS=-lgdi32 -lcomctl32
 
 #************************************************************
 %.o: %.cpp
@@ -85,7 +85,8 @@ rc.o: $(BASE).rc
 # DO NOT DELETE
 
 gtstuff.o: resource.h der_libs/common.h der_libs/commonw.h gtstuff.h gfuncs.h
-gtstuff.o: alg_selector.h config.h der_libs/statbar.h der_libs/winmsgs.h
+gtstuff.o: alg_selector.h config.h palettes.h der_libs/statbar.h
+gtstuff.o: der_libs/winmsgs.h
 config.o: der_libs/common.h config.h
 gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h palettes.h
 alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h

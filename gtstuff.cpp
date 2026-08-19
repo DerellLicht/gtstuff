@@ -11,6 +11,7 @@ static const char *Version = "GTstuff program, Version 1.01" ;
 
 #include <windows.h>
 #include <stdio.h>   //  vsprintf, sprintf, which supports %f
+#include <commctrl.h>
 
 #include "resource.h"
 #include "common.h"
@@ -19,21 +20,25 @@ static const char *Version = "GTstuff program, Version 1.01" ;
 #include "gfuncs.h"
 #include "alg_selector.h"
 #include "config.h"
+#include "palettes.h"
 #include "statbar.h"
 #include "winmsgs.h"
 
 //***********************************************************************
 static HINSTANCE g_hinst = 0;
 
-static HWND hwndMain ;
+static HWND hwndMain = nullptr ;
 static HWND hwndGFrame = nullptr ;
+static HWND hwndGInfo = nullptr ;
+static HWND hwndPalette = nullptr ;
+static HWND hwndPaletteSpin = nullptr ;
+static HWND hwndPalName = nullptr ;
 
 //  Claude 08/17/26 - see the comment on this prototype in gtstuff.h
 HWND get_hwndGFrame(void)
 {
    return hwndGFrame ;
 }
-static HWND hwndGInfo = nullptr ;
 
 //  both of these fields are used by config.cpp to update ini file
 uint cxClient = 0 ;
@@ -429,8 +434,9 @@ static void do_init_dialog(HWND hwnd)
    init_config();
    
    //  get global handles for graphics components
-   hwndGFrame = GetDlgItem(hwnd, IDC_GFRAME) ;
-   hwndGInfo  = GetDlgItem(hwnd, IDC_GINFO) ;
+   hwndGFrame  = GetDlgItem(hwnd, IDC_GFRAME) ;
+   hwndGInfo   = GetDlgItem(hwnd, IDC_GINFO) ;
+   hwndPalName = GetDlgItem(hwnd, IDC_PALNAME) ;
    
    capture_gframe_layout() ;   //  Claude 08/17/26 - must run before cxClient can change
    //  Claude 08/17/26 - see GFrameSubclassProc's comment for why this is
@@ -477,6 +483,35 @@ static void do_init_dialog(HWND hwnd)
    min_application_window_width = MIN_TERMINAL_VISIBLE_DX + (uint) dx_frame ;
 #endif
 
+   //  manage palette-selection field
+   hwndPalette = GetDlgItem(hwnd, IDC_PALETTE) ;
+   hwndPaletteSpin = CreateUpDownControl(
+      WS_CHILD|WS_VISIBLE|UDS_SETBUDDYINT|UDS_ALIGNRIGHT|WS_BORDER,
+      // spin button control style
+      // UDS_SETBUDDYINT   Causes the control to set the text of the buddy window
+      // UDS_ALIGNRIGHT or UDS_ALIGNLEFT  must be set or else updown will not place beside the edit
+      0, 0, 0, 0,          // size and position
+      hwnd,                // parent handle
+      IDC_PALETTESPIN,     // updown ID
+      GetModuleHandle(NULL),             // instance handle
+      hwndPalette,         // associated field, or NULL
+      TOTAL_PALETTE_ENTRIES-1,        // max value
+      0,                   // min value
+      0); // initial value
+   
+   {
+   char tempstr[81];
+   unsigned curpal = get_curr_palette();
+   char const *palname = get_palette_name(curpal);
+   if (palname == nullptr) {
+      sprintf(tempstr, "[%u] index out of range", curpal);
+   }
+   else {
+      sprintf(tempstr, "[%u] %s", curpal, palname);
+   }
+   SetWindowText(hwndPalName, tempstr);
+   }   
+      
    //****************************************************************
    //  create/configure working space
    //****************************************************************
@@ -679,6 +714,40 @@ static bool do_getminmaxinfo(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPar
    return true ;
 }
 
+//****************************************************************************
+static uint read_count(HWND hwnd)
+{
+   char tempbfr[11] ;
+   GetWindowTextA (hwnd, tempbfr, 10);
+   tempbfr[10] = 0 ;
+   char *tptr = strip_leading_spaces(tempbfr) ;
+   return (uint) atoi(tptr) ;
+}
+
+//*******************************************************************
+static bool do_vscroll(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+// #define SB_THUMBPOSITION   4
+// #define SB_ENDSCROLL       8
+// [3496] scroll code=4, nPos=2
+// [3496] scroll code=8, nPos=2
+//    syslog("scroll code=%u, nPos=%u\n", LOWORD(wParam), HIWORD(wParam)) ;
+   if (LOWORD(wParam) != SB_ENDSCROLL)
+      return false;
+   if (hwndPaletteSpin == (HWND) lParam) {
+      uint palette_idx = read_count(hwndPalette) ;
+      char const *palname = get_palette_name(palette_idx);
+      SetWindowText(hwndPalName, palname);
+      
+      // syslog("selected palette index %u\n", palette_idx);
+      // test_init.diameter = read_count(hwndPixDiam) ;
+      // test_led->set_dimens(test_init.diameter, test_init.bit_gap, test_init.char_gap) ;
+      // update_display() ;
+      return true;
+   } 
+   return false ;
+}
+
 //***********************************************************************
 static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -782,6 +851,9 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
       return TRUE ;
 #endif
 
+   case WM_VSCROLL:
+      return do_vscroll(hwnd, message, wParam, lParam) ;
+      
    //***********************************************************************************************
    case WM_COMMAND:
       {  //  create local context

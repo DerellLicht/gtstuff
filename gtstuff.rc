@@ -10,7 +10,7 @@ GTSTUFF_ICO       ICON    "scroll.ico"
 //  doesn't disturb the status bar layout the way a runtime SetMenu() call
 //  did previously: cxClient/cyClient never get measured until *after* the
 //  menu already exists, so nothing downstream ever sees a stale pre-menu
-//  client size.
+//  client size. 
 //*******************************************************************
 IDM_MAINMENU MENU
 BEGIN
@@ -52,9 +52,14 @@ CAPTION "Terminal utility"
 MENU IDM_MAINMENU
 FONT 10, "Times New Roman"
 BEGIN
-   LTEXT           "Graph info:", IDS_GINFO,  10,  6,  37,  10
-   LTEXT           " ",           IDC_GINFO,  50,  5, 150,  10, SS_SUNKEN
-   DEFPUSHBUTTON  "Close",        IDB_CLOSE, 210,  5,  40,  11
+   LTEXT           "Graph info:", IDS_GINFO,     10,  6,  37,  10
+   LTEXT           " ",           IDC_GINFO,     50,  5, 150,  10, SS_SUNKEN
+   LTEXT           "Palette:",    IDS_PALETTE,  220,  6,  26,  10, SS_NOTIFY
+   LTEXT           " ",           IDC_PALETTE,  248,  5,  20,  10, SS_SUNKEN
+   LTEXT           " ",           IDC_PALNAME,  275,  5, 150,  10, SS_SUNKEN
+   
+   
+   PUSHBUTTON  "Close",        IDB_CLOSE,    210, 20,  40,  11
    
    //  Claude 08/17/26 - plain static, not SS_BLACKFRAME -- we draw the
    //  frame's fill, border, and content ourselves (see draw_gframe_contents()
@@ -69,9 +74,8 @@ BEGIN
    //  automatically excludes it, same as it already does for the thick-frame
    //  border and caption on hwndMain, so cxGFrame/cyGFrame need no changes --
    //  and it resizes for free since it's just one property of the same
-   //  window resize_gframe() already tracks, not a second window to keep in
-   //  sync. Rejected the separate-IDC_GBORDER-control idea below for exactly
-   //  that reason.
+   //  window resize_gframe() already tracks, not a second window to keep in sync. 
+   //  Rejected the separate-IDC_GBORDER-control idea below for exactly that reason.
    // LTEXT           " ",           IDC_GBORDER, 2, 1, 200, 200, 0, WS_EX_CLIENTEDGE
    CONTROL         "",            IDC_GFRAME, "Static", SS_LEFT,  4, 20, 342, 200, WS_EX_CLIENTEDGE
 END
