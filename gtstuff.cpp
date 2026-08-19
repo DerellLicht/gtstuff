@@ -1,5 +1,5 @@
 //****************************************************************************
-//  Copyright (c) 1985-2026  Daniel D Miller
+//  Copyright (c) 1985-2026  Derell Licht
 //  Demo program for resizeable-dialog applications
 //
 //  Written by:  Dan Miller
