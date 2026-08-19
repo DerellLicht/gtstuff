@@ -190,5 +190,341 @@
    "squares.o"
   ],
   "file": "squares.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "ezfont.cpp",
+   "-o",
+   "ezfont.o"
+  ],
+  "file": "ezfont.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "polygon.cpp",
+   "-o",
+   "polygon.o"
+  ],
+  "file": "polygon.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "rect.cpp",
+   "-o",
+   "rect.o"
+  ],
+  "file": "rect.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "pixels.cpp",
+   "-o",
+   "pixels.o"
+  ],
+  "file": "pixels.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "colorbars.cpp",
+   "-o",
+   "colorbars.o"
+  ],
+  "file": "colorbars.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "xpalette.cpp",
+   "-o",
+   "xpalette.o"
+  ],
+  "file": "xpalette.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "rgb_data.cpp",
+   "-o",
+   "rgb_data.o"
+  ],
+  "file": "rgb_data.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "bitblt.cpp",
+   "-o",
+   "bitblt.o"
+  ],
+  "file": "bitblt.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "xnpalette.cpp",
+   "-o",
+   "xnpalette.o"
+  ],
+  "file": "xnpalette.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "xrect.cpp",
+   "-o",
+   "xrect.o"
+  ],
+  "file": "xrect.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "gpalettes.cpp",
+   "-o",
+   "gpalettes.o"
+  ],
+  "file": "gpalettes.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "triangles.cpp",
+   "-o",
+   "triangles.o"
+  ],
+  "file": "triangles.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "rainbow.cpp",
+   "-o",
+   "rainbow.o"
+  ],
+  "file": "rainbow.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "lines.cpp",
+   "-o",
+   "lines.o"
+  ],
+  "file": "lines.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "line_games.cpp",
+   "-o",
+   "line_games.o"
+  ],
+  "file": "line_games.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "rcolors.cpp",
+   "-o",
+   "rcolors.o"
+  ],
+  "file": "rcolors.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "flames.cpp",
+   "-o",
+   "flames.o"
+  ],
+  "file": "flames.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "faces.cpp",
+   "-o",
+   "faces.o"
+  ],
+  "file": "faces.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "ascii.cpp",
+   "-o",
+   "ascii.o"
+  ],
+  "file": "ascii.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "stained_glass.cpp",
+   "-o",
+   "stained_glass.o"
+  ],
+  "file": "stained_glass.cpp"
+ },
+ {
+  "directory": "D:\\SourceCode\\Git\\gtstuff",
+  "arguments": [
+   "d:/llvm/bin/i686-w64-mingw32-clang++",
+   "-Wall",
+   "-O2",
+   "-Weffc++",
+   "-c",
+   "-Wno-write-strings",
+   "-Ider_libs",
+   "wincolors.cpp",
+   "-o",
+   "wincolors.o"
+  ],
+  "file": "wincolors.cpp"
  }
 ]

@@ -4,4 +4,6 @@
 #
 # Example (uncomment and edit to suppress a real finding):
 # der_libs/common.h:101  # SomeStruct::some_field
+D:\SourceCode\Git\gtstuff\gobjects.h:11  # unused field 'graph_object::title'
+D:\SourceCode\Git\gtstuff\palettes.h:12  # unused field 'palette_record_s::name'
 

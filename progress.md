@@ -1,7 +1,5 @@
 ## next steps in developing this program
 
-- finish implementing all the graph objects
-
 - implement these flags via user controls
 extern int pause_the_race ;  
 extern unsigned use_solid_pattern ;  
