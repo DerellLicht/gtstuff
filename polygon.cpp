@@ -62,7 +62,7 @@ void polygon::update_display()
    // fillpoly(MaxPts, (int far *) poly); /* Draw the actual polygon     */
    Polygon(hdc, poly, MaxPts) ;
 
-   // ReleaseDC (hwnd, hdc) ;
+   // release_gframe_dc(hdc) ;
    release_gframe_dc(hdc) ;
 
    DeleteObject (hBrush) ;

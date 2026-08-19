@@ -24,6 +24,14 @@ BEGIN
       MENUITEM "Color Bars",      IDM_CLRBARS
       MENUITEM "XWin Palette",    IDM_XPAL
       MENUITEM "Named X Palette", IDM_XNPAL
+      MENUITEM "3D XWin Palette", IDM_XRECT
+      MENUITEM "Other Palettes",  IDM_GPAL
+      MENUITEM "Line triangles",  IDM_TRIANGLE
+      MENUITEM "Rainbow !!",      IDM_RAINBOW
+      MENUITEM "Lines",           IDM_LINES
+      MENUITEM "Line games",      IDM_LGAMES
+      MENUITEM "Raining chars",   IDM_COLORS
+      MENUITEM "Fire tricks",     IDM_FLAMES
       MENUITEM SEPARATOR
       MENUITEM "Close",           IDM_FILE_CLOSE
    END

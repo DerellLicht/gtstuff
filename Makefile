@@ -28,9 +28,12 @@ endif
 LiFLAGS = -Ider_libs
 CFLAGS += -Ider_libs
 
-CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp palettes.cpp \
-circles.cpp squares.cpp polygon.cpp rect.cpp pixels.cpp colorbars.cpp xpalette.cpp \
-rgb_data.cpp bitblt.cpp xnpalette.cpp
+CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp ezfont.cpp \
+palettes.cpp circles.cpp squares.cpp polygon.cpp rect.cpp pixels.cpp colorbars.cpp xpalette.cpp \
+rgb_data.cpp bitblt.cpp xnpalette.cpp xrect.cpp gpalettes.cpp triangles.cpp \
+rainbow.cpp lines.cpp line_games.cpp rcolors.cpp flames.cpp
+# faces.cpp ascii.cpp \
+# stained_glass.cpp wincolors.cpp
 
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
@@ -89,6 +92,7 @@ gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h palettes.h
 alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h
 alg_selector.o: gfuncs.h alg_selector.h
 gobjects.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
+ezfont.o: der_libs/common.h gtstuff.h gfuncs.h ezfont.h
 palettes.o: palettes.h
 circles.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
 squares.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
@@ -106,6 +110,20 @@ bitblt.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 bitblt.o: alg_selector.h
 xnpalette.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 xnpalette.o: alg_selector.h rgb_data.h
+xrect.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+xrect.o: alg_selector.h rgb_data.h
+gpalettes.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+gpalettes.o: alg_selector.h rgb_data.h cheetah.def hometown.def
+triangles.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+triangles.o: alg_selector.h
+rainbow.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
+rainbow.o: alg_selector.h ezfont.h
+lines.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+lines.o: alg_selector.h
+line_games.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+line_games.o: alg_selector.h
+rcolors.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+rcolors.o: alg_selector.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h

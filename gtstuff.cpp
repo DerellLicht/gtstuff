@@ -812,6 +812,14 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
          case IDM_XPAL:
          case IDM_BITBLT:
          case IDM_XNPAL:
+         case IDM_XRECT:
+         case IDM_GPAL:
+         case IDM_TRIANGLE:
+         case IDM_RAINBOW:
+         case IDM_LINES:
+         case IDM_LGAMES:
+         case IDM_COLORS:
+         case IDM_FLAMES:
             change_graph_state(target);
             break;
          } //lint !e744  switch target

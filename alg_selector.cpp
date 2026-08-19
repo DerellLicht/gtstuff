@@ -55,7 +55,6 @@ static colorbars colorbars0("Color Bars") ;
 static xpalette xpalette0("XWindows palette") ;
 static bitblt bitblt0("BitBlt demo and options") ;
 static xnpalette xnpalette0("Named XWindows palette") ;
-#ifndef  RESTRICT_ALGS
 static xrect xrect0("XWindows Palette Boxes") ;
 static gpalettes gpalettes0("more palettes") ;
 static triangles triangles0("line triangle") ;
@@ -64,8 +63,9 @@ static lines lines0("Lines") ;
 static line_games lgames0("Line Games") ;
 static rcolors rcolors0("rcolors32") ;
 static flames flames0("Fire tricks") ;
+#ifndef  RESTRICT_ALGS
 static face_trap faces0("Face traps") ;
-ascii ascii0("ASCII Table") ;
+static ascii ascii0("ASCII Table") ;
 static sglass sglass0("Stained Glass") ;
 static wincolors wincolors0("Windows Colors") ;
 #endif
@@ -100,15 +100,15 @@ std::vector<menu_items_t> menu_items {
 ,{ &xpalette0,  IDM_XPAL,      "XWindows Palette",       0 }
 ,{ &bitblt0,    IDM_BITBLT,    "BitBlt demo",            0 }
 ,{ &xnpalette0, IDM_XNPAL,     "Named XWindows Palette", 0 }
+,{ &xrect0,     IDM_XRECT,     "XWindows Palette Boxes", 0 }
+,{ &gpalettes0, IDM_GPAL,      "More palettes",          0 }
+,{ &triangles0, IDM_TRIANGLE,  "line triangle",          0 }
+,{ &rainbow0,   IDM_RAINBOW,   "Rainbow !!",             0 }
+,{ &lines0,     IDM_LINES,     "Lines",                  0 }
+,{ &lgames0,    IDM_LGAMES,    "Lines Games",            0 }
+,{ &rcolors0,   IDM_COLORS,    "Raining characters",     0 }
+,{ &flames0,    IDM_FLAMES,             "Fire tricks",            0 }
 #ifndef  RESTRICT_ALGS
-,{ &xrect0,     0,             "XWindows Palette Boxes", 0 }
-,{ &gpalettes0, 0,             "more palettes",          0 }
-,{ &triangles0, 0,             "line triangle",          0 }
-,{ &rainbow0,   0,             "Rainbow !!",             0 }
-,{ &lines0,     0,             "Lines",                  0 }
-,{ &lgames0,    0,             "Lines Games",            0 }
-,{ &rcolors0,   0,             "rcolors32",              0 }
-,{ &flames0,    0,             "Fire tricks",            0 }
 ,{ &faces0,     0,             "Face traps",             0 }
 ,{ &ascii0,     0,             "ASCII table",            0 }
 ,{ &sglass0,    0,             "Stained Glass",          0 }

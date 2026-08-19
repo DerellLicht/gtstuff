@@ -27,3 +27,11 @@
 #define  IDM_XPAL             907
 #define  IDM_BITBLT           908
 #define  IDM_XNPAL            909
+#define  IDM_XRECT            910
+#define  IDM_GPAL             911
+#define  IDM_TRIANGLE         912
+#define  IDM_RAINBOW          913
+#define  IDM_LINES            914
+#define  IDM_LGAMES           915
+#define  IDM_COLORS           916
+#define  IDM_FLAMES           917

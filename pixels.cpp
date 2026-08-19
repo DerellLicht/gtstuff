@@ -38,8 +38,8 @@ void pixels::update_display()
       Clear_Window(hdc, 0);
       dp_char_width  = PIX_DX ;
       dp_char_height = PIX_DY ;
-      columns = (unsigned) cxClient / dp_char_width ;
-      rows    = (unsigned) cyClient / dp_char_height ;
+      columns = (unsigned) cxGFrame / dp_char_width ;
+      rows    = (unsigned) cyGFrame / dp_char_height ;
    }
    cycle_count++ ;
    // COLORREF pcolor = random_colorref() ;
