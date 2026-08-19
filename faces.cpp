@@ -1,13 +1,15 @@
 #include <windows.h>
 #include <stdio.h>
+#include <tchar.h>
 
 #include "common.h"     //  u8, etc
+#include "commonw.h"    //  build_font() and constants
 #include "gtstuff.h"  
 #include "gfuncs.h"     //  graphics primitives
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphic objects
 #include "alg_selector.h"
-#include "ezfont.h"
+// #include "ezfont.h"
 
 // #define  COLOR_DECREMENT   2
 
@@ -44,7 +46,7 @@ static char const * const face_trap_ref[] = {
 //  If the requested font isn't present, the user will probably end up
 //  with a default font such as Arial, which won't have the face chars.
 //************************************************************************
-static char const * const face_font = "WingDings" ;
+static TCHAR * face_font = _T("WingDings") ;
 #define  FACE_FONT_SIZE    16
 #define  AF_FIRST_CHAR     74
 #define  AF_FACE_COUNT      3
@@ -353,7 +355,7 @@ void face_trap::update_display()
 
    // SetWindowText(hwnd, title) ;
    HDC hdc = get_gframe_dc() ;
-   HFONT hfont = build_font(face_font, FACE_FONT_SIZE, 0, 0, 0, 0) ;
+   HFONT hfont = build_font(face_font, FACE_FONT_SIZE, EZ_ATTR_NORMAL) ;
    SelectObject (hdc, hfont) ;
    if (we_should_redraw) {
       delay = 0 ;

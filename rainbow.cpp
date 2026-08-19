@@ -15,12 +15,12 @@
 #include <math.h>
 
 #include "common.h"     //  u8, etc
+#include "commonw.h"    //  build_font() and constants
 #include "gtstuff.h"  
 #include "gfuncs.h"     //  graphics primitives
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphic objects
 #include "alg_selector.h"
-#include "ezfont.h"
 
 static const double RADS2DEGS = (180.0 / 3.14159) ;
 
@@ -79,7 +79,7 @@ void rainbow::update_gtimer(HDC hdc)
    if (++gtidx >= 12)
       gtidx = 0 ;
 
-   HFONT progress_font = build_font("Wingdings", 35, 0, 0, 0, 0) ;
+   HFONT progress_font = build_font("Wingdings", 35, EZ_ATTR_NORMAL) ;
    if (progress_font == 0) {
       syslog("progress_font: %s\n", get_system_message()) ;
       return ;

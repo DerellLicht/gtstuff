@@ -1,12 +1,12 @@
 #include <windows.h>
 
 #include "common.h"     //  u8, etc
+#include "commonw.h"    //  build_font() and constants
 #include "gtstuff.h"  
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"       //  we_should_redraw
-#include "ezfont.h"
 
 //************************************************************************
 #define  DAT_XI   30
@@ -48,7 +48,7 @@ void ascii::update_display()
       return ;
 
    // hfont = build_font("Courier New", 20, 0, 0, 0, 0) ;
-   HFONT hfont = build_font(ascii_font_name, DAT_FH, 0, 0, 0, 0) ;
+   HFONT hfont = build_font(ascii_font_name, DAT_FH, EZ_ATTR_NORMAL) ;
    if (hfont == 0) {
       syslog("build_font: %s\n", get_system_message()) ;
    }
