@@ -3,11 +3,6 @@
 //  Present onscreen menu of program options, and display the selected option.
 //  Possibly, a better name for this file/header might have been menu.cpp/menu.h
 //***************************************************************************************
-//  Original file info:
-//  File: DEMO.C
-//  This is a main program which is used to illustrate use of drawing routines 
-//  from the book "Advanced Programmer's Guide to SuperVGA".
-//***************************************************************************************
 
 #include <windows.h>
 #include <stdio.h>   //  sprintf, for %*s syntax
