@@ -1,5 +1,9 @@
 ## next steps in developing this program
 
+- CRITICAL !!!
+We need to go back over all the other `gobjects`, and make sure none of them 
+have `return` after `get_gframe_dc()` without `release_gframe_dc()`
+
 - implement these flags via user controls
 extern int pause_the_race ;  
 extern unsigned use_solid_pattern ;  

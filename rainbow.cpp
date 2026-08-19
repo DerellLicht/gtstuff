@@ -66,8 +66,6 @@ rainbow::rainbow(std::string title_text)
 }
 
 //************************************************************************
-//  this function is currently unused
-//************************************************************************
 void rainbow::update_gtimer(HDC hdc)
 {
    static unsigned gt_interval = 1000000 ;
@@ -165,8 +163,9 @@ void rainbow::update_display()
    Y = -1 + 2 * random_part() ;
    B = (double) sqrt(X * X + Y * Y) ; //  square root
    // 50 IF B >= 1 THEN 30
-   if (B >= 1.0)
-      return ;
+   if (B >= 1.0) {
+      goto error_exit ;
+   }
 
    //  select random color and calculate index of refraction
    pcolor = random_int(6) ; //  select 1 thru 6
@@ -201,7 +200,9 @@ void rainbow::update_display()
    if (I2 >= .02 * random_part())
       rainbow_plot_pixel(hdc, pcolor, T2, 0) ;
 
+   //  This function, which just draws a little clock in the corner,
+   //  *really* slows down the main rainbow drawing...
    // update_gtimer(hdc) ;
-
+error_exit:
    release_gframe_dc(hdc) ;
 }
