@@ -5,7 +5,7 @@
 //  Original program was in BASIC and EGA 4-color video mode.      
 //                                                                 
 //  05/27/98
-//    Converted to C and VGA/16-color by Dan Miller.                 
+//    Converted to C and VGA/16-color by Derell Licht.                 
 //  08/09/02 16:11
 //    Converted into Win32 graphics program for more colors
 //*****************************************************************

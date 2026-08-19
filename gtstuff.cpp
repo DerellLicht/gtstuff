@@ -2,7 +2,7 @@
 //  Copyright (c) 1985-2026  Derell Licht
 //  Demo program for resizeable-dialog applications
 //
-//  Written by:  Dan Miller
+//  Written by:  Derell Licht
 //****************************************************************************
 
 #define  USE_WIDTH_RESIZE
