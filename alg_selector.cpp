@@ -29,8 +29,6 @@ unsigned cycle_count = 0 ;
 
 static u64 ti = 0 ;
 
-#define  RESTRICT_ALGS
-
 /************************************************************************/
 typedef struct menu_items_s {
    graph_object *go ;
@@ -63,14 +61,11 @@ static lines lines0("Lines") ;
 static line_games lgames0("Line Games") ;
 static rcolors rcolors0("rcolors32") ;
 static flames flames0("Fire tricks") ;
-#ifndef  RESTRICT_ALGS
 static face_trap faces0("Face traps") ;
 static ascii ascii0("ASCII Table") ;
 static sglass sglass0("Stained Glass") ;
 static wincolors wincolors0("Windows Colors") ;
-#endif
 // NOLINTEND(bugprone-throwing-static-initialization)
-
 
 //***********************************************************************
 //  Claude 08/17/26 - the "intro" placeholder graphic: an X marking the
@@ -107,13 +102,11 @@ std::vector<menu_items_t> menu_items {
 ,{ &lines0,     IDM_LINES,     "Lines",                  0 }
 ,{ &lgames0,    IDM_LGAMES,    "Lines Games",            0 }
 ,{ &rcolors0,   IDM_COLORS,    "Raining characters",     0 }
-,{ &flames0,    IDM_FLAMES,             "Fire tricks",            0 }
-#ifndef  RESTRICT_ALGS
-,{ &faces0,     0,             "Face traps",             0 }
-,{ &ascii0,     0,             "ASCII table",            0 }
-,{ &sglass0,    0,             "Stained Glass",          0 }
-,{ &wincolors0, 0,             "Windows Colors",         0 }
-#endif
+,{ &flames0,    IDM_FLAMES,    "Fire tricks",            0 }
+,{ &faces0,     IDM_FACES,     "Face traps",             0 }
+,{ &ascii0,     IDM_ASCII,     "Font Toys",              0 }
+,{ &sglass0,    IDM_SGLASS,    "Stained Glass",          0 }
+,{ &wincolors0, IDM_WINCOLORS, "Windows Colors",         0 }
 } ;
 
 //**************************************************************************

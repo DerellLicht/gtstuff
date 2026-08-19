@@ -32,6 +32,10 @@ BEGIN
       MENUITEM "Line games",      IDM_LGAMES
       MENUITEM "Raining chars",   IDM_COLORS
       MENUITEM "Fire tricks",     IDM_FLAMES
+      MENUITEM "Fire trap",       IDM_FACES
+      MENUITEM "Font toys",       IDM_ASCII
+      MENUITEM "Stained glass",   IDM_SGLASS
+      MENUITEM "Windows colors",  IDM_WINCOLORS
       MENUITEM SEPARATOR
       MENUITEM "Close",           IDM_FILE_CLOSE
    END

@@ -1,7 +1,8 @@
 #include <windows.h>
 #include <stdio.h>
 
-#include "gstuff.h"     //  for timer functions
+#include "common.h"     //  u8, etc
+#include "gtstuff.h"  
 #include "gfuncs.h"     //  graphics primitives
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphic objects
@@ -351,7 +352,7 @@ void face_trap::update_display()
       return ;
 
    // SetWindowText(hwnd, title) ;
-   HDC HDC hdc = get_gframe_dc() ;
+   HDC hdc = get_gframe_dc() ;
    HFONT hfont = build_font(face_font, FACE_FONT_SIZE, 0, 0, 0, 0) ;
    SelectObject (hdc, hfont) ;
    if (we_should_redraw) {
@@ -373,13 +374,3 @@ void face_trap::update_display()
    DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT)));
    release_gframe_dc(hdc) ;
 }
-
-//************************************************************************
-//  return TRUE if we handled this key,
-//  FALSE if we did not
-//************************************************************************
-bool face_trap::process_key(unsigned key_id)
-{
-   return FALSE ;
-}
-

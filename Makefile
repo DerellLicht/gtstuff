@@ -31,9 +31,8 @@ CFLAGS += -Ider_libs
 CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp ezfont.cpp \
 palettes.cpp circles.cpp squares.cpp polygon.cpp rect.cpp pixels.cpp colorbars.cpp xpalette.cpp \
 rgb_data.cpp bitblt.cpp xnpalette.cpp xrect.cpp gpalettes.cpp triangles.cpp \
-rainbow.cpp lines.cpp line_games.cpp rcolors.cpp flames.cpp
-# faces.cpp ascii.cpp \
-# stained_glass.cpp wincolors.cpp
+rainbow.cpp lines.cpp line_games.cpp rcolors.cpp flames.cpp faces.cpp \
+ascii.cpp stained_glass.cpp wincolors.cpp
 
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
@@ -124,6 +123,15 @@ line_games.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 line_games.o: alg_selector.h
 rcolors.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 rcolors.o: alg_selector.h
+flames.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
+flames.o: alg_selector.h
+faces.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
+faces.o: alg_selector.h ezfont.h
+ascii.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+ascii.o: alg_selector.h ezfont.h
+stained_glass.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+stained_glass.o: alg_selector.h
+wincolors.o: palettes.h gobjects.h gfuncs.h alg_selector.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h

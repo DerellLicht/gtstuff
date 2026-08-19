@@ -35,3 +35,7 @@
 #define  IDM_LGAMES           915
 #define  IDM_COLORS           916
 #define  IDM_FLAMES           917
+#define  IDM_FACES            918
+#define  IDM_ASCII            919
+#define  IDM_SGLASS           920
+#define  IDM_WINCOLORS        921

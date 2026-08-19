@@ -1,6 +1,7 @@
 #include <windows.h>
 
-#include "gstuff.h"     //  for timer functions
+#include "common.h"     //  u8, etc
+#include "gtstuff.h"  
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
@@ -98,22 +99,22 @@ void sglass::box_point (HDC hdc, int ccol, int rrow, int ssiz)
 //************************************************************************
 void sglass::update_display()
 {
-   HDC hdc;
    static HPEN hPen ;
    int HC ;
    static unsigned delay = 0 ;
 
+   HDC hdc = get_gframe_dc() ;
    if (pause_the_race)
       return ;
+      
    if (we_should_redraw) {
       delay = 0 ;
-      Clear_Window(hwnd, 0);
+      Clear_Window(hdc, 0);
    }
 
    if (++delay < 300000) 
       return ;
    delay = 0 ;
-   HDC hdc = get_gframe_dc() ;
 
    /* CHANGE THE NEXT TWO CONSTANTS FOR NON-EGA        */
    // max_col = 640;               /* max col on EGA */
@@ -162,13 +163,3 @@ void sglass::update_display()
 
    release_gframe_dc(hdc) ;
 }
-
-//************************************************************************
-//  return TRUE if we handled this key,
-//  FALSE if we did not
-//************************************************************************
-bool sglass::process_key(unsigned key_id)
-{
-   return FALSE ;
-}
-

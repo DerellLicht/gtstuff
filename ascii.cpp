@@ -1,6 +1,7 @@
 #include <windows.h>
 
-#include "gstuff.h"     //  for timer functions
+#include "common.h"     //  u8, etc
+#include "gtstuff.h"  
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
@@ -49,10 +50,9 @@ void ascii::update_display()
    // hfont = build_font("Courier New", 20, 0, 0, 0, 0) ;
    HFONT hfont = build_font(ascii_font_name, DAT_FH, 0, 0, 0, 0) ;
    if (hfont == 0) {
-      wsprintf(tempstr, "build_font: %s\n", get_system_message()) ;
-      OutputDebugString(tempstr) ;
+      syslog("build_font: %s\n", get_system_message()) ;
    }
-   HDC HDC hdc = get_gframe_dc() ;
+   HDC hdc = get_gframe_dc() ;
    SelectObject (hdc, hfont) ;
    Clear_Window(hdc, 0);
    SetBkMode(hdc, OPAQUE) ;
@@ -75,13 +75,3 @@ void ascii::update_display()
    DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT)));
    release_gframe_dc(hdc) ;
 }
-
-//************************************************************************
-//  return TRUE if we handled this key,
-//  FALSE if we did not
-//************************************************************************
-bool ascii::process_key(unsigned key_id)
-{
-   return FALSE ;
-}
-

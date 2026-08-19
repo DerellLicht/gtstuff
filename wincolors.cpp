@@ -1,6 +1,7 @@
 #include <windows.h>
 
-#include "gstuff.h"     //  u8, etc
+#include "common.h"     //  u8, etc
+#include "gtstuff.h"  
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
@@ -51,8 +52,6 @@ wincolors::wincolors(std::string title_text)
 //************************************************************************
 void wincolors::update_display()
 {
-   HDC hdc ;
-
    if (!we_should_redraw)
       return ;
 
@@ -107,13 +106,3 @@ void wincolors::update_display()
    //*****************************************************
    release_gframe_dc(hdc) ;
 }
-
-//************************************************************************
-//  return TRUE if we handled this key,
-//  FALSE if we did not
-//************************************************************************
-bool wincolors::process_key(unsigned key_id)
-{
-   return FALSE ;
-}
-
