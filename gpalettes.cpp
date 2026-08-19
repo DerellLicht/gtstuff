@@ -82,11 +82,11 @@ void gpalettes::update_display()
    // int amode = 0 ; //  0=drawing first array, 1=drawing second array
    idx = 0 ;
    yu = 0 ;
-   while (1) {
+   while (LOOP_FOREVER) {
       // yl = yu + strsz.cy - 1;
       //  fit as many as fit, on this row
       xl = 0 ;
-      while (1) {
+      while (LOOP_FOREVER) {
          // xr = xl + strsz.cx - 1 ;
 
          //  draw the string

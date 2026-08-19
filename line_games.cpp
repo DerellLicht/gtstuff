@@ -162,12 +162,15 @@ void line_games::update_display()
          finish.y = 0 ;
       }
    }
-   if (++delay < 5000)
+   if (++delay < 5000) {
       return ;
+   }
    delay = 0 ;
    COLORREF attr = get_palette_entry(color) ;
-   if (++color >= get_palette_entries())
+   if (++color >= get_palette_entries()) {
       color = 0 ;
+   }
+   
    HDC hdc = get_gframe_dc() ;
    //  this doesn't actually clear the window...
    if (we_should_redraw) {

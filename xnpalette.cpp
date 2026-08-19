@@ -59,8 +59,7 @@ void xnpalette::update_display()
       wsprintf(tempstr, "GetTextExtentPoint32 failed: %lu", GetLastError()) ;
       MessageBox(NULL, tempstr, "duh...", MB_ICONEXCLAMATION) ;
    }
-   // wsprintf(tempstr, "string is ( %u, %u )", strsz.cx, strsz.cy) ;
-   // MessageBox(hwnd, tempstr, "string size", MB_ICONEXCLAMATION) ;
+   // syslog("string is ( %u, %u )", strsz.cx, strsz.cy) ;
 
    //*********************************************************
    //  to make things fit a little better onscreen,
@@ -70,11 +69,11 @@ void xnpalette::update_display()
    //  loop over all available rows
    idx = 0 ;
    yu = 0 ;
-   while (1) {
+   while (LOOP_FOREVER) {
       // yl = yu + strsz.cy - 1;
       //  fit as many as fit, on this row
       xl = 0 ;
-      while (1) {
+      while (LOOP_FOREVER) {
          // xr = xl + strsz.cx - 1 ;
 
          //  draw the string

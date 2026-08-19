@@ -103,17 +103,19 @@ void sglass::update_display()
    int HC ;
    static unsigned delay = 0 ;
 
-   HDC hdc = get_gframe_dc() ;
    if (pause_the_race)
       return ;
       
+   HDC hdc = get_gframe_dc() ;
    if (we_should_redraw) {
       delay = 0 ;
       Clear_Window(hdc, 0);
    }
 
-   if (++delay < 300000) 
-      return ;
+   //  in gstuff, delay was 300000
+   if (++delay < 300) {
+      goto error_exit;
+   }
    delay = 0 ;
 
    /* CHANGE THE NEXT TWO CONSTANTS FOR NON-EGA        */
@@ -161,5 +163,6 @@ void sglass::update_display()
    SelectObject(hdc, GetStockObject(BLACK_PEN)) ;  //  deselect my pen
    DeleteObject (hPen) ;
 
+error_exit:
    release_gframe_dc(hdc) ;
 }

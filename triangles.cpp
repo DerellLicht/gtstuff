@@ -33,6 +33,7 @@ void triangles::update_display()
    if (pause_the_race)
       return ;
    cycle_count++ ;
+   
    HDC hdc = get_gframe_dc() ;
    if (we_should_redraw) {
       Clear_Window(hdc, 0);

@@ -354,6 +354,7 @@ void face_trap::update_display()
       return ;
 
    // SetWindowText(hwnd, title) ;
+   
    HDC hdc = get_gframe_dc() ;
    HFONT hfont = build_font(face_font, FACE_FONT_SIZE, EZ_ATTR_NORMAL) ;
    SelectObject (hdc, hfont) ;
@@ -368,7 +369,7 @@ void face_trap::update_display()
       cycle_count++ ;
       SetBkMode(hdc, OPAQUE) ;
       SetBkColor  (hdc, 0) ;
-      for (unsigned idx=0; idx<FACE_COUNT; idx++) {   // NOLINT
+      for (unsigned idx=0; idx<FACE_COUNT; idx++) {
          move_a_face(hdc, &faces[idx]) ;
       }
    }

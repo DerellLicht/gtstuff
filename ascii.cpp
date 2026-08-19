@@ -52,6 +52,7 @@ void ascii::update_display()
    if (hfont == 0) {
       syslog("build_font: %s\n", get_system_message()) ;
    }
+   
    HDC hdc = get_gframe_dc() ;
    SelectObject (hdc, hfont) ;
    Clear_Window(hdc, 0);
