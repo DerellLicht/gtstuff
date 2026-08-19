@@ -92,7 +92,8 @@ alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h
 alg_selector.o: gfuncs.h alg_selector.h
 gobjects.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
 palettes.o: palettes.h
-circles.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
+circles.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+circles.o: alg_selector.h
 squares.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
 polygon.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
 rect.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
@@ -114,8 +115,8 @@ gpalettes.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 gpalettes.o: alg_selector.h rgb_data.h cheetah.def hometown.def
 triangles.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 triangles.o: alg_selector.h
-rainbow.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
-rainbow.o: alg_selector.h
+rainbow.o: der_libs/common.h der_libs/commonw.h gtstuff.h gfuncs.h palettes.h
+rainbow.o: gobjects.h alg_selector.h
 lines.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 lines.o: alg_selector.h
 line_games.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
@@ -124,10 +125,10 @@ rcolors.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 rcolors.o: alg_selector.h
 flames.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
 flames.o: alg_selector.h
-faces.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
-faces.o: alg_selector.h
-ascii.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
-ascii.o: alg_selector.h
+faces.o: der_libs/common.h der_libs/commonw.h gtstuff.h gfuncs.h palettes.h
+faces.o: gobjects.h alg_selector.h
+ascii.o: der_libs/common.h der_libs/commonw.h gtstuff.h palettes.h gobjects.h
+ascii.o: gfuncs.h alg_selector.h
 stained_glass.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 stained_glass.o: alg_selector.h
 wincolors.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h

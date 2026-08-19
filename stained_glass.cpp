@@ -118,10 +118,7 @@ void sglass::update_display()
    }
    delay = 0 ;
 
-   /* CHANGE THE NEXT TWO CONSTANTS FOR NON-EGA        */
-   // max_col = 640;               /* max col on EGA */
-   // max_row = 350;               /* max row        */
-   //  c[xy]Client get updated by WM_SIZE
+   cycle_count++ ;
    max_col = cxGFrame;               /* max col on EGA */
    max_row = cyGFrame;               /* max row        */
 

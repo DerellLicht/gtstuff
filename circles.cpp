@@ -2,6 +2,7 @@
 #include <utility>      //  std::move
 
 #include "common.h"     //  u8, etc
+#include "gtstuff.h" 
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives

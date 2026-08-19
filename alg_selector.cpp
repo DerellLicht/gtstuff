@@ -22,12 +22,11 @@ int pause_the_race = 0 ;
 unsigned use_solid_pattern = 0 ;
 unsigned cycle_count = 0 ;
 
-static u64 ti = 0 ;
-
 /************************************************************************/
 typedef struct menu_items_s {
    graph_object *go ;
    uint          menu_id ;
+   bool          write_once ;
    char const   *title ;
    void (*draw_func)(void);
 } menu_items_t, *menu_items_p ;
@@ -80,29 +79,53 @@ void draw_intro_graphics(void)
 
 /************************************************************************/
 std::vector<menu_items_t> menu_items {
- { 0,           0,             "Graphics demos",         draw_intro_graphics }
-,{ &circles0,   IDM_CIRCLES,   "Psychedelic Raindrops",  0 }
-,{ &squares0,   IDM_SQUARES,   "Boxing Lessons",         0 }
-,{ &polygon0,   IDM_LIGHTNING, "Temporal Lightning",     0 }
-,{ &rect0,      IDM_RECT,      "Palette Boxes",          0 }
-,{ &pixels0,    IDM_PIXELS,    "Pixel-packing",          0 }
-,{ &colorbars0, IDM_CLRBARS,   "Color Bars",             0 }
-,{ &xpalette0,  IDM_XPAL,      "XWindows Palette",       0 }
-,{ &bitblt0,    IDM_BITBLT,    "BitBlt demo",            0 }
-,{ &xnpalette0, IDM_XNPAL,     "Named XWindows Palette", 0 }
-,{ &xrect0,     IDM_XRECT,     "XWindows Palette Boxes", 0 }
-,{ &gpalettes0, IDM_GPAL,      "More palettes",          0 }
-,{ &triangles0, IDM_TRIANGLE,  "line triangle",          0 }
-,{ &rainbow0,   IDM_RAINBOW,   "Rainbow !!",             0 }
-,{ &lines0,     IDM_LINES,     "Lines",                  0 }
-,{ &lgames0,    IDM_LGAMES,    "Lines Games",            0 }
-,{ &rcolors0,   IDM_COLORS,    "Raining characters",     0 }
-,{ &flames0,    IDM_FLAMES,    "Fire tricks",            0 }
-,{ &faces0,     IDM_FACES,     "Face traps",             0 }
-,{ &ascii0,     IDM_ASCII,     "Font Toys",              0 }
-,{ &sglass0,    IDM_SGLASS,    "Stained Glass",          0 }
-,{ &wincolors0, IDM_WINCOLORS, "Windows Colors",         0 }
+ { 0,           0,             true,  "Graphics demos",         draw_intro_graphics }
+,{ &circles0,   IDM_CIRCLES,   false, "Psychedelic Raindrops",  0 }
+,{ &squares0,   IDM_SQUARES,   false, "Boxing Lessons",         0 }
+,{ &polygon0,   IDM_LIGHTNING, false, "Temporal Lightning",     0 }
+,{ &rect0,      IDM_RECT,      true,  "Palette Boxes",          0 }
+,{ &pixels0,    IDM_PIXELS,    false, "Pixel-packing",          0 }
+,{ &colorbars0, IDM_CLRBARS,   true,  "Color Bars",             0 }
+,{ &xpalette0,  IDM_XPAL,      true,  "XWindows Palette",       0 }
+,{ &bitblt0,    IDM_BITBLT,    true,  "BitBlt demo",            0 }
+,{ &xnpalette0, IDM_XNPAL,     true,  "Named XWindows Palette", 0 }
+,{ &xrect0,     IDM_XRECT,     true,  "XWindows Palette Boxes", 0 }
+,{ &gpalettes0, IDM_GPAL,      true,  "More palettes",          0 }
+,{ &triangles0, IDM_TRIANGLE,  false, "line triangle",          0 }
+,{ &rainbow0,   IDM_RAINBOW,   false, "Rainbow !!",             0 }
+,{ &lines0,     IDM_LINES,     false, "Lines",                  0 }
+,{ &lgames0,    IDM_LGAMES,    false, "Lines Games",            0 }
+,{ &rcolors0,   IDM_COLORS,    false, "Raining characters",     0 }
+,{ &flames0,    IDM_FLAMES,    true,  "Fire tricks",            0 }
+,{ &faces0,     IDM_FACES,     true,  "Face traps",             0 }
+,{ &ascii0,     IDM_ASCII,     true,  "Font Toys",              0 }
+,{ &sglass0,    IDM_SGLASS,    false, "Stained Glass",          0 }
+,{ &wincolors0, IDM_WINCOLORS, true,  "Windows Colors",         0 }
 } ;
+
+//***********************************************************************
+// display the cycle counter
+//***********************************************************************
+static u64 ti = 0 ;
+static uint elapsed_secs = 0 ;
+
+static void display_cycle_counter(void)
+{
+   char tempstr[81];
+   unsigned tf_msec = (unsigned) (proc_time () - ti) / get_clocks_per_msec ();
+   if (tf_msec == 0) {
+      tf_msec = 1 ;
+   }
+   uint esecs = tf_msec / 1000 ;
+   if (esecs != elapsed_secs) {
+      elapsed_secs = esecs ;
+      unsigned cycles_per_msec = cycle_count * 1000 / tf_msec ;   
+      // wsprintf(tempstr, "cycle_count=%u, %u msec, %u cycles/sec", 
+      //    cycle_count, tf_msec, cycles_per_msec) ;
+      wsprintf(tempstr, "%u cycles/sec", cycles_per_msec) ;
+      status_message(tempstr);
+   }
+}
 
 //**************************************************************************
 //  notes on how we_should_redraw is used:
@@ -126,9 +149,11 @@ void change_graph_state(uint graph_id)
          // miptr = &menu_items[demo_state] ;
          miptr = &mentry ;
          show_graph_desc(miptr->title);
+         status_message(" ");
          cycle_count = 0 ;
          we_should_redraw = 1 ;
-         ti = proc_time ();
+         ti = proc_time();
+         elapsed_secs = 0 ;
          return ;         
       }
    }
@@ -147,6 +172,9 @@ bool display_current_operation(void)
    if (miptr->go != nullptr) {
       miptr->go->update_display() ;
       we_should_redraw = 0 ;
+      if (!miptr->write_once) {
+         display_cycle_counter();
+      }
       return true ;
    } 
    else if (miptr->draw_func != nullptr) {

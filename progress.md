@@ -7,7 +7,5 @@ extern unsigned cycle_count ;
   
    add a button to toggle modes on related pages  
 
-- implement elapsed time(msec) and cycles/second
-
 - we need custom functions for some gobjects
 
