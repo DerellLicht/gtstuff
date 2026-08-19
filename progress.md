@@ -12,7 +12,7 @@ unsigned fill_patterns[6] = {
 
 - we need custom functions for some gobjects
 
-- `rainbow` takes up about 15% of CPU, and bogs the mouse down badly;
+- `rainbow` bogs the mouse down badly;
   it is also *far* slower than `gstuff` , which does *not* bog down the mouse.
   
 - `line games` doesn't clear screen on startup

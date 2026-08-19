@@ -199,7 +199,7 @@ void rainbow::update_display()
    if (I2 >= .02 * random_part())
       rainbow_plot_pixel(hdc, pcolor, T2, 0) ;
 
-   update_gtimer(hdc) ;
+   // update_gtimer(hdc) ;
 
    release_gframe_dc(hdc) ;
 }
