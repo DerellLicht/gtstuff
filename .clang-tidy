@@ -15,6 +15,7 @@ Checks: >
   -bugprone-narrowing-conversions,
   -bugprone-switch-missing-default-case,
   -bugprone-throwing-static-initialization,
+  -bugprone-unchecked-string-to-number-conversion,
   clang-analyzer-*,
   -clang-analyzer-security.insecureAPI.strcpy,
   clang-diagnostic-*,

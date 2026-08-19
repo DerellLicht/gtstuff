@@ -24,6 +24,14 @@ pixels::pixels(std::string title_text)
 }
 
 //************************************************************************
+void pixels::log_pixel_dimens()
+{
+   char tempstr[81];
+   wsprintf(tempstr, "pixel dimens: %ux%u", columns, rows);
+   status_message(1, tempstr);
+}
+
+//************************************************************************
 void pixels::update_display()
 {
    COLORREF pcolor ;
@@ -40,6 +48,8 @@ void pixels::update_display()
       dp_char_height = PIX_DY ;
       columns = (unsigned) cxGFrame / dp_char_width ;
       rows    = (unsigned) cyGFrame / dp_char_height ;
+      
+      log_pixel_dimens();
    }
    cycle_count++ ;
    // COLORREF pcolor = random_colorref() ;

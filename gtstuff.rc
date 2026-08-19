@@ -12,34 +12,36 @@ GTSTUFF_ICO       ICON    "scroll.ico"
 //  menu already exists, so nothing downstream ever sees a stale pre-menu
 //  client size. 
 //*******************************************************************
-IDM_MAINMENU MENU
-BEGIN
-   POPUP "File"
-   BEGIN
-      MENUITEM "Circles",         IDM_CIRCLES
-      MENUITEM "Squares",         IDM_SQUARES
-      MENUITEM "Lightning",       IDM_LIGHTNING
-      MENUITEM "Rectangle",       IDM_RECT
-      MENUITEM "Pixels",          IDM_PIXELS
-      MENUITEM "Color Bars",      IDM_CLRBARS
-      MENUITEM "XWin Palette",    IDM_XPAL
-      MENUITEM "Named X Palette", IDM_XNPAL
-      MENUITEM "3D XWin Palette", IDM_XRECT
-      MENUITEM "Other Palettes",  IDM_GPAL
-      MENUITEM "Line triangles",  IDM_TRIANGLE
-      MENUITEM "Rainbow !!",      IDM_RAINBOW
-      MENUITEM "Lines",           IDM_LINES
-      MENUITEM "Line games",      IDM_LGAMES
-      MENUITEM "Raining chars",   IDM_COLORS
-      MENUITEM "Fire tricks",     IDM_FLAMES
-      MENUITEM "Face traps",      IDM_FACES
-      MENUITEM "Font toys",       IDM_ASCII
-      MENUITEM "Stained glass",   IDM_SGLASS
-      MENUITEM "Windows colors",  IDM_WINCOLORS
-      MENUITEM SEPARATOR
-      MENUITEM "Close",           IDM_FILE_CLOSE
-   END
-END
+//  Derell, 08/19/26 - replaced menu bar with combobox dropdownlist
+//*******************************************************************
+// IDM_MAINMENU MENU
+// BEGIN
+//    POPUP "File"
+//    BEGIN
+//       MENUITEM "Circles",         IDM_CIRCLES
+//       MENUITEM "Squares",         IDM_SQUARES
+//       MENUITEM "Lightning",       IDM_LIGHTNING
+//       MENUITEM "Rectangle",       IDM_RECT
+//       MENUITEM "Pixels",          IDM_PIXELS
+//       MENUITEM "Color Bars",      IDM_CLRBARS
+//       MENUITEM "XWin Palette",    IDM_XPAL
+//       MENUITEM "Named X Palette", IDM_XNPAL
+//       MENUITEM "3D XWin Palette", IDM_XRECT
+//       MENUITEM "Other Palettes",  IDM_GPAL
+//       MENUITEM "Line triangles",  IDM_TRIANGLE
+//       MENUITEM "Rainbow !!",      IDM_RAINBOW
+//       MENUITEM "Lines",           IDM_LINES
+//       MENUITEM "Line games",      IDM_LGAMES
+//       MENUITEM "Raining chars",   IDM_COLORS
+//       MENUITEM "Fire tricks",     IDM_FLAMES
+//       MENUITEM "Face traps",      IDM_FACES
+//       MENUITEM "Font toys",       IDM_ASCII
+//       MENUITEM "Stained glass",   IDM_SGLASS
+//       MENUITEM "Windows colors",  IDM_WINCOLORS
+//       MENUITEM SEPARATOR
+//       MENUITEM "Close",           IDM_FILE_CLOSE
+//    END
+// END
 
 //*******************************************************************
 //  main dialog
@@ -49,17 +51,23 @@ IDD_MAIN_DIALOG DIALOGEX  160, 40, 350, 250
 STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX
 // EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "Terminal utility"
-MENU IDM_MAINMENU
+// MENU IDM_MAINMENU
 FONT 10, "Times New Roman"
 BEGIN
-   LTEXT           "Graph info:", IDS_GINFO,     10,  6,  37,  10
-   LTEXT           " ",           IDC_GINFO,     50,  5, 150,  10, SS_SUNKEN
-   LTEXT           "Palette:",    IDS_PALETTE,  220,  6,  26,  10, SS_NOTIFY
-   LTEXT           " ",           IDC_PALETTE,  248,  5,  20,  10, SS_SUNKEN
-   LTEXT           " ",           IDC_PALNAME,  275,  5, 150,  10, SS_SUNKEN
-   
-   
-   PUSHBUTTON  "Close",        IDB_CLOSE,    210, 20,  40,  11
+   LTEXT       "Gobject:",        IDS_GOBJECT,   10,  7,  37,  10, SS_NOTIFY
+   COMBOBOX                       IDC_GOBJECT,   50,  5, 150, 200, CBS_DROPDOWNLIST | WS_VSCROLL
+   // PUSHBUTTON  "GO!",             IDB_GOSELECT, 205,  5,  17,  11
+                                  
+   LTEXT       "Palette:",        IDS_PALETTE,  240,  6,  26,  10, SS_NOTIFY
+   LTEXT       " ",               IDC_PALETTE,  270,  5,  20,  10, SS_SUNKEN
+   LTEXT       " ",               IDC_PALNAME,  295,  5, 150,  10, SS_SUNKEN
+                                  
+   LTEXT       "Graph info:",     IDS_GINFO,     10, 21,  37,  10
+   LTEXT       " ",               IDC_GINFO,     50, 20, 150,  10, SS_SUNKEN
+   PUSHBUTTON  "Pause",           IDB_PAUSE,    250, 18,  40,  11
+   PUSHBUTTON  "Solid Pattern",   IDB_PSOLID,   295, 18,  50,  11
+   PUSHBUTTON  "Custom",          IDB_CUSTOM,   350, 18,  40,  11
+   PUSHBUTTON  "Close",           IDB_CLOSE,    405, 18,  40,  11
    
    //  Claude 08/17/26 - plain static, not SS_BLACKFRAME -- we draw the
    //  frame's fill, border, and content ourselves (see draw_gframe_contents()

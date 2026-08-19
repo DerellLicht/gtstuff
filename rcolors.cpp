@@ -24,6 +24,14 @@ rcolors::rcolors(std::string title_text)
 }
 
 //************************************************************************
+void rcolors::log_char_dimens()
+{
+   char tempstr[81];
+   wsprintf(tempstr, "char dimens: %ux%u", columns, rows);
+   status_message(1, tempstr);
+}
+
+//************************************************************************
 void rcolors::update_display()
 {
    // rcolors32_hfont = build_font("FixedSys", 18, 0, 0, 0, 0) ;
@@ -54,6 +62,8 @@ void rcolors::update_display()
    // COLORREF pcolor = get_palette_entry(random_int(256)) ;
    unsigned col = (unsigned) random_int(columns) * char_width ;
    unsigned row = (unsigned) random_int(rows) * char_height ;
+   log_char_dimens();
+   
    // str[0] = random_int(93) + 33 ;
    if (use_solid_pattern)
       str[0] = (char) 0x7F ;

@@ -17,9 +17,10 @@
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"       //  demo declarations
 
-int we_should_redraw = 1 ;
-int pause_the_race = 0 ;
-unsigned use_solid_pattern = 0 ;
+bool we_should_redraw = 1 ;
+bool pause_the_race = false ;
+bool use_solid_pattern = false ;
+
 unsigned cycle_count = 0 ;
 
 /************************************************************************/
@@ -87,11 +88,11 @@ std::vector<menu_items_t> menu_items {
 ,{ &pixels0,    IDM_PIXELS,    false, "Pixel-packing",          0 }
 ,{ &colorbars0, IDM_CLRBARS,   true,  "Color Bars",             0 }
 ,{ &xpalette0,  IDM_XPAL,      true,  "XWindows Palette",       0 }
-,{ &bitblt0,    IDM_BITBLT,    true,  "BitBlt demo",            0 }
+,{ &bitblt0,    IDM_BITBLT,    true,  "BitBlt Demo",            0 }
 ,{ &xnpalette0, IDM_XNPAL,     true,  "Named XWindows Palette", 0 }
 ,{ &xrect0,     IDM_XRECT,     true,  "XWindows Palette Boxes", 0 }
-,{ &gpalettes0, IDM_GPAL,      true,  "More palettes",          0 }
-,{ &triangles0, IDM_TRIANGLE,  false, "line triangle",          0 }
+,{ &gpalettes0, IDM_GPAL,      true,  "More Palettes",          0 }
+,{ &triangles0, IDM_TRIANGLE,  false, "Line Triangle",          0 }
 ,{ &rainbow0,   IDM_RAINBOW,   false, "Rainbow !!",             0 }
 ,{ &lines0,     IDM_LINES,     false, "Lines",                  0 }
 ,{ &lgames0,    IDM_LGAMES,    false, "Lines Games",            0 }
@@ -102,6 +103,50 @@ std::vector<menu_items_t> menu_items {
 ,{ &sglass0,    IDM_SGLASS,    false, "Stained Glass",          0 }
 ,{ &wincolors0, IDM_WINCOLORS, true,  "Windows Colors",         0 }
 } ;
+
+//***********************************************************************
+void fill_gobject_combobox(HWND hwnd, unsigned init_idx)
+{
+   // for (uint j=0; menu_items[j] != 0; j++) {
+   for (auto &mitem : menu_items) {
+      // if (mitem.menu_id == 0) {
+      //    continue ;
+      // }
+      LRESULT result = SendMessageA(hwnd, CB_ADDSTRING, 0, (LPARAM) mitem.title);
+      switch (result) {
+      case CB_ERR:
+         syslog("CB_ADDSTRING: CB_ERR: %s\n", get_system_message()) ;
+         break;
+      case CB_ERRSPACE:
+         syslog("CB_ADDSTRING: CB_ERRSPACE: %s\n", get_system_message()) ;
+         break;
+
+      default:
+         // wsprintfA(msgstr, "CB_ADDSTRING returned %u\n", result) ;
+         // OutputDebugStringA(msgstr) ;
+         break;
+      }
+   }
+   SendMessageA(hwnd, CB_SETCURSEL, (WPARAM) init_idx, 0);
+}
+
+//***********************************************************************
+void run_selected_gobject(HWND hwndGObjList)
+{
+   char tempstr[81];
+   uint sel = SendMessageA(hwndGObjList, CB_GETCURSEL, 0, 0);
+   // sel++ ;  // list box index is off by one vs menu_items list
+   //  the initial landing slot in the dialog, is a label field;
+   //  it is not intended to be executable, and has a resource ID of 0.
+   uint target = menu_items[sel].menu_id;
+   if (target == 0) {
+      return ;
+   }
+   
+   wsprintf(tempstr, "[%u: %u] %s", sel, target, menu_items[sel].title);
+   status_message(tempstr);
+   change_graph_state(target);
+}
 
 //***********************************************************************
 // display the cycle counter
@@ -150,10 +195,14 @@ void change_graph_state(uint graph_id)
          miptr = &mentry ;
          show_graph_desc(miptr->title);
          status_message(" ");
+         status_message(1, " ");
+         status_message(2, " ");
          cycle_count = 0 ;
          we_should_redraw = 1 ;
          ti = proc_time();
          elapsed_secs = 0 ;
+         pause_the_race = false ;
+         use_solid_pattern = false ;
          return ;         
       }
    }

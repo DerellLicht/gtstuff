@@ -18,6 +18,12 @@
 #define  IDC_PALETTE          312
 #define  IDC_PALNAME          313
 #define  IDC_PALETTESPIN      314
+#define  IDB_PAUSE            315
+#define  IDB_CUSTOM           316
+#define  IDB_PSOLID           317
+#define  IDS_GOBJECT          318
+#define  IDC_GOBJECT          319
+// #define  IDB_GOSELECT         320
 
 //  Derell: this is no longer required... I pushed the statbar IDs up to 50,000
 //  IDM_MAINMENU (404, above) items -- 900s to stay clear of statbar.h's 600/700-705/800-803

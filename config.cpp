@@ -24,13 +24,6 @@ uint client_width = 300 ;
 static char ini_name[MAX_PATH_LEN+1] = "" ;
 
 //****************************************************************************
-//  debug: message-reporting data
-//****************************************************************************
-uint dbg_flags =
-               // DBG_WINMSGS ||
-               0 ;
-
-//****************************************************************************
 static void strip_comments(char *bfr)
 {
    char *hd = strchr(bfr, '#') ;

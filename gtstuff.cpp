@@ -24,6 +24,16 @@ static const char *Version = "GTstuff program, Version 1.01" ;
 #include "statbar.h"
 #include "winmsgs.h"
 
+//****************************************************************************
+//  debug: message-reporting data
+//  NOTE: setting constants here, won't work!!
+//        This value is over-written by INI file!!
+//****************************************************************************
+//    if (dbg_flags & DBG_WINMSGS) {
+uint dbg_flags =
+               // DBG_WINMSGS |
+               0 ;
+
 //***********************************************************************
 static HINSTANCE g_hinst = 0;
 
@@ -33,6 +43,8 @@ static HWND hwndGInfo = nullptr ;
 static HWND hwndPalette = nullptr ;
 static HWND hwndPaletteSpin = nullptr ;
 static HWND hwndPalName = nullptr ;
+static HWND hwndGObjList = nullptr ;
+
 
 //  Claude 08/17/26 - see the comment on this prototype in gtstuff.h
 HWND get_hwndGFrame(void)
@@ -154,11 +166,29 @@ static uint get_terminal_top(void)
    static uint local_ctrl_top = 0 ;
    if (local_ctrl_top == 0) {
       local_ctrl_top = get_bottom_line(hwndMain, IDB_CLOSE) ;
-      local_ctrl_top += 3 ;
+      local_ctrl_top += 4 ;
       // syslog("CommPort: ctrl_top = %u, or %u\n", local_ctrl_top, win_ctrl_top+3) ;
    }
    return local_ctrl_top ;
 }  //lint !e715
+
+//***********************************************************************
+//  handle button presses
+//***********************************************************************
+static void toggle_pause_req()
+{
+   pause_the_race = !pause_the_race ;
+}
+
+static void toggle_solid_pattern()
+{
+   use_solid_pattern = !use_solid_pattern ;
+}
+
+static void handle_custom_req()
+{
+   
+}
 
 //***********************************************************************
 //  Claude 08/17/26 - the menu is now attached via IDD_MAIN_DIALOG's own
@@ -434,9 +464,11 @@ static void do_init_dialog(HWND hwnd)
    init_config();
    
    //  get global handles for graphics components
-   hwndGFrame  = GetDlgItem(hwnd, IDC_GFRAME) ;
-   hwndGInfo   = GetDlgItem(hwnd, IDC_GINFO) ;
-   hwndPalName = GetDlgItem(hwnd, IDC_PALNAME) ;
+   hwndGFrame   = GetDlgItem(hwnd, IDC_GFRAME) ;
+   hwndGInfo    = GetDlgItem(hwnd, IDC_GINFO) ;
+   hwndPalName  = GetDlgItem(hwnd, IDC_PALNAME) ;
+   hwndGObjList = GetDlgItem(hwnd, IDC_GOBJECT) ;
+
    
    capture_gframe_layout() ;   //  Claude 08/17/26 - must run before cxClient can change
    //  Claude 08/17/26 - see GFrameSubclassProc's comment for why this is
@@ -483,7 +515,9 @@ static void do_init_dialog(HWND hwnd)
    min_application_window_width = MIN_TERMINAL_VISIBLE_DX + (uint) dx_frame ;
 #endif
 
+   //****************************************************************
    //  manage palette-selection field
+   //****************************************************************
    hwndPalette = GetDlgItem(hwnd, IDC_PALETTE) ;
    hwndPaletteSpin = CreateUpDownControl(
       WS_CHILD|WS_VISIBLE|UDS_SETBUDDYINT|UDS_ALIGNRIGHT|WS_BORDER,
@@ -512,6 +546,9 @@ static void do_init_dialog(HWND hwnd)
    SetWindowText(hwndPalName, tempstr);
    }   
       
+   //****************************************************************
+   fill_gobject_combobox(hwndGObjList, 0);
+   
    //****************************************************************
    //  create/configure working space
    //****************************************************************
@@ -739,10 +776,6 @@ static bool do_vscroll(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
       char const *palname = get_palette_name(palette_idx);
       SetWindowText(hwndPalName, palname);
       
-      // syslog("selected palette index %u\n", palette_idx);
-      // test_init.diameter = read_count(hwndPixDiam) ;
-      // test_led->set_dimens(test_init.diameter, test_init.bit_gap, test_init.char_gap) ;
-      // update_display() ;
       return true;
    } 
    return false ;
@@ -759,6 +792,7 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
       //  list messages to be ignored
       case WM_CTLCOLORBTN:
       case WM_CTLCOLORSTATIC:
+      case WM_CTLCOLORLISTBOX:
       case WM_CTLCOLOREDIT:
       case WM_CTLCOLORDLG:
       case WM_MOUSEMOVE:
@@ -769,8 +803,8 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
       case WM_SETCURSOR:
       case WM_ERASEBKGND:
       case WM_TIMER:
-      case WM_NOTIFY:
-      case WM_COMMAND:  //  prints its own msgs below
+      // case WM_NOTIFY:
+      // case WM_COMMAND:  //  prints its own msgs below
          break;
       default:
          syslog("TOP [%s]\n", lookup_winmsg_name(message)) ;
@@ -859,9 +893,14 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
       {  //  create local context
       DWORD cmd = HIWORD (wParam) ;
       DWORD target = LOWORD(wParam) ;
+      syslog("WM_COMMAND: cmd: %u, target: %u\n", cmd, target);
 
       switch (cmd) {
-      case FVIRTKEY:  //  keyboard accelerators: WARNING: same code as CBN_SELCHANGE !!
+      case CBN_SELCHANGE:
+         run_selected_gobject(hwndGObjList);
+         return true;
+      
+      // case FVIRTKEY:  //  keyboard accelerators: WARNING: same code as CBN_SELCHANGE !!
          //  fall through to BM_CLICKED, which uses same targets
       case BN_CLICKED:
          //  Claude 08/17/26 - menu-item WM_COMMANDs land here too: a menu
@@ -874,7 +913,23 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
          case IDM_FILE_CLOSE:
             PostMessageA(hwnd, WM_CLOSE, 0, 0);
             break;
+            
+         case IDB_PAUSE:
+            toggle_pause_req();
+            break;
+            
+         case IDB_PSOLID:
+            toggle_solid_pattern();
+            break;
 
+         case IDB_CUSTOM:
+            handle_custom_req();
+            break;
+
+         // case IDB_GOSELECT:
+         //    run_selected_gobject(hwndGObjList);
+         //    break;
+            
          case IDM_CIRCLES:
          case IDM_SQUARES:
          case IDM_LIGHTNING:
@@ -976,4 +1031,3 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 
    return (int) Msg.wParam ;
 }  //lint !e715
-

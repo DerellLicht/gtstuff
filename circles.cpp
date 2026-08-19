@@ -24,8 +24,8 @@ void circles::update_display(void)
    HBRUSH hBrush ;
    int x, y, w ;
 
-   // if (pause_the_race)
-   //    return ;
+   if (pause_the_race)
+      return ;
 
    cycle_count++ ;
    if (use_solid_pattern)

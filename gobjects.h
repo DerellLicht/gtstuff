@@ -119,6 +119,7 @@ private:
    unsigned rows ;
    unsigned columns ;
    unsigned color ;
+   void log_pixel_dimens();
 
 public:
    pixels(std::string title_text) ;
@@ -353,6 +354,7 @@ private:
    unsigned char_height ;
    unsigned rows ;
    unsigned columns ;
+   void log_char_dimens();
 
 public:
    rcolors(std::string title_text) ;

@@ -6,9 +6,9 @@
 //  used for max width of elements in certain objects
 #define  CONST_SIZE     50
 
-extern int we_should_redraw ;
-extern int pause_the_race ;
-extern unsigned use_solid_pattern ;
+extern bool we_should_redraw ;
+extern bool pause_the_race ;
+extern bool use_solid_pattern ;
 extern unsigned cycle_count ;
 
 //***********************************************************************
@@ -23,4 +23,7 @@ bool display_current_operation(void);
 //  for how it still reaches get_gframe_dc()/release_gframe_dc(). Referenced
 //  as menu_items[0]'s draw_func in alg_selector.cpp.
 void draw_intro_graphics(void);
+
+void fill_gobject_combobox(HWND hwnd, unsigned init_idx);
+void run_selected_gobject(HWND hwndGObjList);
 
