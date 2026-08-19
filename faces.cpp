@@ -369,8 +369,11 @@ void face_trap::update_display()
       cycle_count++ ;
       SetBkMode(hdc, OPAQUE) ;
       SetBkColor  (hdc, 0) ;
-      for (unsigned idx=0; idx<FACE_COUNT; idx++) {
-         move_a_face(hdc, &faces[idx]) ;
+      // for (unsigned idx=0; idx<FACE_COUNT; idx++) {
+      //    move_a_face(hdc, &faces[idx]) ;
+      // }
+      for (auto &face : faces) {
+         move_a_face(hdc, &face) ;
       }
    }
 

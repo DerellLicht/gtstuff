@@ -129,16 +129,25 @@ void line_games::move_point(vector_p vector)
 }
 
 //************************************************************************
+//  okay, the delay loop is confounding our handling of we_should_redraw,
+//  which in turn keeps screen from getting cleared...
+//  let's handle this with a local copy instead
+//************************************************************************
 void line_games::update_display()
 {
+   static bool local_we_should_redraw = true ;
    if (pause_the_race)
       return ;
 
+   if (++delay < 5000) {
+      return ;
+   }
+   delay = 0 ;
    if (use_solid_pattern) {
       update_line_algorithm() ;
    }
    
-   if (we_should_redraw) {
+   if (local_we_should_redraw) {
       // SetWindowText(hwnd, title) ;
       state = 0 ;
       delay = 0 ;
@@ -162,19 +171,16 @@ void line_games::update_display()
          finish.y = 0 ;
       }
    }
-   if (++delay < 5000) {
-      return ;
-   }
-   delay = 0 ;
+   
    COLORREF attr = get_palette_entry(color) ;
    if (++color >= get_palette_entries()) {
       color = 0 ;
    }
    
    HDC hdc = get_gframe_dc() ;
-   //  this doesn't actually clear the window...
-   if (we_should_redraw) {
+   if (local_we_should_redraw) {
       Clear_Window(hdc, 0);
+      local_we_should_redraw = false ;
    }
 
    cycle_count++ ;

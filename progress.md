@@ -11,4 +11,3 @@ extern unsigned cycle_count ;
 
 - we need custom functions for some gobjects
 
-- `line games` doesn't clear screen on startup
