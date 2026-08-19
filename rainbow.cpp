@@ -66,6 +66,8 @@ rainbow::rainbow(std::string title_text)
 }
 
 //************************************************************************
+//  this function is currently unused
+//************************************************************************
 void rainbow::update_gtimer(HDC hdc)
 {
    static unsigned gt_interval = 1000000 ;

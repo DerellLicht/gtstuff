@@ -201,22 +201,6 @@
    "-c",
    "-Wno-write-strings",
    "-Ider_libs",
-   "ezfont.cpp",
-   "-o",
-   "ezfont.o"
-  ],
-  "file": "ezfont.cpp"
- },
- {
-  "directory": "D:\\SourceCode\\Git\\gtstuff",
-  "arguments": [
-   "d:/llvm/bin/i686-w64-mingw32-clang++",
-   "-Wall",
-   "-O2",
-   "-Weffc++",
-   "-c",
-   "-Wno-write-strings",
-   "-Ider_libs",
    "polygon.cpp",
    "-o",
    "polygon.o"
