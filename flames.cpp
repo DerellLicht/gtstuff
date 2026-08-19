@@ -30,19 +30,20 @@ flames::flames(std::string title_text)
 //************************************************************************
 void flames::dump_fire_palette(void)
 {
-   FILE *fd = fopen("fire_palette.txt", "wt") ;
+   // FILE *fd = fopen("fire_palette.txt", "wt") ;
+   unique_file fd(fopen("fire_palette.txt", "wt")) ;
    if (fd != 0) {
       unsigned idx ;
       for (idx=0; idx<256; idx++) {
          if ((idx % 4) == 0) {
-            fprintf(fd, "\n") ;
+            fprintf(fd.get(), "\n") ;
          }
          rgb_p fptr  = &fire_palette[idx] ;
-         fprintf(fd, "{ 0x%02X, 0x%02X, 0x%02X }, ",
+         fprintf(fd.get(), "{ 0x%02X, 0x%02X, 0x%02X }, ",
             fptr->red, fptr->green, fptr->blue) ;
       }
-      fprintf(fd, "} ;\n") ;
-      fclose(fd) ;
+      fprintf(fd.get(), "} ;\n") ;
+      // fclose(fd) ;
    }
 }
 
@@ -113,7 +114,7 @@ void flames::init_fire_palette(void)
       delete[](fire_palette_record) ;
    }
    unsigned fire_elements = (fire_rows+1) * (fire_cols+1) ;
-   fire_palette_record = new u8[fire_elements] ;
+   fire_palette_record = new u8[fire_elements] ;   // NOLINT(cppcoreguidelines-owning-memory)
    memset(fire_palette_record, 0, fire_elements) ;
    // wsprintf(tempstr, "fire record [0x%08X]: %u x %u = %u\n", 
    //    (unsigned) fire_palette_record,
