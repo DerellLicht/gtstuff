@@ -62,7 +62,7 @@ dist:
 	zip $(BASE).zip *.exe 
 
 wc:
-	wc -l *.cpp *.rc
+	wc -l $(CSRC) *.rc
 
 clint:
 	cmd /C "python ..\ClaudeLint.py --exclude der_libs"
