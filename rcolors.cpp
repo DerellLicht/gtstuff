@@ -65,10 +65,7 @@ void rcolors::update_display()
    log_char_dimens();
    
    // str[0] = random_int(93) + 33 ;
-   if (use_solid_pattern)
-      str[0] = (char) 0x7F ;
-   else
-      str[0] = (char) random_int(256) ;
+   str[0] = (use_solid_pattern) ? (char) 0x7F : (char) random_int(256) ;
 
    //  Interestingly, *some* fixed-point fonts (such as Terminal and MS LineDraw)
    //  act as if they are non-fixed-point fonts, drawing with variable widths...

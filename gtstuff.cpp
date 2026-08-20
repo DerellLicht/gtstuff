@@ -137,16 +137,17 @@ static bool gframe_drawn_once = false;
 //  Main dialog tooltips
 //****************************************************************************
 static tooltip_data const main_tooltips[] = {
-{ IDS_GOBJECT, _T("Gobject"        )},          
-{ IDS_PALETTE, _T("Palette"        )},          
-{ IDC_PALETTE, _T("Palette"        )},          
-{ IDC_PALNAME, _T("Palette"        )},          
-{ IDS_GINFO,   _T("Graph info"     )},          
-{ IDC_GINFO,   _T("Graph info"     )},          
-{ IDB_PAUSE,   _T("Pause"          )},          
-{ IDB_PSOLID,  _T("Solid Pattern"  )},          
-{ IDB_CUSTOM,  _T("Custom"         )},          
-{ IDB_CLOSE,   _T("Close"          )},          
+{ IDS_GOBJECT, _T("Select a graphics object to display"        )},          
+{ IDC_GOBJECT, _T("Select a graphics object to display"        )},          
+{ IDS_PALETTE, _T("Select active palette, for gobjects which use them"        )},          
+{ IDC_PALETTE, _T("Select active palette, for gobjects which use them"        )},          
+{ IDC_PALNAME, _T("Select active palette, for gobjects which use them"        )},          
+{ IDS_GINFO,   _T("Show name of current gobject"     )},          
+{ IDC_GINFO,   _T("Show name of current gobject"     )},          
+{ IDB_PAUSE,   _T("Pause free-running gobjects"          )},          
+{ IDB_PSOLID,  _T("Switch from pattern fill to solid fill, on certain gobjects"  )},          
+{ IDB_CUSTOM,  _T("Execute custom operations for certain gobjects"         )},          
+{ IDB_CLOSE,   _T("Close program"          )},          
 { 0, NULL }} ;
 
 //*******************************************************************
@@ -794,6 +795,7 @@ static bool do_vscroll(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
       uint palette_idx = read_count(hwndPalette) ;
       char const *palname = get_palette_name(palette_idx);
       SetWindowText(hwndPalName, palname);
+      set_DAC_table(palette_idx);
       
       return true;
    } 

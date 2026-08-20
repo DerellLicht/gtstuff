@@ -44,7 +44,7 @@ CAPTION "Terminal utility"
 FONT 10, "Times New Roman"
 BEGIN
    LTEXT       "Gobject:",        IDS_GOBJECT,   10,  7,  37,  10, SS_NOTIFY
-   COMBOBOX                       IDC_GOBJECT,   50,  5, 150, 200, CBS_DROPDOWNLIST | WS_VSCROLL | CBS_OWNERDRAWFIXED | CBS_HASSTRINGS
+   COMBOBOX                       IDC_GOBJECT,   50,  5, 150, 300, CBS_DROPDOWNLIST | WS_VSCROLL | CBS_OWNERDRAWFIXED | CBS_HASSTRINGS
                                   
    LTEXT       "Palette:",        IDS_PALETTE,  240,  6,  26,  10, SS_NOTIFY
    LTEXT       " ",               IDC_PALETTE,  270,  5,  20,  10, SS_SUNKEN | SS_NOTIFY
