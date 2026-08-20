@@ -30,6 +30,8 @@ void draw_intro_graphics(void);
 void fill_gobject_combobox(HWND hwnd, unsigned init_idx);
 void run_selected_gobject(HWND hwndGObjList);
 
+void toggle_pause_req();
+void toggle_solid_pattern();
 void handle_custom_req(HWND hwnd);
 
 //  font.dialog.cpp

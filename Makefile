@@ -28,7 +28,7 @@ endif
 LiFLAGS = -Ider_libs
 CFLAGS += -Ider_libs
 
-CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp font.dialog.cpp \
+CSRC=gtstuff.cpp config.cpp gfuncs.cpp alg_selector.cpp gobjects.cpp font.dialog.cpp images.cpp \
 palettes.cpp circles.cpp squares.cpp polygon.cpp rect.cpp pixels.cpp colorbars.cpp xpalette.cpp \
 rgb_data.cpp bitblt.cpp xnpalette.cpp xrect.cpp gpalettes.cpp triangles.cpp \
 rainbow.cpp lines.cpp line_games.cpp rcolors.cpp flames.cpp faces.cpp \
@@ -87,14 +87,15 @@ rc.o: $(BASE).rc
 
 gtstuff.o: resource.h der_libs/common.h der_libs/commonw.h gtstuff.h gfuncs.h
 gtstuff.o: alg_selector.h config.h palettes.h der_libs/statbar.h
-gtstuff.o: der_libs/tooltips.h der_libs/winmsgs.h
+gtstuff.o: der_libs/tooltips.h der_libs/winmsgs.h images.h
 config.o: der_libs/common.h config.h
 gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h palettes.h
 alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h
-alg_selector.o: gfuncs.h alg_selector.h
+alg_selector.o: gfuncs.h alg_selector.h images.h
 gobjects.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
-font.dialog.o: resource.h der_libs/common.h palettes.h gobjects.h gfuncs.h
-font.dialog.o: alg_selector.h
+font.dialog.o: resource.h der_libs/common.h gtstuff.h palettes.h gobjects.h
+font.dialog.o: gfuncs.h alg_selector.h
+images.o: resource.h der_libs/common.h gtstuff.h images.h
 palettes.o: palettes.h
 circles.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 circles.o: alg_selector.h

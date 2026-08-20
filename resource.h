@@ -24,8 +24,11 @@
 #define  IDS_GOBJECT          318
 #define  IDC_GOBJECT          319
 // #define  IDB_GOSELECT         320
-#define  IDC_FSELECT    400
-#define  IDC_FCOMBO     401
+#define  IDC_FSELECT          321
+#define  IDC_FCOMBO           322
+#define  IDC_LEDBMPS          323
+#define  IDC_LED_PAUSE        324
+#define  IDC_LED_SOLID        325
 
 //  Derell: this is no longer required... I pushed the statbar IDs up to 50,000
 //  IDM_MAINMENU (404, above) items -- 900s to stay clear of statbar.h's 600/700-705/800-803

@@ -25,6 +25,7 @@ static const char *Version = "GTstuff program, Version 1.02" ;
 #include "statbar.h"
 #include "tooltips.h"
 #include "winmsgs.h"
+#include "images.h"
 
 //****************************************************************************
 //  debug: message-reporting data
@@ -48,6 +49,8 @@ HWND hwndPaletteSpin = nullptr ;
 static HWND hwndPalName = nullptr ;
 static HWND hwndGObjList = nullptr ;
 
+HWND hwndPauseState = nullptr ;
+HWND hwndSolidState = nullptr ;
 
 //  Claude 08/17/26 - see the comment on this prototype in gtstuff.h
 HWND get_hwndGFrame(void)
@@ -197,19 +200,6 @@ static uint get_terminal_top(void)
    }
    return local_ctrl_top ;
 }  //lint !e715
-
-//***********************************************************************
-//  handle button presses
-//***********************************************************************
-static void toggle_pause_req()
-{
-   pause_the_race = !pause_the_race ;
-}
-
-static void toggle_solid_pattern()
-{
-   use_solid_pattern = !use_solid_pattern ;
-}
 
 //***********************************************************************
 //  Claude 08/17/26 - the menu is now attached via IDD_MAIN_DIALOG's own
@@ -514,6 +504,8 @@ static void do_init_dialog(HWND hwnd)
    //  loop starts -- see draw_gframe_contents()'s comment.
    resize_gframe() ;
 
+   hwndPauseState = resize_led_control(hwnd, IDC_LED_PAUSE) ; //  Pause state indicator
+   hwndSolidState = resize_led_control(hwnd, IDC_LED_SOLID) ; //  RX activity indicator
    // Claude 08/14/26 - the real, permanent floor for WM_GETMINMAXINFO.
    // Same shape as resize_dialog_and_workspace's live layout math, just solved for
    // the smallest acceptable listview height (MIN_LISTVIEW_VISIBLE_DY)
@@ -1078,6 +1070,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 {
    g_hinst = hInstance;
    load_exec_filename() ;     //  get our executable name
+   load_led_images() ;        //  load our image list
 
    HWND hwnd = CreateDialog(g_hinst, MAKEINTRESOURCE(IDD_MAIN_DIALOG), NULL, (DLGPROC) DialogProc) ;
    if (hwnd == NULL) {

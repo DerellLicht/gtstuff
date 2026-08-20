@@ -9,13 +9,11 @@
 
 #include "resource.h"  
 #include "common.h"  
-// #include "gstuff.h"     //  for timer functions
+#include "gtstuff.h" 
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"
 #include "alg_selector.h"
-
-extern HINSTANCE g_hinst ;
 
 //lint -esym(714, display_font_list)
 //lint -esym(765, display_font_list)

@@ -10,6 +10,8 @@
 
 GTSTUFF_ICO       ICON    "scroll.ico"
 
+IDC_LEDBMPS   BITMAP    "leds.tiny.bmp"
+
 //*******************************************************************
 //  main-dialog menu bar
 //  Claude 08/17/26 - attached to the dialog via the MENU statement below,
@@ -46,17 +48,31 @@ BEGIN
    LTEXT       "Gobject:",        IDS_GOBJECT,   10,  7,  37,  10, SS_NOTIFY
    COMBOBOX                       IDC_GOBJECT,   50,  5, 150, 300, CBS_DROPDOWNLIST | WS_VSCROLL | CBS_OWNERDRAWFIXED | CBS_HASSTRINGS
                                   
-   LTEXT       "Palette:",        IDS_PALETTE,  240,  6,  26,  10, SS_NOTIFY
-   LTEXT       " ",               IDC_PALETTE,  270,  5,  20,  10, SS_SUNKEN | SS_NOTIFY
-   LTEXT       " ",               IDC_PALNAME,  295,  5, 150,  10, SS_SUNKEN | SS_NOTIFY
+   LTEXT       "Palette:",        IDS_PALETTE,  210,  6,  26,  10, SS_NOTIFY
+   LTEXT       " ",               IDC_PALETTE,  240,  5,  20,  10, SS_SUNKEN | SS_NOTIFY
+   LTEXT       " ",               IDC_PALNAME,  265,  5, 150,  10, SS_SUNKEN | SS_NOTIFY
                                   
+   //  Changing these fields from SS_BLACKFRAME to LTEXT/WS_EX_STATICEDGE, 
+   //  disables the tooltips associated with the child objects
    // LTEXT       "Graph info:",     IDS_GINFO,     10, 21,  37,  10, SS_NOTIFY
    // LTEXT       " ",               IDC_GINFO,     50, 20, 150,  10, SS_SUNKEN | SS_NOTIFY
-   PUSHBUTTON  "Pause",           IDB_PAUSE,    250, 18,  40,  11
-   PUSHBUTTON  "Solid Pattern",   IDB_PSOLID,   295, 18,  50,  11
-   PUSHBUTTON  "Custom",          IDB_CUSTOM,   350, 18,  40,  11
-   PUSHBUTTON  "Close",           IDB_CLOSE,    405, 18,  40,  11
+#define  PAUSE_X   (210)
+#define  SOLID_X   (PAUSE_X + 70)
+#define  OTHER_X   (SOLID_X + 80)
+
+   CONTROL        "",    IDC_STATIC, "Static", SS_BLACKFRAME, PAUSE_X,    18, 62, 16
+   PUSHBUTTON  "Pause",  IDB_PAUSE,                           PAUSE_X+4,  20, 40, 11
+   CONTROL        "",    IDC_LED_PAUSE,"Static",WS_CHILD | WS_VISIBLE | SS_ICON | SS_CENTERIMAGE | SS_REALSIZEIMAGE | SS_NOTIFY,
+                                                              PAUSE_X+47, 22, 10,  8
+                                                              
+   CONTROL        "",    IDC_STATIC, "Static", SS_BLACKFRAME, SOLID_X,    18, 71, 16
+   PUSHBUTTON  "Solid Pattern", IDB_PSOLID,                   SOLID_X+4,  20, 50, 11
+   CONTROL        "",    IDC_LED_SOLID,"Static",WS_CHILD | WS_VISIBLE | SS_ICON | SS_CENTERIMAGE | SS_REALSIZEIMAGE | SS_NOTIFY,
+                                                              SOLID_X+57, 22, 10,  8
    
+   PUSHBUTTON  "Custom",          IDB_CUSTOM,   OTHER_X,    20,  40,  11
+   PUSHBUTTON  "Close",           IDB_CLOSE,    OTHER_X+60, 18,  40,  16
+
    //  Claude 08/17/26 - plain static, not SS_BLACKFRAME -- we draw the
    //  frame's fill, border, and content ourselves (see draw_gframe_contents()
    //  in gtstuff.cpp), so this control only needs to reserve screen space and

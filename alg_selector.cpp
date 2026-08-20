@@ -16,6 +16,7 @@
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"       //  demo declarations
+#include "images.h"  
 
 bool we_should_redraw = 1 ;
 bool pause_the_race = false ;
@@ -112,9 +113,6 @@ std::vector<menu_items_t> menu_items {
 } ;
 
 //***********************************************************************
-extern HWND hwndPalette ;
-extern HWND hwndPaletteSpin ;
-
 static void button_enable_disable(HWND hwnd)
 {
    static HWND hwndPause  = nullptr ;
@@ -156,6 +154,21 @@ void fill_gobject_combobox(HWND hwnd, unsigned init_idx)
       }
    }
    SendMessageA(hwnd, CB_SETCURSEL, (WPARAM) init_idx, 0);
+}
+
+//***********************************************************************
+//  handle button presses
+//***********************************************************************
+void toggle_pause_req()
+{
+   pause_the_race = !pause_the_race ;
+   draw_ledb(hwndPauseState, pause_the_race);
+}
+
+void toggle_solid_pattern()
+{
+   use_solid_pattern = !use_solid_pattern ;
+   draw_ledb(hwndSolidState, use_solid_pattern);
 }
 
 //***********************************************************************
@@ -247,6 +260,8 @@ void change_graph_state(uint graph_id)
          use_solid_pattern = false ;
          run_custom_op = false ;
          button_enable_disable(get_main_dialog_handle());
+         draw_ledb(hwndPauseState, false);
+         draw_ledb(hwndSolidState, false);
          return ;         
       }
    }

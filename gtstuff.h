@@ -10,15 +10,19 @@
 
 #define  DBG_VERBOSE       0x01
 #define  DBG_WINMSGS       0x02
-#define  DBG_RX_DEBUG      0x04
-#define  DBG_CTASK_TRACE   0x08
-#define  DBG_SMTP_RECV     0x10
-#define  DBG_POLLING       0x20
-#define  DBG_ETHERNET      0x40
+
+extern HINSTANCE g_hinst ;
 
 extern uint cxClient ;
 extern uint cyClient ;
 
+// These HWND fields are defined in gtstuff.cpp, 
+// but used in alg_selector.cpp
+extern HWND hwndPalette ;
+extern HWND hwndPaletteSpin ;
+
+extern HWND hwndPauseState ;
+extern HWND hwndSolidState ;
 //**************************************************************
 //  function prototypes
 //**************************************************************
