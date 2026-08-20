@@ -18,7 +18,7 @@
 #include "alg_selector.h"       //  demo declarations
 #include "images.h"  
 
-bool we_should_redraw = 1 ;
+bool we_should_redraw = true ;
 bool pause_the_race = false ;
 bool use_solid_pattern = false ;
 bool run_custom_op = false ;
@@ -177,7 +177,7 @@ void handle_custom_req(HWND hwnd)
    }
    else {
       run_custom_op = !run_custom_op ;
-      we_should_redraw = 1 ;
+      we_should_redraw = true ;
    }
 }
 
@@ -251,7 +251,7 @@ void change_graph_state(uint graph_id)
          status_message(1, " ");
          status_message(2, " ");
          cycle_count = 0 ;
-         we_should_redraw = 1 ;
+         we_should_redraw = true ;
          ti = proc_time();
          elapsed_secs = 0 ;
          pause_the_race = false ;
@@ -278,7 +278,7 @@ bool display_current_operation(void)
    }
    if (miptr->go != nullptr) {
       miptr->go->update_display() ;
-      we_should_redraw = 0 ;
+      we_should_redraw = false ;
       if (!miptr->write_once) {
          display_cycle_counter();
       }
@@ -292,13 +292,13 @@ bool display_current_operation(void)
       //  idle pass because it's meant to be continuously running.
       if (we_should_redraw) {
          (miptr->draw_func)() ;
-         we_should_redraw = 0 ;
+         we_should_redraw = false ;
          return true ;
       }
       return false ;
    }
    else {
-      we_should_redraw = 0 ;
+      we_should_redraw = false ;
       return false ;
    }
 }

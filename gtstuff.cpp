@@ -367,7 +367,7 @@ static void draw_gframe_contents(void)
    //  blank frame during an active resize is an accepted tradeoff --
    //  resizing isn't a continuous-use mode, and content resumes the instant
    //  the drag ends and the idle loop gets a turn again.
-   we_should_redraw = 1 ;
+   we_should_redraw = true ;
 }
 
 // Claude 08/17/26 - hwndGFrame's original (Static class) window procedure,

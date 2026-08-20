@@ -136,11 +136,15 @@ void line_games::move_point(vector_p vector)
 //************************************************************************
 void line_games::update_display()
 {
-   //  this only works for first entry per program execution
-   static bool local_we_should_redraw = true ;
+   static bool local_we_should_redraw = false ;
    if (pause_the_race)
       return ;
 
+   //  remember this until after delay is resolved
+   if (we_should_redraw) {
+      local_we_should_redraw = true ;
+   }
+   
    if (++delay < 5000) {
       return ;
    }

@@ -29,7 +29,7 @@ void ascii::set_font_name(char *new_font_name)
 {
    if (new_font_name != 0) {
       strncpy(ascii_font_name, new_font_name, LF_FULLFACESIZE) ;
-      we_should_redraw = 1 ;
+      we_should_redraw = true ;
    }
 }
 
