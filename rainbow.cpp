@@ -42,8 +42,8 @@ static const unsigned rainbow_index[6] = {
 } ;
 
 //***********************************************************************
-rainbow::rainbow(std::string title_text) 
-: graph_object(std::move(title_text)) 
+rainbow::rainbow() 
+: graph_object() 
 , X(0)
 , Y(0)
 , B(0)

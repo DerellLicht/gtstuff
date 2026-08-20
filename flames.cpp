@@ -10,8 +10,8 @@
 
 #define  COLOR_DECREMENT   2
 //***********************************************************************
-flames::flames(std::string title_text) 
-: graph_object(std::move(title_text)) 
+flames::flames() 
+: graph_object() 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 // , fire_palette(0)  //  cannot init array in init list

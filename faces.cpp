@@ -85,8 +85,8 @@ static direction_data_t dir_data[8] = {
 } ;
 
 //***********************************************************************
-face_trap::face_trap(std::string title_text) 
-: graph_object(std::move(title_text)) 
+face_trap::face_trap() 
+: graph_object() 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 , busy_bfr(NULL)

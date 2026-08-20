@@ -17,8 +17,8 @@
 
 static char ascii_font_name[LF_FULLFACESIZE] = "Wingdings" ;
 //***********************************************************************
-ascii::ascii(std::string title_text) 
-: graph_object(std::move(title_text)) 
+ascii::ascii() 
+: graph_object() 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 { 

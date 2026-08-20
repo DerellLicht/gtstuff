@@ -41,3 +41,6 @@ void show_graph_desc(char const *desc);
 //  never see an HWND at all, only the HDC those two functions hand back.
 HWND get_hwndGFrame(void) ;
 
+//  width/height of graphics frame
+extern uint cxGFrame ;
+extern uint cyGFrame ;

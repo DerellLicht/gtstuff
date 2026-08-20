@@ -2,6 +2,7 @@
 #include <utility>      //  std::move
 
 #include "common.h"     //  u8, etc
+#include "gtstuff.h"    //  GFrame-related declarations
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
@@ -10,8 +11,8 @@
 #define  MAX_BOX_EDGE   100
 
 //***********************************************************************
-squares::squares(std::string title_text) 
-: graph_object(std::move(title_text)) 
+squares::squares() 
+: graph_object() 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 { 

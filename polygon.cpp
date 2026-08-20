@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include "common.h"     //  u8, etc
+#include "gtstuff.h"    //  GFrame-related declarations
 #include "palettes.h"   //  24-bit palette functions
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"     //  graphics primitives
@@ -16,8 +17,8 @@
 #define MaxPts    6             /* Maximum # of pts in polygon  */
 
 //***********************************************************************
-polygon::polygon(std::string title_text) 
-: graph_object(std::move(title_text)) 
+polygon::polygon() 
+: graph_object() 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 { 
@@ -62,7 +63,6 @@ void polygon::update_display()
    // fillpoly(MaxPts, (int far *) poly); /* Draw the actual polygon     */
    Polygon(hdc, poly, MaxPts) ;
 
-   // release_gframe_dc(hdc) ;
    release_gframe_dc(hdc) ;
 
    DeleteObject (hBrush) ;

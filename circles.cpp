@@ -11,8 +11,8 @@
 #define  MAX_CIRCLE_DIAM   60
 
 //***********************************************************************
-circles::circles(std::string title_text) 
-: graph_object(std::move(title_text)) 
+circles::circles() 
+: graph_object() 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 { 

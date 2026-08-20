@@ -27,10 +27,6 @@
 #define  ROP_OR    SRCPAINT
 #define  ROP_XOR   SRCINVERT
 
-//  width/height of graphics frame
-extern uint cxGFrame ;
-extern uint cyGFrame ;
-
 // extern unsigned dos_cref[16] ;
 
 //lint -esym(843, fill_patterns)

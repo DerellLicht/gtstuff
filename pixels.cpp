@@ -11,8 +11,8 @@
 #define  PIX_DY   3
 
 //***********************************************************************
-pixels::pixels(std::string title_text) 
-: graph_object(std::move(title_text)) 
+pixels::pixels() 
+: graph_object() 
 , dp_char_width(0)
 , dp_char_height(0)
 , rows(0)

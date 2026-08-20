@@ -99,8 +99,10 @@ images.o: resource.h der_libs/common.h gtstuff.h images.h
 palettes.o: palettes.h
 circles.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 circles.o: alg_selector.h
-squares.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
-polygon.o: der_libs/common.h palettes.h gobjects.h gfuncs.h alg_selector.h
+squares.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+squares.o: alg_selector.h
+polygon.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
+polygon.o: alg_selector.h
 rect.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h
 rect.o: alg_selector.h
 pixels.o: der_libs/common.h gtstuff.h palettes.h gobjects.h gfuncs.h

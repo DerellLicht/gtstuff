@@ -13,8 +13,8 @@
 
 #define  MAX_LINE_ALGORITHM   3
 //***********************************************************************
-line_games::line_games(std::string title_text) 
-: graph_object(std::move(title_text)) 
+line_games::line_games() 
+: graph_object() 
 //  per http://www.acm.org/crossroads/xrds1-4/ovp.html
 // , _v1(v1), _v2(v2), _v3(v3)
 #ifndef _lint

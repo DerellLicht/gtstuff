@@ -10,14 +10,9 @@
 #include "gtstuff.h"    //  get_hwndGFrame() -- see gobjects.h note; this is
                          //  the one other file besides gtstuff.cpp itself
                          //  that knows hwndGFrame exists at all
-#include "gfuncs.h"     //  cxGFrame/cyGFrame
+                         //  also, cxGFrame/cyGFrame
 #include "palettes.h"   //  24-bit palette functions
-#include "gobjects.h"   //  graphics-object classes
-
-graph_object::graph_object(std::string title_text) :
-   title(std::move(title_text))
-{
-}
+#include "gobjects.h"   //  graphics-object classes; this requires palettes.h
 
 //****************************************************************************
 //  Claude 08/17/26 - GetDC(hwndGFrame) does not actually clip to hwndGFrame's

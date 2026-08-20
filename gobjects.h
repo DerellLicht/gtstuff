@@ -8,7 +8,7 @@
 
 class graph_object {
 public:
-   explicit graph_object(std::string title_text) ;
+   explicit graph_object() = default;
    //  disable copy operators for this polymorphic base
    graph_object& operator=(const graph_object &src) = delete;
    graph_object(const graph_object&) = delete;
@@ -21,8 +21,6 @@ public:
    virtual void update_display(void) = 0 ;
 
 protected:
-   std::string title ;  // NOLINT(cppcoreguidelines-non-private-member-variables-in-classes)
-   
    //  Claude 08/17/26 - centralized, clip-safe access to hwndGFrame's DC,
    //  inherited by every subclass -- call get_gframe_dc()/release_gframe_dc()
    //  exactly like GetDC()/ReleaseDC(), unqualified, from any subclass's
@@ -47,7 +45,7 @@ class circles: public graph_object {
 private:
 
 public:
-   circles(std::string title_text) ;
+   circles( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    circles &operator=(const circles &src) = delete;
@@ -64,7 +62,7 @@ class squares: public graph_object {
 private:
 
 public:
-   squares(std::string title_text) ;
+   squares( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    squares &operator=(const squares &src) = delete;
@@ -81,7 +79,7 @@ class polygon: public graph_object {
 private:
 
 public:
-   polygon(std::string title_text) ;
+   polygon( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    polygon &operator=(const polygon &src) = delete;
@@ -98,7 +96,7 @@ class rect: public graph_object {
 private:
 
 public:
-   rect(std::string title_text) ;
+   rect( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    rect &operator=(const rect &src) = delete;
@@ -121,7 +119,7 @@ private:
    void log_pixel_dimens();
 
 public:
-   pixels(std::string title_text) ;
+   pixels( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    pixels &operator=(const pixels &src) = delete;
@@ -138,7 +136,7 @@ class colorbars: public graph_object {
 private:
 
 public:
-   colorbars(std::string title_text) ;
+   colorbars( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    colorbars &operator=(const colorbars &src) = delete;
@@ -155,7 +153,7 @@ class xpalette: public graph_object {
 private:
 
 public:
-   xpalette(std::string title_text) ;
+   xpalette( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    xpalette &operator=(const xpalette &src) = delete;
@@ -175,7 +173,7 @@ private:
    void Concentric_Rect(HDC hdc, int l, int t, int width, int height);
 
 public:
-   bitblt(std::string title_text) ;
+   bitblt( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    bitblt &operator=(const bitblt &src) = delete;
@@ -192,7 +190,7 @@ class xnpalette: public graph_object {
 private:
 
 public:
-   xnpalette(std::string title_text) ;
+   xnpalette( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    xnpalette &operator=(const xnpalette &src) = delete;
@@ -212,7 +210,7 @@ private:
    void Solid_XRect(HDC hdc, int xl, int yu, int xr, int yl, int Color);
 
 public:
-   xrect(std::string title_text) ;
+   xrect( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    xrect &operator=(const xrect &src) = delete;
@@ -229,7 +227,7 @@ class gpalettes: public graph_object {
 private:
 
 public:
-   gpalettes(std::string title_text) ;
+   gpalettes( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    gpalettes &operator=(const gpalettes &src) = delete;
@@ -246,7 +244,7 @@ class triangles: public graph_object {
 private:
 
 public:
-   triangles(std::string title_text) ;
+   triangles( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    triangles &operator=(const triangles &src) = delete;
@@ -270,7 +268,7 @@ private:
    void update_gtimer(HDC hdc);
 
 public:
-   rainbow(std::string title_text) ;
+   rainbow( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    rainbow &operator=(const rainbow &src) = delete;
@@ -289,7 +287,7 @@ private:
    unsigned orient ;  //  0=horiz, 1=vert
 
 public:
-   lines(std::string title_text) ;
+   lines( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    lines &operator=(const lines &src) = delete;
@@ -341,7 +339,7 @@ public:
    line_games& operator=(line_games&&) = delete;
    ~line_games() override = default;
 
-   line_games(std::string title_text) ;
+   line_games( ) ;
    void update_display(void) override ;
    void update_line_algorithm(void);
 } ;
@@ -356,7 +354,7 @@ private:
    void log_char_dimens();
 
 public:
-   rcolors(std::string title_text) ;
+   rcolors( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    rcolors &operator=(const rcolors &src) = delete;
@@ -391,7 +389,7 @@ private:
    void draw_fire_element(HDC hdc, unsigned x, unsigned y, unsigned color);
 
 public:
-   flames(std::string title_text) ;
+   flames( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    flames &operator=(const flames &src) = delete;
@@ -434,7 +432,7 @@ private:
    unsigned max_char_width(HDC hdc);
 
 public:
-   face_trap(std::string title_text) ;
+   face_trap( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    face_trap &operator=(const face_trap &src) = delete;
@@ -452,7 +450,7 @@ class ascii: public graph_object {
 private:
 
 public:
-   ascii(std::string title_text) ;
+   ascii( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    ascii &operator=(const ascii &src) = delete;
@@ -483,7 +481,7 @@ private:
    void box_point (HDC hdc, int ccol, int rrow, int ssiz);
 
 public:
-   sglass(std::string title_text) ;
+   sglass( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    sglass& operator=(sglass const &src) = delete;
@@ -500,7 +498,7 @@ class wincolors: public graph_object {
 private:
 
 public:
-   wincolors(std::string title_text) ;
+   wincolors( ) ;
    //  disable copy and assignment operators
    //  for classes with pointer members
    wincolors &operator=(const wincolors &src) = delete;

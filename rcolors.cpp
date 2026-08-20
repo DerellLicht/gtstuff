@@ -8,8 +8,8 @@
 #include "alg_selector.h"       //  cycle_count
 
 //***********************************************************************
-rcolors::rcolors(std::string title_text) 
-: graph_object(std::move(title_text)) 
+rcolors::rcolors() 
+: graph_object() 
 , char_width(0)
 , char_height(0)
 , rows(0)

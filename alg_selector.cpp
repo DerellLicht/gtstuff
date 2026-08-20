@@ -45,28 +45,28 @@ void draw_intro_graphics(void)
 //  instantiate each of the classes
 //***********************************************************************
 // NOLINTBEGIN(bugprone-throwing-static-initialization)
-static circles circles0("Psychedelic Raindrops") ;
-static squares squares0("Boxing Lessons") ;
-static polygon polygon0("Temporal Lightning") ;
-static rect rect0("Palette Boxes") ;
-static pixels pixels0("Pixel-packing") ;
-static colorbars colorbars0("Color Bars") ;
-static xpalette xpalette0("XWindows palette") ;
-static bitblt bitblt0("BitBlt demo and options") ;
-static xnpalette xnpalette0("Named XWindows palette") ;
-static xrect xrect0("XWindows Palette Boxes") ;
-static gpalettes gpalettes0("more palettes") ;
-static triangles triangles0("line triangle") ;
-static rainbow rainbow0("Rainbow !!") ;
-static lines lines0("Lines") ;
-static line_games lgames0("Line Games") ;
-static rcolors rcolors0("rcolors32") ;
-static flames flames0("Fire tricks") ;
-static face_trap faces0("Face traps") ;
+static circles circles0 ;
+static squares squares0 ;
+static polygon polygon0 ;
+static rect rect0 ;
+static pixels pixels0 ;
+static colorbars colorbars0 ;
+static xpalette xpalette0 ;
+static bitblt bitblt0 ;
+static xnpalette xnpalette0 ;
+static xrect xrect0 ;
+static gpalettes gpalettes0 ;
+static triangles triangles0 ;
+static rainbow rainbow0 ;
+static lines lines0 ;
+static line_games lgames0 ;
+static rcolors rcolors0 ;
+static flames flames0 ;
+static face_trap faces0 ;
 //  ascii is exported because it is used by font.dialog.cpp
-ascii ascii0("ASCII Table") ;
-static sglass sglass0("Stained Glass") ;
-static wincolors wincolors0("Windows Colors") ;
+ascii ascii0 ;
+static sglass sglass0 ;
+static wincolors wincolors0 ;
 // NOLINTEND(bugprone-throwing-static-initialization)
 
 //************************************************************************
