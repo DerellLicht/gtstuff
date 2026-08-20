@@ -1050,6 +1050,7 @@ case WM_DRAWITEM:
    //  application shutdown handlers
    //********************************************************************
    case WM_CLOSE:
+      release_led_images() ;
       DestroyWindow(hwnd);
       break;
 
