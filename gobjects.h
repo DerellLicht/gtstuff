@@ -7,9 +7,6 @@
 #include <string>
 
 class graph_object {
-protected:
-   std::string title ;  // NOLINT(cppcoreguidelines-non-private-member-variables-in-classes)
-
 public:
    explicit graph_object(std::string title_text) ;
    //  disable copy operators for this polymorphic base
@@ -24,6 +21,8 @@ public:
    virtual void update_display(void) = 0 ;
 
 protected:
+   std::string title ;  // NOLINT(cppcoreguidelines-non-private-member-variables-in-classes)
+   
    //  Claude 08/17/26 - centralized, clip-safe access to hwndGFrame's DC,
    //  inherited by every subclass -- call get_gframe_dc()/release_gframe_dc()
    //  exactly like GetDC()/ReleaseDC(), unqualified, from any subclass's
