@@ -8,7 +8,8 @@
 #include "alg_selector.h"
 
 //***********************************************************************
-sglass::sglass(std::string title_text) : graph_object(std::move(title_text)) 
+sglass::sglass(std::string title_text) 
+: graph_object(std::move(title_text)) 
 , max_col(0)    
 , max_row(0)
 , x(0)
