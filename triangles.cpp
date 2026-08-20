@@ -47,10 +47,6 @@ void triangles::update_display()
       hPen = CreatePen(PS_SOLID, 1, get_palette_entry(attr)) ;
       SelectObject(hdc, hPen) ;
 
-      // MoveToEx(hdc, x, y, NULL) ;
-      // LineTo  (hdc, x1, y) ;
-      // LineTo  (hdc, x1, y1) ;
-      // LineTo  (hdc, x, y) ;
       pts[0].x = x ;
       pts[0].y = y ;
       pts[1].x = x1 ;

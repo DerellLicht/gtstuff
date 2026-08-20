@@ -20,6 +20,7 @@
 bool we_should_redraw = 1 ;
 bool pause_the_race = false ;
 bool use_solid_pattern = false ;
+bool run_custom_op = false ;
 
 unsigned cycle_count = 0 ;
 
@@ -57,7 +58,8 @@ static line_games lgames0("Line Games") ;
 static rcolors rcolors0("rcolors32") ;
 static flames flames0("Fire tricks") ;
 static face_trap faces0("Face traps") ;
-static ascii ascii0("ASCII Table") ;
+//  ascii is exported because it is used by font.dialog.cpp
+ascii ascii0("ASCII Table") ;
 static sglass sglass0("Stained Glass") ;
 static wincolors wincolors0("Windows Colors") ;
 // NOLINTEND(bugprone-throwing-static-initialization)
@@ -131,6 +133,18 @@ void fill_gobject_combobox(HWND hwnd, unsigned init_idx)
 }
 
 //***********************************************************************
+void handle_custom_req(HWND hwnd)
+{
+   if (miptr->menu_id == IDM_ASCII) {
+      read_a_font(hwnd);
+   }
+   else {
+      run_custom_op = !run_custom_op ;
+      we_should_redraw = 1 ;
+   }
+}
+
+//***********************************************************************
 void run_selected_gobject(HWND hwndGObjList)
 {
    char tempstr[81];
@@ -138,11 +152,13 @@ void run_selected_gobject(HWND hwndGObjList)
    // sel++ ;  // list box index is off by one vs menu_items list
    //  the initial landing slot in the dialog, is a label field;
    //  it is not intended to be executable, and has a resource ID of 0.
-   uint target = menu_items[sel].menu_id;
+   // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
+   uint target = menu_items[sel].menu_id; 
    if (target == 0) {
       return ;
    }
    
+   // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
    wsprintf(tempstr, "[%u: %u] %s", sel, target, menu_items[sel].title);
    status_message(tempstr);
    change_graph_state(target);
@@ -203,6 +219,7 @@ void change_graph_state(uint graph_id)
          elapsed_secs = 0 ;
          pause_the_race = false ;
          use_solid_pattern = false ;
+         run_custom_op = false ;
          return ;         
       }
    }

@@ -37,7 +37,8 @@ uint dbg_flags =
                0 ;
 
 //***********************************************************************
-static HINSTANCE g_hinst = 0;
+//  only used by font.dialog.cpp
+HINSTANCE g_hinst = 0;
 
 static HWND hwndMain = nullptr ;
 static HWND hwndGFrame = nullptr ;
@@ -142,8 +143,8 @@ static tooltip_data const main_tooltips[] = {
 { IDS_PALETTE, _T("Select active palette, for gobjects which use them"        )},          
 { IDC_PALETTE, _T("Select active palette, for gobjects which use them"        )},          
 { IDC_PALNAME, _T("Select active palette, for gobjects which use them"        )},          
-{ IDS_GINFO,   _T("Show name of current gobject"     )},          
-{ IDC_GINFO,   _T("Show name of current gobject"     )},          
+// { IDS_GINFO,   _T("Show name of current gobject"     )},          
+// { IDC_GINFO,   _T("Show name of current gobject"     )},          
 { IDB_PAUSE,   _T("Pause free-running gobjects"          )},          
 { IDB_PSOLID,  _T("Switch from pattern fill to solid fill, on certain gobjects"  )},          
 { IDB_CUSTOM,  _T("Execute custom operations for certain gobjects"         )},          
@@ -202,11 +203,6 @@ static void toggle_pause_req()
 static void toggle_solid_pattern()
 {
    use_solid_pattern = !use_solid_pattern ;
-}
-
-static void handle_custom_req()
-{
-   
 }
 
 //***********************************************************************
@@ -796,7 +792,6 @@ static bool do_vscroll(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
       char const *palname = get_palette_name(palette_idx);
       SetWindowText(hwndPalName, palname);
       set_DAC_table(palette_idx);
-      
       return true;
    } 
    return false ;
@@ -988,7 +983,7 @@ case WM_DRAWITEM:
       {  //  create local context
       DWORD cmd = HIWORD (wParam) ;
       DWORD target = LOWORD(wParam) ;
-      syslog("WM_COMMAND: cmd: %u, target: %u\n", cmd, target);
+      // syslog("WM_COMMAND: cmd: %u, target: %u\n", cmd, target);
 
       switch (cmd) {
       case CBN_SELCHANGE:
@@ -1018,7 +1013,7 @@ case WM_DRAWITEM:
             break;
 
          case IDB_CUSTOM:
-            handle_custom_req();
+            handle_custom_req(hwnd);
             break;
 
          // case IDB_GOSELECT:

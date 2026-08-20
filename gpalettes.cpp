@@ -94,7 +94,9 @@ void gpalettes::update_display()
          // if (amode == 0) {
          if (idx < 256) {
             SetBkColor  (hdc, cheetah[idx].value) ;
-            if (!(get_curr_palette() & 1)) {
+            //  this should *not* use palette, it should just have a toggle
+            // if (!(get_curr_palette() & 1)) {
+            if (!run_custom_op) {
                sprintf(tempstr, " %-*s ", maxlen, cheetah[idx].name) ; //  for %*s 
             } else {
                wsprintf(tempstr, " (%3d, %3d, %3d) ", 
@@ -103,8 +105,9 @@ void gpalettes::update_display()
          }  //  drawing first array
          else {
             SetBkColor  (hdc, hometown[idx-256].value) ;
-            // if (get_curr_palette() == 0) {
-            if (!(get_curr_palette() & 1)) {
+            //  this should *not* use palette, it should just have a toggle
+            // if (!(get_curr_palette() & 1)) {
+            if (!run_custom_op) {
                sprintf(tempstr, " %-*s ", maxlen, hometown[idx-256].name) ; //  for %*s 
             } else {
                wsprintf(tempstr, " (%3d, %3d, %3d) ", 

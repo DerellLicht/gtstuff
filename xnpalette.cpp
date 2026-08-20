@@ -79,8 +79,10 @@ void xnpalette::update_display()
          //  draw the string
          SetTextColor(hdc, 0) ;
          SetBkColor  (hdc, drgb[idx].value) ;
-         // if (get_curr_palette() == 0) {
-         if (!(get_curr_palette() & 1)) {
+         //  this should *not* use palette, it should just have a toggle
+         // if (!(get_curr_palette() & 1)) {
+         if (!run_custom_op) {
+            //  wsprintf() not used here, because it doesn't support length argument
             sprintf(tempstr, " %-*s ", maxlen, drgb[idx].name) ;
          } else {
             wsprintf(tempstr, " (%3d, %3d, %3d) ", 

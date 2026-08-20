@@ -34,8 +34,9 @@ line_games::line_games(std::string title_text)
 //************************************************************************
 void line_games::update_line_algorithm(void)
 {
-   if (++line_algorithm > MAX_LINE_ALGORITHM)
+   if (++line_algorithm > MAX_LINE_ALGORITHM) {
       line_algorithm = 0 ;
+   }
 }
 
 /************************************************************************/
@@ -135,6 +136,7 @@ void line_games::move_point(vector_p vector)
 //************************************************************************
 void line_games::update_display()
 {
+   //  this only works for first entry per program execution
    static bool local_we_should_redraw = true ;
    if (pause_the_race)
       return ;
@@ -143,7 +145,9 @@ void line_games::update_display()
       return ;
    }
    delay = 0 ;
-   if (use_solid_pattern) {
+   
+   if (run_custom_op) {
+      run_custom_op = false ; //  only run once per click
       update_line_algorithm() ;
    }
    

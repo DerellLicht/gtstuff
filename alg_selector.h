@@ -9,12 +9,15 @@
 extern bool we_should_redraw ;
 extern bool pause_the_race ;
 extern bool use_solid_pattern ;
+extern bool run_custom_op ;
+
 extern unsigned cycle_count ;
 
 //***********************************************************************
 //  demo function prototypes
 //***********************************************************************
-// int check_for_state_change(HWND hwnd, unsigned inchr);
+
+//  alg_selector.cpp
 void change_graph_state(uint graph_id);
 bool display_current_operation(void);
 
@@ -26,4 +29,9 @@ void draw_intro_graphics(void);
 
 void fill_gobject_combobox(HWND hwnd, unsigned init_idx);
 void run_selected_gobject(HWND hwndGObjList);
+
+void handle_custom_req(HWND hwnd);
+
+//  font.dialog.cpp
+int read_a_font(HWND hwnd);
 
