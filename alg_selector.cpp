@@ -9,13 +9,13 @@
 #include <math.h>
 #include <vector>
 
-#include "common.h"     //  u8, etc
 #include "resource.h"  
-#include "gtstuff.h"    //  
-#include "palettes.h"   //  24-bit palette functions - required by gobjects.h
-#include "gobjects.h"   //  graphics-object classes
-#include "gfuncs.h"     //  graphics primitives
-#include "alg_selector.h"       //  demo declarations
+#include "common.h"        //  u8, etc
+#include "gtstuff.h"    
+#include "palettes.h"      //  24-bit palette functions - required by gobjects.h
+#include "gobjects.h"      //  graphics-object classes
+#include "gfuncs.h"        //  graphics primitives
+#include "alg_selector.h"  //  demo declarations
 #include "images.h"  
 
 bool we_should_redraw = true ;
