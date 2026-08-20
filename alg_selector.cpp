@@ -1,7 +1,6 @@
 //***************************************************************************************
 //  alg_selector.cpp 
-//  Present onscreen menu of program options, and display the selected option.
-//  Possibly, a better name for this file/header might have been menu.cpp/menu.h
+//  maintains record of current gobject, and dispatches update_display() appropriately
 //***************************************************************************************
 
 #include <windows.h>
