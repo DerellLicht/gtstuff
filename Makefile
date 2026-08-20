@@ -37,6 +37,7 @@ ascii.cpp stained_glass.cpp wincolors.cpp
 CSRC+=der_libs/common_funcs.cpp \
 der_libs/common_win.cpp \
 der_libs/statbar.cpp \
+der_libs/tooltips.cpp \
 der_libs/winmsgs.cpp 
 
 OBJS = $(CSRC:.cpp=.o) rc.o
@@ -86,7 +87,7 @@ rc.o: $(BASE).rc
 
 gtstuff.o: resource.h der_libs/common.h der_libs/commonw.h gtstuff.h gfuncs.h
 gtstuff.o: alg_selector.h config.h palettes.h der_libs/statbar.h
-gtstuff.o: der_libs/winmsgs.h
+gtstuff.o: der_libs/tooltips.h der_libs/winmsgs.h
 config.o: der_libs/common.h config.h
 gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h palettes.h
 alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h
@@ -137,3 +138,5 @@ wincolors.o: alg_selector.h
 der_libs/common_funcs.o: der_libs/common.h
 der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
 der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h
+der_libs/tooltips.o: der_libs/iface_32_64.h der_libs/common.h
+der_libs/tooltips.o: der_libs/tooltips.h

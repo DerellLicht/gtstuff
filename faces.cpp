@@ -277,6 +277,7 @@ void face_trap::redraw_face_traps(HDC hdc)
 
    //**********************************************************************
    //  put faces in places
+   //  ***  This is where the faces[] array is filled out
    //**********************************************************************
    // typedef struct face_s {
    //    u8  fchar ;
@@ -290,7 +291,7 @@ void face_trap::redraw_face_traps(HDC hdc)
       fp->fchar = AF_FIRST_CHAR + (u8) random_int(AF_FACE_COUNT) ;
       fp->attr = random_colorref() ;
       fp->dir  = random_int(8) ;
-      while (1) {
+      while (LOOP_FOREVER) {
          fp->row = random_int(dft_rows) ;
          fp->col = random_int(dft_columns) ;
          busy_idx = (fp->row * dft_columns) + fp->col ;

@@ -7,11 +7,12 @@
 
 #define  USE_WIDTH_RESIZE
 
-static const char *Version = "GTstuff program, Version 1.01" ;
+static const char *Version = "GTstuff program, Version 1.02" ;
 
 #include <windows.h>
 #include <stdio.h>   //  vsprintf, sprintf, which supports %f
 #include <commctrl.h>
+#include <tchar.h>
 
 #include "resource.h"
 #include "common.h"
@@ -22,6 +23,7 @@ static const char *Version = "GTstuff program, Version 1.01" ;
 #include "config.h"
 #include "palettes.h"
 #include "statbar.h"
+#include "tooltips.h"
 #include "winmsgs.h"
 
 //****************************************************************************
@@ -130,6 +132,22 @@ static bool gframe_drawn_once = false;
 //*******************************************************************
 //  *** END Claude resize data block
 //*******************************************************************
+
+//****************************************************************************
+//  Main dialog tooltips
+//****************************************************************************
+static tooltip_data const main_tooltips[] = {
+{ IDS_GOBJECT, _T("Gobject"        )},          
+{ IDS_PALETTE, _T("Palette"        )},          
+{ IDC_PALETTE, _T("Palette"        )},          
+{ IDC_PALNAME, _T("Palette"        )},          
+{ IDS_GINFO,   _T("Graph info"     )},          
+{ IDC_GINFO,   _T("Graph info"     )},          
+{ IDB_PAUSE,   _T("Pause"          )},          
+{ IDB_PSOLID,  _T("Solid Pattern"  )},          
+{ IDB_CUSTOM,  _T("Custom"         )},          
+{ IDB_CLOSE,   _T("Close"          )},          
+{ 0, NULL }} ;
 
 //*******************************************************************
 //lint -esym(714, status_message)
@@ -556,6 +574,7 @@ static void do_init_dialog(HWND hwnd)
    //  restore previously-saved window size/position from the .ini file. 
    restore_dialog_settings(hwnd);
 
+   create_and_add_tooltips(hwnd, 150, 100, 10000, main_tooltips);
    //  Claude 08/17/26 - IDB_CLOSE is the only WS_TABSTOP control in this
    //  dialog, so the dialog manager gives it default keyboard focus on
    //  startup, and nothing ever moves focus away from it afterward. That's
@@ -888,6 +907,80 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
    case WM_VSCROLL:
       return do_vscroll(hwnd, message, wParam, lParam) ;
       
+case WM_MEASUREITEM:
+{
+    // Fixed row height for all combobox items -- must be set once
+    // when the control is created, or the dropdown mis-measures rows
+    LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT)lParam;
+    if (lpmis->CtlID == IDC_GOBJECT)
+    {
+        lpmis->itemHeight = 18; // adjust to taste / your font metrics
+        return TRUE;
+    }
+    break;
+}
+
+case WM_DRAWITEM:
+{
+    LPDRAWITEMSTRUCT lpdis = (LPDRAWITEMSTRUCT)lParam;
+    if (lpdis->CtlID != IDC_GOBJECT || lpdis->itemID == (UINT)-1)
+    {
+        break;
+    }
+
+    char text[256];
+    SendMessage(lpdis->hwndItem, CB_GETLBTEXT, lpdis->itemID, (LPARAM)text);
+
+    BOOL isHeader = (lpdis->itemID == 0);
+    BOOL selected = !isHeader && (lpdis->itemState & ODS_SELECTED);
+
+    COLORREF bgColor = selected ? GetSysColor(COLOR_HIGHLIGHT) : GetSysColor(COLOR_WINDOW);
+    COLORREF txColor = selected ? GetSysColor(COLOR_HIGHLIGHTTEXT)
+                                 : (isHeader ? RGB(128, 128, 128) : GetSysColor(COLOR_WINDOWTEXT));
+
+    HBRUSH hbr = CreateSolidBrush(bgColor);
+    FillRect(lpdis->hDC, &lpdis->rcItem, hbr);
+    DeleteObject(hbr);
+
+    SetBkMode(lpdis->hDC, TRANSPARENT);
+    SetTextColor(lpdis->hDC, txColor);
+
+    // --- font swap block: this is what's new/fixed ---
+    HFONT hFontToUse = NULL;
+    HFONT hOldFont = NULL;
+
+    if (isHeader)
+    {
+        HFONT hCurFont = (HFONT)SendMessage(lpdis->hwndItem, WM_GETFONT, 0, 0);
+        LOGFONT lf;
+        GetObject(hCurFont, sizeof(lf), &lf);
+        lf.lfItalic = TRUE;
+        lf.lfUnderline = TRUE;
+        hFontToUse = CreateFontIndirect(&lf);
+        hOldFont = (HFONT)SelectObject(lpdis->hDC, hFontToUse); // save the DC's previous font
+    }
+    // --- end font swap block ---
+
+    RECT rc = lpdis->rcItem;
+    rc.left += 4;
+    DrawText(lpdis->hDC, text, -1, &rc, DT_SINGLELINE | DT_VCENTER | DT_LEFT);
+
+    // --- restore-then-delete: this is the actual fix ---
+    if (hFontToUse)
+    {
+        SelectObject(lpdis->hDC, hOldFont);   // put the original font back first
+        DeleteObject(hFontToUse);             // now safe to delete our custom one
+    }
+    // --- end restore-then-delete ---
+
+    if (selected && (lpdis->itemState & ODS_FOCUS))
+    {
+        DrawFocusRect(lpdis->hDC, &lpdis->rcItem);
+    }
+
+    return TRUE;
+}
+
    //***********************************************************************************************
    case WM_COMMAND:
       {  //  create local context
