@@ -44,7 +44,6 @@ void draw_intro_graphics(void)
 //***********************************************************************
 //  instantiate each of the classes
 //***********************************************************************
-// NOLINTBEGIN(bugprone-throwing-static-initialization)
 static circles circles0 ;
 static squares squares0 ;
 static polygon polygon0 ;
@@ -63,11 +62,10 @@ static line_games lgames0 ;
 static rcolors rcolors0 ;
 static flames flames0 ;
 static face_trap faces0 ;
-//  ascii is exported because it is used by font.dialog.cpp
+//  ascii is public because it is used by font.dialog.cpp
 ascii ascii0 ;
 static sglass sglass0 ;
 static wincolors wincolors0 ;
-// NOLINTEND(bugprone-throwing-static-initialization)
 
 //************************************************************************
 typedef struct menu_items_s {
