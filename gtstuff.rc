@@ -78,7 +78,7 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //  font Dialog
-FONTBOX DIALOG DISCARDABLE  32, 32, 330, 270
+FONTBOX DIALOG DISCARDABLE  32, 32, 180, 150
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION
 CAPTION "Select font to display"
 FONT 10, "Verdana"

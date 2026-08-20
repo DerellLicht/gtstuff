@@ -43,8 +43,8 @@ HINSTANCE g_hinst = 0;
 static HWND hwndMain = nullptr ;
 static HWND hwndGFrame = nullptr ;
 static HWND hwndGInfo = nullptr ;
-static HWND hwndPalette = nullptr ;
-static HWND hwndPaletteSpin = nullptr ;
+HWND hwndPalette = nullptr ;
+HWND hwndPaletteSpin = nullptr ;
 static HWND hwndPalName = nullptr ;
 static HWND hwndGObjList = nullptr ;
 
@@ -168,6 +168,12 @@ void status_message(uint idx, char *msgstr)
 void show_graph_desc(char const *desc)
 {
    SetWindowText(hwndGInfo, desc) ;
+}
+
+//****************************************************************************
+HWND get_main_dialog_handle()
+{
+   return hwndMain ;
 }
 
 //****************************************************************************
@@ -484,7 +490,6 @@ static void do_init_dialog(HWND hwnd)
    hwndPalName  = GetDlgItem(hwnd, IDC_PALNAME) ;
    hwndGObjList = GetDlgItem(hwnd, IDC_GOBJECT) ;
 
-   
    capture_gframe_layout() ;   //  Claude 08/17/26 - must run before cxClient can change
    //  Claude 08/17/26 - see GFrameSubclassProc's comment for why this is
    //  necessary rather than just calling draw_gframe_contents() after resizes.
@@ -500,13 +505,6 @@ static void do_init_dialog(HWND hwnd)
    MainStatusBar->MoveToBottom(cxClient, cyClient) ;
    //  re-position status-bar parts
    update_statusbar_parts() ;
-
-   //  Claude 08/17/26 - select the intro page (menu_items[0]) at startup,
-   //  same as clicking a menu item would -- establishes miptr/demo_state so
-   //  display_current_operation() has something to dispatch to once the
-   //  idle loop starts. Without this, miptr stays nullptr until the user's
-   //  first menu click and nothing draws in the meantime.
-   change_graph_state(0) ;
 
    //  Claude 08/17/26 - size the graphics frame to the initial dialog and
    //  fill/border it; resize_dialog_and_workspace() keeps this in sync from
@@ -564,6 +562,13 @@ static void do_init_dialog(HWND hwnd)
    //****************************************************************
    fill_gobject_combobox(hwndGObjList, 0);
    
+   //  Claude 08/17/26 - select the intro page (menu_items[0]) at startup,
+   //  same as clicking a menu item would -- establishes miptr/demo_state so
+   //  display_current_operation() has something to dispatch to once the
+   //  idle loop starts. Without this, miptr stays nullptr until the user's
+   //  first menu click and nothing draws in the meantime.
+   change_graph_state(0) ;
+
    //****************************************************************
    //  create/configure working space
    //****************************************************************

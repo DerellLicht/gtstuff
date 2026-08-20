@@ -24,17 +24,21 @@ bool run_custom_op = false ;
 
 unsigned cycle_count = 0 ;
 
-/************************************************************************/
-typedef struct menu_items_s {
-   graph_object *go ;
-   uint          menu_id ;
-   bool          write_once ;
-   char const   *title ;
-   void (*draw_func)(void);
-} menu_items_t, *menu_items_p ;
-
-static menu_items_p miptr = nullptr ;
-/************************************************************************/
+//***********************************************************************
+//  Claude 08/17/26 - the "intro" placeholder graphic: an X marking the
+//  frame's extent while no algorithm is selected. Formerly hardcoded into
+//  draw_gframe_contents() (gtstuff.cpp) on every repaint; moved here as
+//  menu_items[0]'s draw_func so it goes through the same dispatch as every
+//  other demo. draw_gframe_contents() still owns fill+border (that's frame
+//  housekeeping, not demo content) -- this just adds the X on top of that.
+//***********************************************************************
+void draw_intro_graphics(void)
+{
+   HDC hdc = graph_object::get_gframe_dc() ;
+   LineCR(hdc, 0, 0,                  (int) cxGFrame - 1, (int) cyGFrame - 1, WIN_BWHITE) ;
+   LineCR(hdc, 0, (int) cyGFrame - 1, (int) cxGFrame - 1, 0,                  WIN_BWHITE) ;
+   graph_object::release_gframe_dc(hdc) ;
+}
 
 //***********************************************************************
 //  instantiate each of the classes
@@ -64,47 +68,69 @@ static sglass sglass0("Stained Glass") ;
 static wincolors wincolors0("Windows Colors") ;
 // NOLINTEND(bugprone-throwing-static-initialization)
 
-//***********************************************************************
-//  Claude 08/17/26 - the "intro" placeholder graphic: an X marking the
-//  frame's extent while no algorithm is selected. Formerly hardcoded into
-//  draw_gframe_contents() (gtstuff.cpp) on every repaint; moved here as
-//  menu_items[0]'s draw_func so it goes through the same dispatch as every
-//  other demo. draw_gframe_contents() still owns fill+border (that's frame
-//  housekeeping, not demo content) -- this just adds the X on top of that.
-//***********************************************************************
-void draw_intro_graphics(void)
-{
-   HDC hdc = graph_object::get_gframe_dc() ;
-   LineCR(hdc, 0, 0,                  (int) cxGFrame - 1, (int) cyGFrame - 1, WIN_BWHITE) ;
-   LineCR(hdc, 0, (int) cyGFrame - 1, (int) cxGFrame - 1, 0,                  WIN_BWHITE) ;
-   graph_object::release_gframe_dc(hdc) ;
-}
+//************************************************************************
+typedef struct menu_items_s {
+   graph_object  *go ;
+   uint           menu_id ;
+   bool           write_once ;
+   bool           use_pause ;
+   bool           solid_fill_option ;
+   bool           use_pal_select ;
+   bool           use_custom_option ;
+   char const    *title ;
+   void (*draw_func)(void);
+} menu_items_t, *menu_items_p ;
 
-/************************************************************************/
+static menu_items_p miptr = nullptr ;
+
+//************************************************************************
 std::vector<menu_items_t> menu_items {
- { 0,           0,             true,  "Graphics demos",         draw_intro_graphics }
-,{ &circles0,   IDM_CIRCLES,   false, "Psychedelic Raindrops",  0 }
-,{ &squares0,   IDM_SQUARES,   false, "Boxing Lessons",         0 }
-,{ &polygon0,   IDM_LIGHTNING, false, "Temporal Lightning",     0 }
-,{ &rect0,      IDM_RECT,      true,  "Palette Boxes",          0 }
-,{ &pixels0,    IDM_PIXELS,    false, "Pixel-packing",          0 }
-,{ &colorbars0, IDM_CLRBARS,   true,  "Color Bars",             0 }
-,{ &xpalette0,  IDM_XPAL,      true,  "XWindows Palette",       0 }
-,{ &bitblt0,    IDM_BITBLT,    true,  "BitBlt Demo",            0 }
-,{ &xnpalette0, IDM_XNPAL,     true,  "Named XWindows Palette", 0 }
-,{ &xrect0,     IDM_XRECT,     true,  "XWindows Palette Boxes", 0 }
-,{ &gpalettes0, IDM_GPAL,      true,  "More Palettes",          0 }
-,{ &triangles0, IDM_TRIANGLE,  false, "Line Triangle",          0 }
-,{ &rainbow0,   IDM_RAINBOW,   false, "Rainbow !!",             0 }
-,{ &lines0,     IDM_LINES,     false, "Lines",                  0 }
-,{ &lgames0,    IDM_LGAMES,    false, "Lines Games",            0 }
-,{ &rcolors0,   IDM_COLORS,    false, "Raining characters",     0 }
-,{ &flames0,    IDM_FLAMES,    true,  "Fire tricks",            0 }
-,{ &faces0,     IDM_FACES,     true,  "Face traps",             0 }
-,{ &ascii0,     IDM_ASCII,     true,  "Font Toys",              0 }
-,{ &sglass0,    IDM_SGLASS,    false, "Stained Glass",          0 }
-,{ &wincolors0, IDM_WINCOLORS, true,  "Windows Colors",         0 }
+//                                                       pal
+// gobject      menu_id        write_once  pause  solid  select custom
+ { 0,           0,             true,       false, false, false, false, "Graphics demos",         draw_intro_graphics }
+,{ &circles0,   IDM_CIRCLES,   false,      true,  true,  false, false, "Psychedelic Raindrops",  0 }
+,{ &squares0,   IDM_SQUARES,   false,      true,  true,  false, false, "Boxing Lessons",         0 }
+,{ &polygon0,   IDM_LIGHTNING, false,      true,  false, false, false, "Temporal Lightning",     0 }
+,{ &rect0,      IDM_RECT,      true,       false, false, false, false, "Palette Boxes",          0 }
+,{ &pixels0,    IDM_PIXELS,    false,      true,  true,  true,  false, "Pixel-packing",          0 }
+,{ &colorbars0, IDM_CLRBARS,   true,       false, false, false, false, "Color Bars",             0 }
+,{ &xpalette0,  IDM_XPAL,      true,       false, false, false, false, "XWindows Palette",       0 }
+,{ &bitblt0,    IDM_BITBLT,    true,       false, false, false, false, "BitBlt Demo",            0 }
+,{ &xnpalette0, IDM_XNPAL,     true,       false, false, false, true,  "Named XWindows Palette", 0 }
+,{ &xrect0,     IDM_XRECT,     true,       false, false, false, false, "XWindows Palette Boxes", 0 }
+,{ &gpalettes0, IDM_GPAL,      true,       false, false, false, true,  "More Palettes",          0 }
+,{ &triangles0, IDM_TRIANGLE,  false,      true,  false, false, false, "Line Triangle",          0 }
+,{ &rainbow0,   IDM_RAINBOW,   false,      true,  false, true,  false, "Rainbow !!",             0 }
+,{ &lines0,     IDM_LINES,     false,      true,  false, false, false, "Lines",                  0 }
+,{ &lgames0,    IDM_LGAMES,    false,      true,  false, true,  true,  "Lines Games",            0 }
+,{ &rcolors0,   IDM_COLORS,    false,      true,  true,  true,  false, "Raining characters",     0 }
+,{ &flames0,    IDM_FLAMES,    true,       false, false, false, false, "Fire tricks",            0 }
+,{ &faces0,     IDM_FACES,     true,       false, false, false, false, "Face traps",             0 }
+,{ &ascii0,     IDM_ASCII,     true,       false, false, false, true,  "Font Toys",              0 }
+,{ &sglass0,    IDM_SGLASS,    false,      true,  false, true,  false, "Stained Glass",          0 }
+,{ &wincolors0, IDM_WINCOLORS, true,       false, false, false, false, "Windows Colors",         0 }
 } ;
+
+//***********************************************************************
+extern HWND hwndPalette ;
+extern HWND hwndPaletteSpin ;
+
+static void button_enable_disable(HWND hwnd)
+{
+   static HWND hwndPause  = nullptr ;
+   static HWND hwndSolid  = nullptr ;
+   static HWND hwndCustom = nullptr ;
+   if (hwndPause == nullptr) {
+      hwndPause  = GetDlgItem(hwnd, IDB_PAUSE ) ;
+      hwndSolid  = GetDlgItem(hwnd, IDB_PSOLID) ;
+      hwndCustom = GetDlgItem(hwnd, IDB_CUSTOM) ;
+   }
+   EnableWindow(hwndPause,       (miptr->use_pause)         ? TRUE : FALSE);
+   EnableWindow(hwndSolid,       (miptr->solid_fill_option) ? TRUE : FALSE);
+   EnableWindow(hwndCustom,      (miptr->use_custom_option) ? TRUE : FALSE);
+   EnableWindow(hwndPaletteSpin, (miptr->use_pal_select)    ? TRUE : FALSE);
+   EnableWindow(hwndPalette,     (miptr->use_pal_select)    ? TRUE : FALSE);
+}
 
 //***********************************************************************
 void fill_gobject_combobox(HWND hwnd, unsigned init_idx)
@@ -220,9 +246,11 @@ void change_graph_state(uint graph_id)
          pause_the_race = false ;
          use_solid_pattern = false ;
          run_custom_op = false ;
+         button_enable_disable(get_main_dialog_handle());
          return ;         
       }
    }
+   
    //  we didn't find the requested ID
    char msgstr[81];
    sprintf(msgstr, "ERROR: ID %u not found !!", graph_id);
