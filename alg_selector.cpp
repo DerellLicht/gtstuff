@@ -101,7 +101,7 @@ std::vector<menu_items_t> menu_items {
 ,{ &rainbow0,   IDM_RAINBOW,   false,      true,  false, true,  false, "Rainbow !!",             0 }
 ,{ &lines0,     IDM_LINES,     false,      true,  false, false, false, "Lines",                  0 }
 ,{ &lgames0,    IDM_LGAMES,    false,      true,  false, true,  true,  "Lines Games",            0 }
-,{ &rcolors0,   IDM_COLORS,    false,      true,  true,  true,  false, "Raining characters",     0 }
+,{ &rcolors0,   IDM_COLORS,    false,      true,  true,  true,  true,  "Raining characters",     0 }
 ,{ &flames0,    IDM_FLAMES,    true,       false, false, false, false, "Fire tricks",            0 }
 ,{ &faces0,     IDM_FACES,     true,       false, false, false, false, "Face traps",             0 }
 ,{ &ascii0,     IDM_ASCII,     true,       false, false, false, true,  "Font Toys",              0 }

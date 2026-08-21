@@ -95,8 +95,12 @@ void rcolors::update_display()
    }
 
    SetBkColor  (hdc, 0) ;
-   // SetTextColor(hdc, random_palette_ref()) ;
-   SetTextColor(hdc, random_colorref()) ;
+   if (run_custom_op) {
+      SetTextColor(hdc, random_palette_ref()) ;
+   }
+   else {
+      SetTextColor(hdc, random_colorref()) ;
+   }
    TextOut (hdc, col, row, str, 1);
    //  don't delete my font!!
    // DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT)));
