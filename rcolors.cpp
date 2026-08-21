@@ -58,11 +58,8 @@ void rcolors::update_display()
       return ;
 
    cycle_count++ ;
-   // COLORREF pcolor = random_colorref() ;
-   // COLORREF pcolor = get_palette_entry(random_int(256)) ;
    unsigned col = (unsigned) random_int(columns) * char_width ;
    unsigned row = (unsigned) random_int(rows) * char_height ;
-   log_char_dimens();
    
    // str[0] = random_int(93) + 33 ;
    str[0] = (use_solid_pattern) ? (char) 0x7F : (char) random_int(256) ;
@@ -78,9 +75,9 @@ void rcolors::update_display()
    // or you can call CreateFont(), which has a really long parameter list
    // consisting exactly of all the members of a LOGFONT. 
    // In CE, CreateFont() doesn't exist so you have to use CreateFontIndirect().
-   if (rcolors32_hfont == 0)
-       // rcolors32_hfont = build_font("FixedSys", 18, 0, 0, 0, 0) ;
+   if (rcolors32_hfont == 0) {
        rcolors32_hfont = CreateFontIndirect(&lfont) ;
+   }
 
    HDC hdc = get_gframe_dc() ;
    SelectObject (hdc, rcolors32_hfont) ;
@@ -94,6 +91,7 @@ void rcolors::update_display()
       char_height = ssize.cy ;
       columns = (unsigned) cxGFrame / (unsigned) ssize.cx ;
       rows    = (unsigned) cyGFrame / (unsigned) ssize.cy ;
+      log_char_dimens();
    }
 
    SetBkColor  (hdc, 0) ;
