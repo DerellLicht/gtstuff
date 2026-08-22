@@ -1,0 +1,9 @@
+- circles is *much* slower than squares ... check out the loop for delays
+
+- lightning is *also* very slow, but that might be reasonable,
+  given the complex operation...
+  
+- line triangles is *also* exceptionally slow...
+
+- line games is exceptionally slow
+  
