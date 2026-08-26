@@ -1,2 +1,0 @@
-- line games is exceptionally slow
-  
