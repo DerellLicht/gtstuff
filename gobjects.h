@@ -254,6 +254,11 @@ public:
    ~triangles() override = default;
 
    void update_display(void) override ;
+   static inline HPEN s_pens[256] = {} ;
+   int  current_palette_index = -1 ;   // sentinel: "no palette selected yet",
+                                        // guarantees first-ever redraw treats
+                                        // it as a change and populates s_pens
+   void release_cached_pens() ;
 } ;
 
 //*******************************************************

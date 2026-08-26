@@ -15,9 +15,23 @@
 //***********************************************************************
 triangles::triangles() 
 : graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
 { 
+}
+
+//************************************************************************
+//  Claude - free any cached pens from a previous palette so they can be
+//  recreated (lazily, on next use) with the new palette's colors. Safe
+//  to call even if some/all entries are still nullptr.
+//************************************************************************
+void triangles::release_cached_pens()
+{
+   // for (int i = 0; i < 256; i++) {
+   for (auto &s_pen : s_pens) {
+      if (s_pen) {
+         DeleteObject(s_pen) ;
+         s_pen = nullptr ;
+      }
+   }
 }
 
 //************************************************************************
@@ -26,7 +40,7 @@ void triangles::update_display()
    int j, x, y, x1, y1 ;
    double m ;
    static unsigned attr = 1 ;
-   HPEN hPen ;
+   // HPEN hPen ;
    POINT pts[4] ;
    unsigned max_colors = get_palette_entries() ;
 
@@ -37,6 +51,12 @@ void triangles::update_display()
    HDC hdc = get_gframe_dc() ;
    if (we_should_redraw) {
       Clear_Window(hdc, 0);
+      
+      unsigned active_palette_index = get_curr_palette() ;
+      if (current_palette_index != active_palette_index) {  // whatever your global/accessor is called
+         release_cached_pens() ;
+         current_palette_index = active_palette_index ;
+      }
    }
 
    x = DLG_X0 ; //  x offset
@@ -44,8 +64,11 @@ void triangles::update_display()
    x1 = cxGFrame - DLG_X0 ;
    y1 = cyGFrame - DLG_Y0 ;
    for (j=1; j<=20; j++) {
-      hPen = CreatePen(PS_SOLID, 1, get_palette_entry(attr)) ;
-      SelectObject(hdc, hPen) ;
+      // hPen = CreatePen(PS_SOLID, 1, get_palette_entry(attr)) ;
+      if (!s_pens[attr]) {
+         s_pens[attr] = CreatePen(PS_SOLID, 1, get_palette_entry(attr)) ;
+      }
+      SelectObject(hdc, s_pens[attr]) ;
 
       pts[0].x = x ;
       pts[0].y = y ;
@@ -57,8 +80,8 @@ void triangles::update_display()
       pts[3].y = y ;
       Polyline(hdc, &pts[0], 4) ;
 
-      SelectObject(hdc, GetStockObject(BLACK_PEN)) ;  //  deselect my pen
-      DeleteObject (hPen) ;
+      // SelectObject(hdc, GetStockObject(BLACK_PEN)) ;  //  deselect my pen
+      // DeleteObject (hPen) ;
 
       //  update our points
       m = (double) ((double) (x1 - x + 1) 

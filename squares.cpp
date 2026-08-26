@@ -42,7 +42,7 @@ void squares::update_display(void)
 
    xl = random_int(cxGFrame) ;
    yl = random_int(cyGFrame) ;
-   if (use_solid_pattern == 0) {
+   if (!use_solid_pattern) {
       yu = yl + 1 + random_int(MAX_BOX_EDGE) ;
       xr = xl + 1 + random_int(MAX_BOX_EDGE) ;
    } else {
