@@ -65,7 +65,7 @@ clean:
 
 dist:
 	rm -f *.zip
-	zip $(DIST_ZIP) $(BIN) README.md CHANGELOG.md
+	zip $(DIST_ZIP) $(BIN) README.md LICENSE.txt CHANGELOG.md
 
 # Your new automated release workflow
 release: dist
