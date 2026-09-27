@@ -403,12 +403,15 @@ static LRESULT CALLBACK GFrameSubclassProc(HWND hwnd, UINT message, WPARAM wPara
       draw_gframe_contents() ;
       EndPaint(hwnd, &ps) ;
       }
-      return 0 ;
+      return 0 ;   //  WM_PAINT: app returns 0 when it processes this message
 
    case WM_ERASEBKGND:
       //  draw_gframe_contents() already fills the interior every time it
       //  runs (from WM_PAINT above) -- skip the redundant separate erase.
       return 1 ;
+      
+   default:
+      break ;
    }
    return CallWindowProcA(gframe_orig_proc, hwnd, message, wParam, lParam) ;
 }
@@ -901,79 +904,79 @@ static LRESULT CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPAR
    case WM_VSCROLL:
       return do_vscroll(hwnd, message, wParam, lParam) ;
       
-case WM_MEASUREITEM:
-{
-    // Fixed row height for all combobox items -- must be set once
-    // when the control is created, or the dropdown mis-measures rows
-    LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT)lParam;
-    if (lpmis->CtlID == IDC_GOBJECT)
-    {
-        lpmis->itemHeight = 18; // adjust to taste / your font metrics
-        return TRUE;
-    }
-    break;
-}
+   case WM_MEASUREITEM:
+   {
+       // Fixed row height for all combobox items -- must be set once
+       // when the control is created, or the dropdown mis-measures rows
+       LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT)lParam;
+       if (lpmis->CtlID == IDC_GOBJECT)
+       {
+           lpmis->itemHeight = 18; // adjust to taste / your font metrics
+           return TRUE;
+       }
+       break;
+   }
 
-case WM_DRAWITEM:
-{
-    LPDRAWITEMSTRUCT lpdis = (LPDRAWITEMSTRUCT)lParam;
-    if (lpdis->CtlID != IDC_GOBJECT || lpdis->itemID == (UINT)-1)
-    {
-        break;
-    }
+   case WM_DRAWITEM:
+   {
+       LPDRAWITEMSTRUCT lpdis = (LPDRAWITEMSTRUCT)lParam;
+       if (lpdis->CtlID != IDC_GOBJECT || lpdis->itemID == (UINT)-1)
+       {
+           break;
+       }
 
-    char text[256];
-    SendMessage(lpdis->hwndItem, CB_GETLBTEXT, lpdis->itemID, (LPARAM)text);
+       char text[256];
+       SendMessage(lpdis->hwndItem, CB_GETLBTEXT, lpdis->itemID, (LPARAM)text);
 
-    BOOL isHeader = (lpdis->itemID == 0);
-    BOOL selected = !isHeader && (lpdis->itemState & ODS_SELECTED);
+       BOOL isHeader = (lpdis->itemID == 0);
+       BOOL selected = !isHeader && (lpdis->itemState & ODS_SELECTED);
 
-    COLORREF bgColor = selected ? GetSysColor(COLOR_HIGHLIGHT) : GetSysColor(COLOR_WINDOW);
-    COLORREF txColor = selected ? GetSysColor(COLOR_HIGHLIGHTTEXT)
-                                 : (isHeader ? RGB(128, 128, 128) : GetSysColor(COLOR_WINDOWTEXT));
+       COLORREF bgColor = selected ? GetSysColor(COLOR_HIGHLIGHT) : GetSysColor(COLOR_WINDOW);
+       COLORREF txColor = selected ? GetSysColor(COLOR_HIGHLIGHTTEXT)
+                                    : (isHeader ? RGB(128, 128, 128) : GetSysColor(COLOR_WINDOWTEXT));
 
-    HBRUSH hbr = CreateSolidBrush(bgColor);
-    FillRect(lpdis->hDC, &lpdis->rcItem, hbr);
-    DeleteObject(hbr);
+       HBRUSH hbr = CreateSolidBrush(bgColor);
+       FillRect(lpdis->hDC, &lpdis->rcItem, hbr);
+       DeleteObject(hbr);
 
-    SetBkMode(lpdis->hDC, TRANSPARENT);
-    SetTextColor(lpdis->hDC, txColor);
+       SetBkMode(lpdis->hDC, TRANSPARENT);
+       SetTextColor(lpdis->hDC, txColor);
 
-    // --- font swap block: this is what's new/fixed ---
-    HFONT hFontToUse = NULL;
-    HFONT hOldFont = NULL;
+       // --- font swap block: this is what's new/fixed ---
+       HFONT hFontToUse = NULL;
+       HFONT hOldFont = NULL;
 
-    if (isHeader)
-    {
-        HFONT hCurFont = (HFONT)SendMessage(lpdis->hwndItem, WM_GETFONT, 0, 0);
-        LOGFONT lf;
-        GetObject(hCurFont, sizeof(lf), &lf);
-        lf.lfItalic = TRUE;
-        lf.lfUnderline = TRUE;
-        hFontToUse = CreateFontIndirect(&lf);
-        hOldFont = (HFONT)SelectObject(lpdis->hDC, hFontToUse); // save the DC's previous font
-    }
-    // --- end font swap block ---
+       if (isHeader)
+       {
+           HFONT hCurFont = (HFONT)SendMessage(lpdis->hwndItem, WM_GETFONT, 0, 0);
+           LOGFONT lf;
+           GetObject(hCurFont, sizeof(lf), &lf);
+           lf.lfItalic = TRUE;
+           lf.lfUnderline = TRUE;
+           hFontToUse = CreateFontIndirect(&lf);
+           hOldFont = (HFONT)SelectObject(lpdis->hDC, hFontToUse); // save the DC's previous font
+       }
+       // --- end font swap block ---
 
-    RECT rc = lpdis->rcItem;
-    rc.left += 4;
-    DrawText(lpdis->hDC, text, -1, &rc, DT_SINGLELINE | DT_VCENTER | DT_LEFT);
+       RECT rc = lpdis->rcItem;
+       rc.left += 4;
+       DrawText(lpdis->hDC, text, -1, &rc, DT_SINGLELINE | DT_VCENTER | DT_LEFT);
 
-    // --- restore-then-delete: this is the actual fix ---
-    if (hFontToUse)
-    {
-        SelectObject(lpdis->hDC, hOldFont);   // put the original font back first
-        DeleteObject(hFontToUse);             // now safe to delete our custom one
-    }
-    // --- end restore-then-delete ---
+       // --- restore-then-delete: this is the actual fix ---
+       if (hFontToUse)
+       {
+           SelectObject(lpdis->hDC, hOldFont);   // put the original font back first
+           DeleteObject(hFontToUse);             // now safe to delete our custom one
+       }
+       // --- end restore-then-delete ---
 
-    if (selected && (lpdis->itemState & ODS_FOCUS))
-    {
-        DrawFocusRect(lpdis->hDC, &lpdis->rcItem);
-    }
+       if (selected && (lpdis->itemState & ODS_FOCUS))
+       {
+           DrawFocusRect(lpdis->hDC, &lpdis->rcItem);
+       }
 
-    return TRUE;
-}
+       return TRUE;
+   }
 
    //***********************************************************************************************
    case WM_COMMAND:
@@ -999,19 +1002,19 @@ case WM_DRAWITEM:
          case IDB_CLOSE:
          case IDM_FILE_CLOSE:
             PostMessageA(hwnd, WM_CLOSE, 0, 0);
-            break;
+            return true;
             
          case IDB_PAUSE:
             toggle_pause_req();
-            break;
+            return true;
             
          case IDB_PSOLID:
             toggle_solid_pattern();
-            break;
+            return true;
 
          case IDB_CUSTOM:
             handle_custom_req(hwnd);
-            break;
+            return true;
 
          // case IDB_GOSELECT:
          //    run_selected_gobject(hwndGObjList);
@@ -1039,11 +1042,17 @@ case WM_DRAWITEM:
          case IDM_SGLASS:
          case IDM_WINCOLORS:
             change_graph_state(target);
-            break;
-         } //lint !e744  switch target
-         return true;
+            return true;
+            
+         default:
+            break ;  // return false;
+         } //lint !e744  switch BN_CLICKED->target
+         
+      default:
+         break ;  //  return false
       } //lint !e744  switch cmd
-      break;
+      
+      break;   // return false
       }  //lint !e438 !e10  end local context
 
    //********************************************************************
@@ -1052,14 +1061,14 @@ case WM_DRAWITEM:
    case WM_CLOSE:
       release_led_images() ;
       DestroyWindow(hwnd);
-      break;
+      return TRUE;
 
    case WM_DESTROY:
       PostQuitMessage(0);
-      break;
+      return TRUE;
 
-   // default:
-   //    return false;
+   default:
+      return false;
    }  //lint !e744  switch(message) 
 
    return false;

@@ -171,13 +171,13 @@ unsigned face_trap::get_free_flags(int x, int y)
 //************************************************************************
 unsigned face_trap::get_free_count(unsigned busy_flags)
 {
-   unsigned dmask = 1 ;
+   unsigned dmask = 1U ;
    unsigned j ;
    unsigned busy_count = 0 ;
    for (j=0; j<8; j++) {
       if (busy_flags & dmask)
          busy_count++ ;
-      dmask <<= 1 ;
+      dmask <<= 1U ;
    }
    return busy_count ;
 }
@@ -187,7 +187,7 @@ unsigned face_trap::pick_new_dir(unsigned free_flags, unsigned free_count)
 {
    //  the original random_int(free_count) didn't appear to be very random!!
    unsigned idx = random_int(4 * free_count) / 4 ;
-   unsigned dmask = 1 ;
+   unsigned dmask = 1U ;
    unsigned j ;
    unsigned found = 0 ;
    // wsprintf(tempstr, "ri: %u of %u\n", idx, free_count) ;
@@ -198,7 +198,7 @@ unsigned face_trap::pick_new_dir(unsigned free_flags, unsigned free_count)
             return j;
          found++ ;
       }
-      dmask <<= 1 ;
+      dmask <<= 1U ;
    }
    return 0 ;  //  this should not occur, since free_count was already checked
 }
