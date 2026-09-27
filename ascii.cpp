@@ -15,7 +15,7 @@
 #define  DAT_DY   35
 #define  DAT_FH   25
 
-static char ascii_font_name[LF_FULLFACESIZE] = "Wingdings" ;
+static char ascii_font_name[LF_FULLFACESIZE+1] = "Wingdings" ;
 //***********************************************************************
 ascii::ascii() 
 : graph_object() 

@@ -85,7 +85,7 @@ static menu_items_p miptr = nullptr ;
 std::vector<menu_items_t> menu_items {
 //                                                       pal
 // gobject      menu_id        write_once  pause  solid  select custom
- { 0,           0,             true,       false, false, false, false, "Graphics demos",         draw_intro_graphics }
+ { nullptr,     0,             true,       false, false, false, false, "Graphics demos",         draw_intro_graphics }
 ,{ &circles0,   IDM_CIRCLES,   false,      true,  true,  false, false, "Psychedelic Raindrops",  0 }
 ,{ &squares0,   IDM_SQUARES,   false,      true,  true,  false, false, "Boxing Lessons",         0 }
 ,{ &polygon0,   IDM_LIGHTNING, false,      true,  false, false, false, "Temporal Lightning",     0 }
@@ -202,6 +202,20 @@ void run_selected_gobject(HWND hwndGObjList)
 
 //***********************************************************************
 // display the cycle counter
+//
+//  Claude 09/26/26 - called once per update_display() pass; only actually
+//  updates the status bar when a new whole second has elapsed since the
+//  gobject was selected (ti/elapsed_secs are reset in change_graph_state()).
+//  Two fixes in this function:
+//  1. The clock delta is now divided by clocks-per-msec *before* being
+//     narrowed to 32 bits. Previously the (unsigned) cast was applied to
+//     the raw 64-bit delta first, which could wrap depending on the units
+//     that proc_time() returns.
+//  2. cycle_count * 1000 is now computed in 64 bits. In 32-bit unsigned
+//     arithmetic it wrapped at ~4.29M cycles (roughly 5 minutes at
+//     15,000 cycles/sec), after which the displayed rate was garbage.
+//     The variable is also renamed: the value is cycles per *second*,
+//     not per msec.
 //***********************************************************************
 static u64 ti = 0 ;
 static uint elapsed_secs = 0 ;
@@ -209,17 +223,17 @@ static uint elapsed_secs = 0 ;
 static void display_cycle_counter(void)
 {
    char tempstr[81];
-   unsigned tf_msec = (unsigned) (proc_time () - ti) / get_clocks_per_msec ();
+   unsigned tf_msec = (unsigned) ((proc_time () - ti) / get_clocks_per_msec ());
    if (tf_msec == 0) {
       tf_msec = 1 ;
    }
    uint esecs = tf_msec / 1000 ;
    if (esecs != elapsed_secs) {
       elapsed_secs = esecs ;
-      unsigned cycles_per_msec = cycle_count * 1000 / tf_msec ;   
+      unsigned cycles_per_sec = (unsigned) ((u64) cycle_count * 1000 / tf_msec) ;
       // wsprintf(tempstr, "cycle_count=%u, %u msec, %u cycles/sec", 
-      //    cycle_count, tf_msec, cycles_per_msec) ;
-      wsprintf(tempstr, "%u cycles/sec", cycles_per_msec) ;
+      //    cycle_count, tf_msec, cycles_per_sec) ;
+      wsprintf(tempstr, "%u cycles/sec", cycles_per_sec) ;
       status_message(tempstr);
    }
 }

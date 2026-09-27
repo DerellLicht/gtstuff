@@ -5,6 +5,7 @@
 //*****************************************************************************
 
 #include <string>
+#include <limits.h>
 
 class graph_object {
 public:
@@ -242,7 +243,15 @@ public:
 //*******************************************************
 class triangles: public graph_object {
 private:
-
+   //  shared pen cache, one pen per palette entry, created lazily
+   //  and flushed when the active palette changes (only one gobject
+   //  instance is ever active, so sharing is safe)
+   static inline HPEN s_pens[256] = {} ;
+   //  UINT_MAX = "no palette selected yet", so the first redraw
+   //  always counts as a change and populates s_pens
+   unsigned current_palette_index = UINT_MAX ;
+   void release_cached_pens() ;
+   
 public:
    triangles( ) ;
    //  disable copy and assignment operators
@@ -254,11 +263,6 @@ public:
    ~triangles() override = default;
 
    void update_display(void) override ;
-   static inline HPEN s_pens[256] = {} ;
-   int  current_palette_index = -1 ;   // sentinel: "no palette selected yet",
-                                        // guarantees first-ever redraw treats
-                                        // it as a change and populates s_pens
-   void release_cached_pens() ;
 } ;
 
 //*******************************************************

@@ -1,8 +1,8 @@
 USE_DEBUG = NO
 USE_64BIT = NO
 USE_UNICODE = NO
-USE_CLANG = YES
-USE_CYGWIN = NO
+USE_CLANG = NO
+USE_CYGWIN = YES
 
 # the legacy version of qualify.cpp, does not depend upon c++ string class
 USE_LEGACY = NO
@@ -85,7 +85,7 @@ $(BIN): $(OBJS)
 	$(TOOLS)/$(GNAME) $(LFLAGS) $(OBJS) -o $@ $(LIBS)
 
 rc.o: $(BASE).rc 
-	$(TOOLS)\$(WRNAME) $< -O coff -o $@
+	$(TOOLS)/$(WRNAME) $< -O coff -o $@
 
 # DO NOT DELETE
 
