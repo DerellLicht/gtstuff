@@ -29,7 +29,7 @@ static HWND hWndComboBox = 0 ;
 //*********************************************************
 typedef struct font_list_s {
    struct font_list_s *next ;
-   char name[LF_FULLFACESIZE] ;
+   char name[LF_FULLFACESIZE+1] ;
    DWORD combo_box_idx ;
 } font_list_t, *font_list_p ;
 
@@ -156,7 +156,7 @@ static void add_font_to_list(char *facename)
       return ;
    memset((char *) fptr, 0, sizeof(font_list_t)) ;
    strncpy(fptr->name, facename, LF_FULLFACESIZE) ;
-   *(fptr->name + LF_FULLFACESIZE - 1) = 0 ; //  ensure NULL-term on name
+   *(fptr->name + LF_FULLFACESIZE) = 0 ; //  ensure NULL-term on name
 
    //  add new entry to list
    if (font_list == 0)

@@ -94,13 +94,13 @@ void xnpalette::update_display()
          if (drgb[idx].name == 0  ||  strncmp(drgb[idx].name, "gray", 4) == 0)
             break;
          xl += strsz.cx + 3 ;
-         if ((xl + strsz.cx) > cxGFrame)
+         if ((uint) (xl + strsz.cx) > cxGFrame)
             break;
       }  //  draw one row
       if (drgb[idx].name == 0  ||  strncmp(drgb[idx].name, "gray", 4) == 0)
          break;
       yu += strsz.cy + 3 ;
-      if ((yu + strsz.cy) > cyGFrame)
+      if ((uint)(yu + strsz.cy) > cyGFrame)
          break;
    }  
 

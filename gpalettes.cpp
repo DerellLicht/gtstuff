@@ -122,13 +122,13 @@ void gpalettes::update_display()
          if (idx == 512)
             break;
          xl += strsz.cx + 3 ;
-         if ((xl + strsz.cx) > cxGFrame)
+         if ((uint)(xl + strsz.cx) > cxGFrame)
             break;
       }  //  draw one row
       if (idx == 512)
          break;
       yu += strsz.cy + 3 ;
-      if ((yu + strsz.cy) > cyGFrame)
+      if ((uint)(yu + strsz.cy) > cyGFrame)
          break;
    }
 
