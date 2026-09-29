@@ -4,8 +4,6 @@
 
 #undef  __STRICT_ANSI__
 
-#define  USE_VECTOR
-
 //  used by ascii class
 #include <windows.h>
 #include <string>
@@ -30,111 +28,12 @@ extern ascii ascii0 ;
 static HWND hWndComboBox = 0 ;
 
 //*********************************************************
-#ifdef  USE_VECTOR
 typedef struct font_list_s {
    std::string name ;
    DWORD combo_box_idx {};
 } font_list_t, *font_list_p ;
 
 static std::vector<font_list_s> font_list ;
-
-#else
-typedef struct font_list_s {
-   struct font_list_s *next ;
-   char name[LF_FULLFACESIZE+1] ;
-   DWORD combo_box_idx ;
-} font_list_t, *font_list_p ;
-
-static font_list_p font_list = 0 ;
-static font_list_p font_tail = 0 ;
-static unsigned font_count = 0 ;
-#endif
-
-//*********************************************************
-//*********************************************************
-#ifdef  USE_VECTOR
-// static bool const sort_name (font_list_s const &a, font_list_s const &b)
-// {
-//    return (_stricmp (a.name.c_str (), b.name.c_str ()) < 0) ;
-// }
-#else
-static int sort_name(font_list_p a, font_list_p b)
-{
-   return (strcmpi(a->name, b->name)) ;
-}
-#endif
-
-#ifndef  USE_VECTOR
-//*********************************************************
-static font_list_p z = NULL ;
-
-//*********************************************************
-//  This routine merges two sorted linked lists.
-//*********************************************************
-static font_list_p merge(font_list_p a, font_list_p b)
-   {
-   font_list_p c = z ;
-
-   do {
-      int x = sort_name(a, b) ;
-      if (x <= 0)
-         {
-         c->next = a ;
-         c = a ;
-         a = a->next ;
-         }
-      else
-         {
-         c->next = b ;
-         c = b ;
-         b = b->next ;
-         }
-      }
-   while ((a != NULL) && (b != NULL));
-
-   if (a == NULL)  c->next = b ;
-             else  c->next = a ;
-   return z->next ;
-   }
-
-//*********************************************************
-//  This routine recursively splits linked lists
-//  into two parts, passing the divided lists to
-//  merge() to merge the two sorted lists.
-//*********************************************************
-static font_list_p merge_sort(font_list_p c)
-   {
-   font_list_p a ;
-   font_list_p b ;
-   font_list_p prev ;
-   int pcount = 0 ;
-   int j = 0 ;
-
-   if ((c != NULL) && (c->next != NULL))
-      {
-      a = c ;
-      while (a != NULL)
-         {
-         pcount++ ;
-         a = a->next  ;
-         }
-      a = c ;
-      b = c ;
-      prev = b ;
-      while (j <  pcount/2)
-         {
-         j++ ;
-         prev = b ;
-         b = b->next ;
-         }
-      prev->next = NULL ;  //lint !e771
-
-      return merge(merge_sort(a), merge_sort(b)) ;
-      }
-   return c ;
-   }
-
-#endif
 
 //*********************************************************
 //  This intermediate function is used because I want
@@ -146,41 +45,20 @@ static font_list_p merge_sort(font_list_p c)
 //*********************************************************
 static void sort_font_list(void)
 {
-#ifdef  USE_VECTOR
    // std::sort(font_list.begin(), font_list.end(), sort_name);
 
    std::sort(font_list.begin(), font_list.end(), [](const font_list_s& a, const font_list_s& b) {
       return (_stricmp(a.name.c_str(), b.name.c_str()) < 0) ;
    } ) ;
-
-#else
-   if (z == 0) {
-      // z = new ffdata ;
-      // z = (struct ffdata *) malloc(sizeof(ffdata)) ;
-      z = (font_list_p) new font_list_t ;
-      if (z == NULL)
-         return ;
-      memset((char *) z, 0, sizeof(font_list_t)) ;
-   }
-   font_list = merge_sort(font_list) ;
-#endif   
 }
 
 //***********************************************************************
 static bool check_for_dupe(char *face_name)
 {
-#ifdef  USE_VECTOR
    for(auto &fptr : font_list) {
       if (_tcscmp(face_name, fptr.name.c_str()) == 0)
          return true;
    }
-#else
-   font_list_p fptr ;
-   for (fptr=font_list; fptr != 0; fptr = fptr->next) {
-      if (strcmp(face_name, fptr->name) == 0)
-         return true;
-   }
-#endif
    return false;
 }
 
@@ -191,25 +69,8 @@ static void add_font_to_list(char *facename)
 {
    if (check_for_dupe(facename))
       return ;
-#ifdef  USE_VECTOR
    font_list_p fptr = &font_list.emplace_back();
    fptr->name = facename ;
-#else
-   font_list_p fptr = new font_list_t ; // NOLINT(cppcoreguidelines-owning-memory)
-   if (fptr == 0) //lint !e774
-      return ;
-   memset((char *) fptr, 0, sizeof(font_list_t)) ;
-   strncpy(fptr->name, facename, LF_FULLFACESIZE) ;
-   *(fptr->name + LF_FULLFACESIZE) = 0 ; //  ensure NULL-term on name
-
-   //  add new entry to list
-   if (font_list == 0)
-      font_list = fptr ;
-   else
-      font_tail->next = fptr ;
-   font_tail = fptr ;
-   font_count++ ;
-#endif   
 }
 
 //***********************************************************************
@@ -250,16 +111,9 @@ static void populate_combo_box(void)
    if (hWndComboBox == 0)
       return ;
 
-#ifdef  USE_VECTOR
    for(auto &fptr : font_list) {
       fptr.combo_box_idx = SendMessage(hWndComboBox, CB_ADDSTRING, 0, (LPARAM) fptr.name.c_str()) ;
    }
-#else
-   font_list_p fptr ;
-   for (fptr=font_list; fptr != 0; fptr = fptr->next) {
-      fptr->combo_box_idx = SendMessage(hWndComboBox, CB_ADDSTRING, 0, (LPARAM) fptr->name) ;
-   }
-#endif   
 }
 
 //****************************************************************************
@@ -267,27 +121,12 @@ static DWORD get_current_font_index(void)
 {
    char *cfptr = ascii0.get_font_name();
 
-#ifdef  USE_VECTOR
    for(auto &fptr : font_list) {
       if (_tcscmp(cfptr, fptr.name.c_str()) == 0) {
          return fptr.combo_box_idx ;
       }
    }
    return 0 ;
-#else
-   // unsigned fcount = 0 ;
-   font_list_p fptr ;
-   for (fptr=font_list; fptr != 0; fptr = fptr->next) {
-      // wsprintf(tempstr, "%s vs %s, %u, %u\n", cfptr, fptr->name, fptr->combo_box_idx, fcount) ;
-      // OutputDebugString(tempstr) ;
-      if (strcmp(cfptr, fptr->name) == 0)
-         break;
-      // fcount++ ;
-   }
-   // wsprintf(tempstr, "current font=%s (%u), fcount=%u\n", cfptr, fptr->combo_box_idx, fcount) ;
-   // OutputDebugString(tempstr) ;
-   return (fptr == 0) ? 0 : fptr->combo_box_idx ;
-#endif   
 }
 
 //****************************************************************************
@@ -296,19 +135,11 @@ static char const *get_selected_font(void)
    LRESULT cbresult = SendMessage(hWndComboBox, CB_GETCURSEL, 0, 0);
    if (cbresult == CB_ERR)
       return 0;
-#ifdef  USE_VECTOR
    for(auto &fptr : font_list) {
       if (fptr.combo_box_idx == (DWORD) cbresult) {
          return fptr.name.c_str();
       }
    }
-#else
-   font_list_p fptr ;
-   for (fptr=font_list; fptr != 0; fptr = fptr->next) {
-      if (fptr->combo_box_idx == (DWORD) cbresult)
-         return fptr->name;
-   }
-#endif   
    return 0;
 }
 
