@@ -47,6 +47,10 @@ void ascii::update_display()
    if (!we_should_redraw) 
       return ;
 
+   char tempstr[81];
+   wsprintf(tempstr, "current font: %s", ascii_font_name) ;
+   status_message(tempstr);
+   
    // hfont = build_font("Courier New", 20, 0, 0, 0, 0) ;
    HFONT hfont = build_font(ascii_font_name, DAT_FH, EZ_ATTR_NORMAL) ;
    if (hfont == 0) {

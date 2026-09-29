@@ -222,7 +222,6 @@ static uint elapsed_secs = 0 ;
 
 static void display_cycle_counter(void)
 {
-   char tempstr[81];
    unsigned tf_msec = (unsigned) ((proc_time () - ti) / get_clocks_per_msec ());
    if (tf_msec == 0) {
       tf_msec = 1 ;
@@ -233,6 +232,7 @@ static void display_cycle_counter(void)
       unsigned cycles_per_sec = (unsigned) ((u64) cycle_count * 1000 / tf_msec) ;
       // wsprintf(tempstr, "cycle_count=%u, %u msec, %u cycles/sec", 
       //    cycle_count, tf_msec, cycles_per_sec) ;
+      char tempstr[81];
       wsprintf(tempstr, "%u cycles/sec", cycles_per_sec) ;
       status_message(tempstr);
    }
