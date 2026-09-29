@@ -104,7 +104,7 @@ std::vector<menu_items_t> menu_items {
 ,{ &rcolors0,   IDM_COLORS,    false,      true,  true,  true,  true,  "Raining characters",     0 }
 ,{ &flames0,    IDM_FLAMES,    true,       false, false, false, false, "Fire tricks",            0 }
 ,{ &faces0,     IDM_FACES,     true,       false, false, false, false, "Face traps",             0 }
-,{ &ascii0,     IDM_ASCII,     true,       false, false, false, true,  "Font Toys",              0 }
+,{ &ascii0,     IDM_ASCII,     true,       false, false, false, true,  "Font Toys (ASCII)",      0 }
 ,{ &sglass0,    IDM_SGLASS,    false,      true,  false, true,  false, "Stained Glass",          0 }
 ,{ &wincolors0, IDM_WINCOLORS, true,       false, false, false, false, "Windows Colors",         0 }
 } ;

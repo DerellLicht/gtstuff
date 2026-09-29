@@ -25,7 +25,7 @@ ascii::ascii()
 }
 
 //************************************************************************
-void ascii::set_font_name(char *new_font_name)
+void ascii::set_font_name(char const *new_font_name)
 {
    if (new_font_name != 0) {
       strncpy(ascii_font_name, new_font_name, LF_FULLFACESIZE) ;

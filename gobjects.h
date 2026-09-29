@@ -469,7 +469,7 @@ public:
    ~ascii() override = default;
 
    void update_display(void) override ;
-   void set_font_name(char *new_font_name);
+   void set_font_name(char const *new_font_name);
    char *get_font_name(void);
 } ;
 

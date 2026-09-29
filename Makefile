@@ -14,7 +14,7 @@ ifeq ($(USE_DEBUG),YES)
 CFLAGS=-Wall -O -g -Weffc++ -c 
 LFLAGS=
 else
-CFLAGS=-Wall -O2 -Weffc++ -c 
+CFLAGS=-Wall -O2 -c 
 LFLAGS=-s -mwindows 
 endif
 CFLAGS += -Wno-write-strings
@@ -50,7 +50,7 @@ LIBS=-lgdi32 -lcomctl32
 DIST_ZIP := $(BASE)V$(VERSION).zip
 
 # Force these action-only targets to always run
-.PHONY: dist
+.PHONY: dist ccjson
 
 #************************************************************
 %.o: %.cpp
@@ -94,9 +94,9 @@ gtstuff.o: alg_selector.h config.h palettes.h der_libs/statbar.h
 gtstuff.o: der_libs/tooltips.h der_libs/winmsgs.h images.h
 config.o: der_libs/common.h config.h
 gfuncs.o: der_libs/common.h gfuncs.h gtstuff.h palettes.h
-alg_selector.o: der_libs/common.h resource.h gtstuff.h palettes.h gobjects.h
+alg_selector.o: resource.h der_libs/common.h gtstuff.h palettes.h gobjects.h
 alg_selector.o: gfuncs.h alg_selector.h images.h
-gobjects.o: der_libs/common.h gtstuff.h gfuncs.h palettes.h gobjects.h
+gobjects.o: der_libs/common.h gtstuff.h palettes.h gobjects.h
 font.dialog.o: resource.h der_libs/common.h gtstuff.h palettes.h gobjects.h
 font.dialog.o: gfuncs.h alg_selector.h
 images.o: resource.h der_libs/common.h gtstuff.h images.h

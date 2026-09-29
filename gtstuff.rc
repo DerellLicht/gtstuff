@@ -94,7 +94,7 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //  font Dialog
-FONTBOX DIALOG DISCARDABLE  32, 32, 180, 150
+FONTBOX DIALOG DISCARDABLE  32, 32, 180, 100
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION
 CAPTION "Select font to display"
 FONT 10, "Verdana"
@@ -102,10 +102,10 @@ BEGIN
     // CTEXT    text,                   id,          x,  y, width, height [, style [, extended-style]]
     CTEXT       "Font Selection dialog",IDC_STATIC, 0, 10, 200, 20
 
-    // PUSHBUTTON text, id, x, y, width, height [[, style [[, extended-style]]]]
-    PUSHBUTTON  "Okay", IDC_FSELECT, 10, 30, 100, 20
     // COMBOBOX id, x, y, width, height [, style [, extended-style]]
-    COMBOBOX    IDC_FCOMBO, 10, 60, 80, 120, CBS_DROPDOWN | WS_VSCROLL
+    COMBOBOX    IDC_FCOMBO,          10, 30, 160, 100, CBS_DROPDOWN | WS_VSCROLL
     // COMBOBOX    IDC_FCOMBO, 10, 60, 80, 200, WS_VSCROLL
+    // PUSHBUTTON text, id, x, y, width, height [[, style [[, extended-style]]]]
+    PUSHBUTTON  "Okay", IDC_FSELECT, 10, 60, 160,  20
 END
 

@@ -4,8 +4,14 @@
 
 #undef  __STRICT_ANSI__
 
+#define  USE_VECTOR
+
 //  used by ascii class
 #include <windows.h>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <tchar.h>
 
 #include "resource.h"  
 #include "common.h"  
@@ -14,9 +20,6 @@
 #include "gobjects.h"   //  graphics-object classes
 #include "gfuncs.h"
 #include "alg_selector.h"
-
-//lint -esym(714, display_font_list)
-//lint -esym(765, display_font_list)
 
 //  ascii.cpp
 // extern void set_font_name(char *new_font_name);
@@ -27,6 +30,15 @@ extern ascii ascii0 ;
 static HWND hWndComboBox = 0 ;
 
 //*********************************************************
+#ifdef  USE_VECTOR
+typedef struct font_list_s {
+   std::string name ;
+   DWORD combo_box_idx {};
+} font_list_t, *font_list_p ;
+
+static std::vector<font_list_s> font_list ;
+
+#else
 typedef struct font_list_s {
    struct font_list_s *next ;
    char name[LF_FULLFACESIZE+1] ;
@@ -36,13 +48,23 @@ typedef struct font_list_s {
 static font_list_p font_list = 0 ;
 static font_list_p font_tail = 0 ;
 static unsigned font_count = 0 ;
+#endif
 
 //*********************************************************
+//*********************************************************
+#ifdef  USE_VECTOR
+// static bool const sort_name (font_list_s const &a, font_list_s const &b)
+// {
+//    return (_stricmp (a.name.c_str (), b.name.c_str ()) < 0) ;
+// }
+#else
 static int sort_name(font_list_p a, font_list_p b)
 {
-   return(strcmpi(a->name, b->name)) ;
+   return (strcmpi(a->name, b->name)) ;
 }
+#endif
 
+#ifndef  USE_VECTOR
 //*********************************************************
 static font_list_p z = NULL ;
 
@@ -112,6 +134,8 @@ static font_list_p merge_sort(font_list_p c)
    return c ;
    }
 
+#endif
+
 //*********************************************************
 //  This intermediate function is used because I want
 //  merge_sort() to accept a passed parameter,
@@ -122,6 +146,14 @@ static font_list_p merge_sort(font_list_p c)
 //*********************************************************
 static void sort_font_list(void)
 {
+#ifdef  USE_VECTOR
+   // std::sort(font_list.begin(), font_list.end(), sort_name);
+
+   std::sort(font_list.begin(), font_list.end(), [](const font_list_s& a, const font_list_s& b) {
+      return (_stricmp(a.name.c_str(), b.name.c_str()) < 0) ;
+   } ) ;
+
+#else
    if (z == 0) {
       // z = new ffdata ;
       // z = (struct ffdata *) malloc(sizeof(ffdata)) ;
@@ -131,17 +163,25 @@ static void sort_font_list(void)
       memset((char *) z, 0, sizeof(font_list_t)) ;
    }
    font_list = merge_sort(font_list) ;
+#endif   
 }
 
 //***********************************************************************
-static unsigned check_for_dupe(char *face_name)
+static bool check_for_dupe(char *face_name)
 {
+#ifdef  USE_VECTOR
+   for(auto &fptr : font_list) {
+      if (_tcscmp(face_name, fptr.name.c_str()) == 0)
+         return true;
+   }
+#else
    font_list_p fptr ;
    for (fptr=font_list; fptr != 0; fptr = fptr->next) {
       if (strcmp(face_name, fptr->name) == 0)
-         return 1;
+         return true;
    }
-   return 0;
+#endif
+   return false;
 }
 
 //***********************************************************************
@@ -149,8 +189,12 @@ static unsigned check_for_dupe(char *face_name)
 //***********************************************************************
 static void add_font_to_list(char *facename)
 {
-   if (check_for_dupe(facename) != 0)
+   if (check_for_dupe(facename))
       return ;
+#ifdef  USE_VECTOR
+   font_list_p fptr = &font_list.emplace_back();
+   fptr->name = facename ;
+#else
    font_list_p fptr = new font_list_t ; // NOLINT(cppcoreguidelines-owning-memory)
    if (fptr == 0) //lint !e774
       return ;
@@ -165,6 +209,7 @@ static void add_font_to_list(char *facename)
       font_tail->next = fptr ;
    font_tail = fptr ;
    font_count++ ;
+#endif   
 }
 
 //***********************************************************************
@@ -175,7 +220,7 @@ static void add_font_to_list(char *facename)
 //   TCHAR  elfScript[LF_FACESIZE];
 // } ENUMLOGFONTEX, *LPENUMLOGFONTEX;
 static int CALLBACK EnumFontFamiliesExProc(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
-                                    int FontType, LPARAM lParam )
+                                           int FontType, LPARAM lParam )
 {
    // LOGFONT *lfptr = &lpelfe->elfLogFont ;
    // printf( "%s, charset=%u, paf=%u\n", lfptr->lfFaceName, lfptr->lfCharSet, lfptr->lfPitchAndFamily );
@@ -205,19 +250,33 @@ static void populate_combo_box(void)
    if (hWndComboBox == 0)
       return ;
 
+#ifdef  USE_VECTOR
+   for(auto &fptr : font_list) {
+      fptr.combo_box_idx = SendMessage(hWndComboBox, CB_ADDSTRING, 0, (LPARAM) fptr.name.c_str()) ;
+   }
+#else
    font_list_p fptr ;
    for (fptr=font_list; fptr != 0; fptr = fptr->next) {
       fptr->combo_box_idx = SendMessage(hWndComboBox, CB_ADDSTRING, 0, (LPARAM) fptr->name) ;
    }
+#endif   
 }
 
 //****************************************************************************
 static DWORD get_current_font_index(void)
 {
-   font_list_p fptr ;
    char *cfptr = ascii0.get_font_name();
 
+#ifdef  USE_VECTOR
+   for(auto &fptr : font_list) {
+      if (_tcscmp(cfptr, fptr.name.c_str()) == 0) {
+         return fptr.combo_box_idx ;
+      }
+   }
+   return 0 ;
+#else
    // unsigned fcount = 0 ;
+   font_list_p fptr ;
    for (fptr=font_list; fptr != 0; fptr = fptr->next) {
       // wsprintf(tempstr, "%s vs %s, %u, %u\n", cfptr, fptr->name, fptr->combo_box_idx, fcount) ;
       // OutputDebugString(tempstr) ;
@@ -228,19 +287,28 @@ static DWORD get_current_font_index(void)
    // wsprintf(tempstr, "current font=%s (%u), fcount=%u\n", cfptr, fptr->combo_box_idx, fcount) ;
    // OutputDebugString(tempstr) ;
    return (fptr == 0) ? 0 : fptr->combo_box_idx ;
+#endif   
 }
 
 //****************************************************************************
-static char *get_selected_font(void)
+static char const *get_selected_font(void)
 {
    LRESULT cbresult = SendMessage(hWndComboBox, CB_GETCURSEL, 0, 0);
    if (cbresult == CB_ERR)
       return 0;
+#ifdef  USE_VECTOR
+   for(auto &fptr : font_list) {
+      if (fptr.combo_box_idx == (DWORD) cbresult) {
+         return fptr.name.c_str();
+      }
+   }
+#else
    font_list_p fptr ;
    for (fptr=font_list; fptr != 0; fptr = fptr->next) {
       if (fptr->combo_box_idx == (DWORD) cbresult)
          return fptr->name;
    }
+#endif   
    return 0;
 }
 
@@ -319,7 +387,7 @@ static BOOL CALLBACK FontDlgProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 void display_font_list(void)
 {
    // font_list_p fptr ;
-   syslog("found %u fonts\n", font_count) ;
+   syslog("found %u fonts\n", font_list.size()) ;
    // OutputDebugString(tempstr) ;
    // for (fptr=font_list; fptr != 0; fptr = fptr->next) 
    //    puts(fptr->name) ;
@@ -328,7 +396,7 @@ void display_font_list(void)
 //****************************************************************************
 int read_a_font(HWND hwnd)
 {
-   if (font_count == 0) {
+   if (font_list.empty()) {
       build_font_list() ;
       sort_font_list() ;
       // display_font_list() ;
