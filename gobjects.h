@@ -372,14 +372,14 @@ private:
    int max_row = 0;
    int x = 0;
    int y = 0;
-   int distfact = 2;    /* multiplier for distance */
-   int size = 75;        /* max size to grow to     */
-   int osize = 50;       /* same                    */
-   int limit = 1;       /* min. size of box - one row/col */
-   int in_size = 1;     /* starting size                */
-   int o_size = 0;      /* same                         */
-   int unoo = 1;        /* one - changed from + to -    */
-   int onoo = 1;        /* same, for other drawing      */
+   int distfact = 2;    //  multiplier for distance 
+   int size = 75;       //  max size to grow to     
+   int osize = 50;      //  same                    
+   int limit = 1;       //  min. size of box - one row/col
+   int in_size = 1;     //  starting size             
+   int o_size = 0;      //  same                      
+   int unoo = 1;        //  one - changed from + to - 
+   int onoo = 1;        //  same, for other drawing   
 
    void box_box (HDC hdc, int col_inpt, int row_inpt, int siz);
    void box_point (HDC hdc, int ccol, int rrow, int ssiz);
