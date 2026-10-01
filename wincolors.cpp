@@ -1,4 +1,6 @@
 #include <windows.h>
+#include <string>
+#include <vector>
 
 #include "common.h"     //  u8, etc
 #include "gtstuff.h"  
@@ -7,8 +9,7 @@
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"
 
-#define  WCLR_NAME_CT   30
-static char const * const wincolor_names[WCLR_NAME_CT] = {
+static std::vector<std::string> wincolor_names {
 "COLOR_SCROLLBAR",
 "COLOR_BACKGROUND",  //  1: use for background, aka COLOR_DESKTOP
 "COLOR_ACTIVECAPTION",
@@ -41,6 +42,7 @@ static char const * const wincolor_names[WCLR_NAME_CT] = {
 "COLOR_MENUHILIGHT"
 } ;
 
+#define  COLOR_UNUSED25    25
 //************************************************************************
 void wincolors::update_display()
 {
@@ -66,13 +68,16 @@ void wincolors::update_display()
 
    SetBkMode(hdc, TRANSPARENT);
    int line_idx = 0 ;
-   for (idx=0; idx < WCLR_NAME_CT; idx++) {
-      if (idx == 1  ||  idx == 8  ||  idx == 25)
+   for (idx=0; idx < wincolor_names.size(); idx++) {
+      if (idx == COLOR_BACKGROUND ||   //  1
+          idx == COLOR_WINDOWTEXT ||   //  8
+          idx == COLOR_UNUSED25)       // 25
          continue;
       unsigned xf = xi + dx ;
       unsigned yf = yi + dy ;
       COLORREF bgnd = GetSysColor(idx) ;
-      wsprintf(bfr, " %u: %s ", idx, wincolor_names[idx]) ;
+      // sprintf(bfr, " %u: %s ", idx, wincolor_names[idx].c_str()) ;
+      sprintf(bfr, " %u: %s ", idx, wincolor_names[idx].c_str()) ;
       SolidRect(hdc, xi, yi, xf, yf, bgnd) ;
       if (bgnd == 0) {
          Box(hdc, xi, yi, xf, yf, frame_white) ;
