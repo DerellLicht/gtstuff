@@ -7,15 +7,6 @@
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"
 
-//***********************************************************************
-lines::lines() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-, orient(0)  //  0=horiz, 1=vert
-{ 
-}
-
 //************************************************************************
 void lines::update_display()
 {

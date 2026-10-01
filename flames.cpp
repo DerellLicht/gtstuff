@@ -9,24 +9,7 @@
 #include "alg_selector.h"
 
 #define  COLOR_DECREMENT   2
-//***********************************************************************
-flames::flames() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-// , fire_palette(0)  //  cannot init array in init list
-, fire_palette{}
-, fire_palette_init(0)
-, fire_palette_record(NULL)
-, fire_char_width(0)
-, fire_char_height(0)
-, fire_rows(0)
-, fire_cols(0)
-{ 
-   //lint -esym(1401, flames::fire_palette)
-}
 
-//lint -esym(1714, flames::dump_fire_palette)
 //************************************************************************
 void flames::dump_fire_palette(void)
 {

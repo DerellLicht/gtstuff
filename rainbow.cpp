@@ -41,30 +41,6 @@ static const unsigned rainbow_index[6] = {
    WIN_MAGENTA       //  violet  
 } ;
 
-//***********************************************************************
-rainbow::rainbow() 
-: graph_object() 
-, X(0)
-, Y(0)
-, B(0)
-, thold_limit(60.0)
-, xbase(1)
-, xdiff(1)
-, ybase(1)
-, ydiff(1)
-
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-   // RADS2DEGS = (180.0 / 3.14159) ;
-   // thold_limit = 60.0 ;
-
-   //  these initial values are unimporant,
-   //  it will be initialized by WM_SIZE in the windows app
-   // xbase = xdiff = ybase = ydiff = 1 ;
-   //lint -esym(1401, rainbow::X, rainbow::Y, rainbow::B)
-}
-
 //************************************************************************
 void rainbow::update_gtimer(HDC hdc)
 {

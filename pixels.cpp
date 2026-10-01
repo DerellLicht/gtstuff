@@ -10,19 +10,6 @@
 #define  PIX_DX   3
 #define  PIX_DY   3
 
-//***********************************************************************
-pixels::pixels() 
-: graph_object() 
-, dp_char_width(0)
-, dp_char_height(0)
-, rows(0)
-, columns(0)
-, color(0)
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
-
 //************************************************************************
 void pixels::log_pixel_dimens()
 {

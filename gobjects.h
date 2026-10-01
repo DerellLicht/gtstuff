@@ -88,15 +88,15 @@ public:
 //*******************************************************
 class pixels: public graph_object {
 private:
-   unsigned dp_char_width ;
-   unsigned dp_char_height ;
-   unsigned rows ;
-   unsigned columns ;
-   unsigned color ;
+   unsigned dp_char_width = 0;
+   unsigned dp_char_height = 0;
+   unsigned rows = 0;
+   unsigned columns = 0;
+   unsigned color = 0;
    void log_pixel_dimens();
 
 public:
-   pixels();
+   pixels() = default;
    ~pixels() override = default;
 
    void update_display(void) override ;
@@ -196,16 +196,21 @@ public:
 //*******************************************************
 class rainbow: public graph_object {
 private:
-   double X, Y, B ;
-   double thold_limit ;
-   unsigned xbase, xdiff, ybase, ydiff ;
+   double X = 0.0;
+   double Y = 0.0;
+   double B = 0.0;
+   double thold_limit = 60.0;
+   unsigned xbase = 1;
+   unsigned xdiff = 1; 
+   unsigned ybase = 1;
+   unsigned ydiff = 1;
 
    //  private functions
    void rainbow_plot_pixel(HDC hdc, int pcolor, double thold_angle, unsigned primary);
    void update_gtimer(HDC hdc);
 
 public:
-   rainbow();
+   rainbow() = default;
    ~rainbow() override = default;
 
    void update_display(void) override ;
@@ -215,10 +220,10 @@ public:
 //*******************************************************
 class lines: public graph_object {
 private:
-   unsigned orient ;  //  0=horiz, 1=vert
+   unsigned orient = 0;  //  0=horiz, 1=vert
 
 public:
-   lines();
+   lines() = default;
    ~lines() override = default;
 
    void update_display(void) override ;
@@ -266,14 +271,15 @@ public:
 //*******************************************************
 class rcolors: public graph_object {
 private:
-   unsigned char_width ;
-   unsigned char_height ;
-   unsigned rows ;
-   unsigned columns ;
+   unsigned char_width = 0;
+   unsigned char_height = 0;
+   unsigned rows = 0;
+   unsigned columns = 0;
+   
    void log_char_dimens();
 
 public:
-   rcolors();
+   rcolors() = default;
    ~rcolors() override = default;
 
    void update_display(void) override ;
@@ -282,13 +288,13 @@ public:
 //*******************************************************
 class flames: public graph_object {
 private:
-   rgb_t fire_palette[256] ;
-   unsigned fire_palette_init ;
-   u8 *fire_palette_record ;
-   unsigned fire_char_width ;
-   unsigned fire_char_height ;
-   unsigned fire_rows ;
-   unsigned fire_cols ;
+   rgb_t fire_palette[256] = {};
+   unsigned fire_palette_init = 0;
+   u8 *fire_palette_record = {};
+   unsigned fire_char_width = 0;
+   unsigned fire_char_height = 0;
+   unsigned fire_rows = 0;
+   unsigned fire_cols = 0;
 
    //  private functions
    void dump_fire_palette(void);
@@ -302,7 +308,7 @@ private:
    void draw_fire_element(HDC hdc, unsigned x, unsigned y, unsigned color);
 
 public:
-   flames();
+   flames() = default;
    ~flames() override = default;
 
    void update_display(void) override ;
@@ -321,12 +327,12 @@ typedef struct face_s {
 
 class face_trap: public graph_object {
 private:
-   char *busy_bfr ;
-   unsigned char_width ;
-   unsigned char_height ;
-   unsigned dft_columns ;
-   unsigned dft_rows ;
-   face_t faces[FACE_COUNT] ;  //  convert to <vector>
+   char *busy_bfr = {};
+   unsigned char_width = 0;
+   unsigned char_height = 0;
+   unsigned dft_columns = 0;
+   unsigned dft_rows = 0;
+   face_t faces[FACE_COUNT] = {};  //  convert to <vector>
 
    //  private functions
    void move_a_face(HDC hdc, face_p fp);
@@ -339,7 +345,7 @@ private:
    unsigned max_char_width(HDC hdc);
 
 public:
-   face_trap();
+   face_trap() = default;
    ~face_trap() override = default;
 
    void update_display(void) override ;
@@ -362,21 +368,24 @@ public:
 //*******************************************************
 class sglass: public graph_object {
 private:
-   int max_col, max_row, x, y;
-   int distfact ;    /* multiplier for distance */
-   int size ;        /* max size to grow to     */
-   int osize ;       /* same                    */
-   int limit ;       /* min. size of box - one row/col */
-   int in_size ;     /* starting size                */
-   int o_size ;      /* same                         */
-   int unoo ;        /* one - changed from + to -    */
-   int onoo ;        /* same, for other drawing      */
+   int max_col = 0;
+   int max_row = 0;
+   int x = 0;
+   int y = 0;
+   int distfact = 2;    /* multiplier for distance */
+   int size = 75;        /* max size to grow to     */
+   int osize = 50;       /* same                    */
+   int limit = 1;       /* min. size of box - one row/col */
+   int in_size = 1;     /* starting size                */
+   int o_size = 0;      /* same                         */
+   int unoo = 1;        /* one - changed from + to -    */
+   int onoo = 1;        /* same, for other drawing      */
 
    void box_box (HDC hdc, int col_inpt, int row_inpt, int siz);
    void box_point (HDC hdc, int ccol, int rrow, int ssiz);
 
 public:
-   sglass();
+   sglass() = default;
    ~sglass() override = default;
    
    void update_display(void) override ;

@@ -7,29 +7,6 @@
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"
 
-//***********************************************************************
-sglass::sglass() 
-: graph_object() 
-, max_col(0)    
-, max_row(0)
-, x(0)
-, y(0)
-, distfact(2)   /* multiplier for distance */
-, size(75)      /* max size to grow to     */
-, osize(50)     /* same                    */
-, limit(1)      /* min. size of box - one row/col */
-, in_size(1)    /* starting size                */
-, o_size(0)     /* same                         */
-, unoo(1)       /* one - changed from + to -    */
-, onoo(1)       /* same, for other drawing      */
-
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-   //  these are initialized in update_display(), after WM_SIZE is processed
-   //lint -esym(1401, sglass::max_col, sglass::max_row, sglass::x, sglass::y, sglass::o_size)
-}
-
 /*******************************************************************/
 /*                         box_box  -  draw boxes                  */
 /*******************************************************************/

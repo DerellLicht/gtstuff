@@ -7,22 +7,6 @@
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"       //  cycle_count
 
-//***********************************************************************
-rcolors::rcolors() 
-: graph_object() 
-, char_width(0)
-, char_height(0)
-, rows(0)
-, columns(0)
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-   // char_width = 0 ;
-   // char_height = 0 ;
-   // rows = 0 ;
-   // columns = 0 ;
-}
-
 //************************************************************************
 void rcolors::log_char_dimens()
 {

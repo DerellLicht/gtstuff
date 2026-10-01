@@ -84,21 +84,6 @@ static direction_data_t dir_data[8] = {
    {  0, -1, 0x80 }, // N
 } ;
 
-//***********************************************************************
-face_trap::face_trap() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-, busy_bfr(NULL)
-, char_width(0)
-, char_height(0)
-, dft_columns(0)
-, dft_rows(0)
-, faces{}
-{ 
-   //lint -esym(1401, face_trap::faces)
-}
-
 //************************************************************************
 unsigned face_trap::max_char_width(HDC hdc)
 {
