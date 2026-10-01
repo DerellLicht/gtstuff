@@ -158,7 +158,7 @@ void wincolors::update_display()
       unsigned yf = yi + dy ;
       COLORREF bgnd = GetSysColor(idx) ;
       // sprintf(bfr, " %u: %s ", idx, wincolor_names[idx].c_str()) ;
-      sprintf(bfr, " %u: %s ", idx, wincolor_names[idx].c_str()) ;
+      sprintf(bfr, " %u: %s ", idx, wincolor_names[idx].c_str()) ;  //  NOLINT(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
       SolidRect(hdc, xi, yi, xf, yf, bgnd) ;
       //  Claude: the label is drawn against the box color.  Use the theme's
       //  COLOR_WINDOWTEXT if it is readable there, else black/white.

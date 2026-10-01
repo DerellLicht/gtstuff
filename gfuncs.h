@@ -40,9 +40,8 @@ COLORREF random_palette_ref(void);
 
 void Clear_Screen(HDC hdc);
 void Clear_Screen(HDC hdc, BYTE Color);
-// void Clear_Window(HWND hwnd, BYTE Color);
-void Clear_Window(HWND hwnd, unsigned Color);
-void Clear_Window(HDC hdc, unsigned Color);
+void Clear_Window(HWND hwnd, COLORREF Color);
+void Clear_Window(HDC hdc, COLORREF Color);
 
 void Solid_Rect(HDC hdc, int xl, int yu, int xr, int yl, BYTE Color);
 void SolidRect(HDC hdc, int xl, int yu, int xr, int yl, COLORREF Color);

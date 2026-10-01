@@ -76,7 +76,7 @@ COLORREF random_colorref(void)
 }
 
 /************************************************************************/
-void Clear_Window(HDC hdc, unsigned Color)
+void Clear_Window(HDC hdc, COLORREF Color)
 {
    RECT   rect ;
    SetRect (&rect, 0, 0, cxGFrame, cyGFrame) ;
@@ -88,24 +88,17 @@ void Clear_Window(HDC hdc, unsigned Color)
 /************************************************************************/
 //  clear window using specified color (given hwnd)
 /************************************************************************/
-void Clear_Window(HWND hwnd, unsigned Color)
+void Clear_Window(HWND hwnd, COLORREF Color)
 {
    // RECT rect ;
    HDC hdc = GetDC (hwnd) ;
    Clear_Window(hdc, Color) ;
-   // SetRect (&rect, 0, 0, cxGFrame, cyGFrame) ;
-   // HBRUSH hBrush = CreateSolidBrush (Color) ;
-   // FillRect (hdc, &rect, hBrush) ;
-   // DeleteObject (hBrush) ;
    ReleaseDC (hwnd, hdc) ;
 }
 
 /************************************************************************/
-//  clear window using specified color (given hdc)
+//  clear graphic window using specified palette entry
 /************************************************************************/
-//lint -esym(714, Clear_Screen)
-//lint -esym(759, Clear_Screen)
-//lint -esym(765, Clear_Screen)
 void Clear_Screen(HDC hdc, BYTE Color)
 {
    RECT   rect ;
@@ -116,7 +109,7 @@ void Clear_Screen(HDC hdc, BYTE Color)
 }
 
 /************************************************************************/
-//  clear window using system background color
+//  clear graphic window using system background color
 /************************************************************************/
 void Clear_Screen(HDC hdc)
 {
