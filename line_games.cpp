@@ -12,22 +12,6 @@
 // #define  CHANGE_ANGLE   45
 
 #define  MAX_LINE_ALGORITHM   3
-//***********************************************************************
-line_games::line_games() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-#ifndef _lint
-, start({0})
-, finish({0})
-#endif
-, state(0)
-, delay(0)
-, color(0)
-, line_algorithm(3)
-{ 
-   //lint -esym(1401, line_games::start, line_games::finish)
-}
 
 //************************************************************************
 //  previously toggled by TAB key

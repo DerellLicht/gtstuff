@@ -9,7 +9,7 @@
 
 class graph_object {
 public:
-   explicit graph_object() = default;
+   graph_object() = default;
    //  disable copy operators for this polymorphic base
    graph_object& operator=(const graph_object &src) = delete;
    graph_object(const graph_object&) = delete;
@@ -46,13 +46,7 @@ class circles: public graph_object {
 private:
 
 public:
-   circles( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   circles &operator=(const circles &src) = delete;
-   circles(const circles&) = delete;
-   circles(circles&&) = delete;
-   circles& operator=(circles&&) = delete;
+   circles();
    ~circles() override = default;
 
    void update_display(void) override ;
@@ -63,13 +57,7 @@ class squares: public graph_object {
 private:
 
 public:
-   squares( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   squares &operator=(const squares &src) = delete;
-   squares(const squares&) = delete;
-   squares(squares&&) = delete;
-   squares& operator=(squares&&) = delete;
+   squares();
    ~squares() override = default;
 
    void update_display(void) override ;
@@ -80,13 +68,7 @@ class polygon: public graph_object {
 private:
 
 public:
-   polygon( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   polygon &operator=(const polygon &src) = delete;
-   polygon(const polygon&) = delete;
-   polygon(polygon&&) = delete;
-   polygon& operator=(polygon&&) = delete;
+   polygon();
    ~polygon() override = default;
 
    void update_display(void) override ;
@@ -97,13 +79,7 @@ class rect: public graph_object {
 private:
 
 public:
-   rect( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   rect &operator=(const rect &src) = delete;
-   rect(const rect&) = delete;
-   rect(rect&&) = delete;
-   rect& operator=(rect&&) = delete;
+   rect();
    ~rect() override = default;
 
    void update_display(void) override ;
@@ -120,13 +96,7 @@ private:
    void log_pixel_dimens();
 
 public:
-   pixels( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   pixels &operator=(const pixels &src) = delete;
-   pixels(const pixels&) = delete;
-   pixels(pixels&&) = delete;
-   pixels& operator=(pixels&&) = delete;
+   pixels();
    ~pixels() override = default;
 
    void update_display(void) override ;
@@ -137,13 +107,7 @@ class colorbars: public graph_object {
 private:
 
 public:
-   colorbars( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   colorbars &operator=(const colorbars &src) = delete;
-   colorbars(const colorbars&) = delete;
-   colorbars(colorbars&&) = delete;
-   colorbars& operator=(colorbars&&) = delete;
+   colorbars();
    ~colorbars() override = default;
 
    void update_display(void) override ;
@@ -154,13 +118,7 @@ class xpalette: public graph_object {
 private:
 
 public:
-   xpalette( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   xpalette &operator=(const xpalette &src) = delete;
-   xpalette(const xpalette&) = delete;
-   xpalette(xpalette&&) = delete;
-   xpalette& operator=(xpalette&&) = delete;
+   xpalette();
    ~xpalette() override = default;
 
    void update_display(void) override ;
@@ -174,13 +132,7 @@ private:
    void Concentric_Rect(HDC hdc, int l, int t, int width, int height);
 
 public:
-   bitblt( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   bitblt &operator=(const bitblt &src) = delete;
-   bitblt(const bitblt&) = delete;
-   bitblt(bitblt&&) = delete;
-   bitblt& operator=(bitblt&&) = delete;
+   bitblt();
    ~bitblt() override = default;
 
    void update_display(void) override ;
@@ -191,13 +143,7 @@ class xnpalette: public graph_object {
 private:
 
 public:
-   xnpalette( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   xnpalette &operator=(const xnpalette &src) = delete;
-   xnpalette(const xnpalette&) = delete;
-   xnpalette(xnpalette&&) = delete;
-   xnpalette& operator=(xnpalette&&) = delete;
+   xnpalette();
    ~xnpalette() override = default;
 
    void update_display(void) override ;
@@ -211,13 +157,7 @@ private:
    void Solid_XRect(HDC hdc, int xl, int yu, int xr, int yl, int Color);
 
 public:
-   xrect( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   xrect &operator=(const xrect &src) = delete;
-   xrect(const xrect&) = delete;
-   xrect(xrect&&) = delete;
-   xrect& operator=(xrect&&) = delete;
+   xrect();
    ~xrect() override = default;
 
    void update_display(void) override ;
@@ -228,13 +168,7 @@ class gpalettes: public graph_object {
 private:
 
 public:
-   gpalettes( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   gpalettes &operator=(const gpalettes &src) = delete;
-   gpalettes(const gpalettes&) = delete;
-   gpalettes(gpalettes&&) = delete;
-   gpalettes& operator=(gpalettes&&) = delete;
+   gpalettes();
    ~gpalettes() override = default;
 
    void update_display(void) override ;
@@ -253,13 +187,7 @@ private:
    void release_cached_pens() ;
    
 public:
-   triangles( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   triangles &operator=(const triangles &src) = delete;
-   triangles(const triangles&) = delete;
-   triangles(triangles&&) = delete;
-   triangles& operator=(triangles&&) = delete;
+   triangles();
    ~triangles() override = default;
 
    void update_display(void) override ;
@@ -277,13 +205,7 @@ private:
    void update_gtimer(HDC hdc);
 
 public:
-   rainbow( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   rainbow &operator=(const rainbow &src) = delete;
-   rainbow(const rainbow&) = delete;
-   rainbow(rainbow&&) = delete;
-   rainbow& operator=(rainbow&&) = delete;
+   rainbow();
    ~rainbow() override = default;
 
    void update_display(void) override ;
@@ -296,13 +218,7 @@ private:
    unsigned orient ;  //  0=horiz, 1=vert
 
 public:
-   lines( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   lines &operator=(const lines &src) = delete;
-   lines(const lines&) = delete;
-   lines(lines&&) = delete;
-   lines& operator=(lines&&) = delete;
+   lines();
    ~lines() override = default;
 
    void update_display(void) override ;
@@ -328,27 +244,21 @@ typedef struct vector_s {
 //*******************************************************
 class line_games: public graph_object {
 private:
-   vector_t start ;
-   vector_t finish ;
-   unsigned state ;
-   unsigned delay ;
-   unsigned color ;
-   unsigned line_algorithm ;
+   vector_t start = {};
+   vector_t finish = {};
+   unsigned state = 0;
+   unsigned delay = 0;
+   unsigned color = 0;
+   unsigned line_algorithm = 3;
 
    //  private functions
    void move_point(vector_p vector);
    void init_vector(vector_p vector);
 
 public:
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   line_games &operator=(const line_games &src) = delete;
-   line_games(const line_games&) = delete;
-   line_games(line_games&&) = delete;
-   line_games& operator=(line_games&&) = delete;
+   line_games() = default;
    ~line_games() override = default;
 
-   line_games( ) ;
    void update_display(void) override ;
    void update_line_algorithm(void);
 } ;
@@ -363,13 +273,7 @@ private:
    void log_char_dimens();
 
 public:
-   rcolors( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   rcolors &operator=(const rcolors &src) = delete;
-   rcolors(const rcolors&) = delete;
-   rcolors(rcolors&&) = delete;
-   rcolors& operator=(rcolors&&) = delete;
+   rcolors();
    ~rcolors() override = default;
 
    void update_display(void) override ;
@@ -398,13 +302,7 @@ private:
    void draw_fire_element(HDC hdc, unsigned x, unsigned y, unsigned color);
 
 public:
-   flames( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   flames &operator=(const flames &src) = delete;
-   flames(const flames&) = delete;
-   flames(flames&&) = delete;
-   flames& operator=(flames&&) = delete;
+   flames();
    ~flames() override = default;
 
    void update_display(void) override ;
@@ -441,13 +339,7 @@ private:
    unsigned max_char_width(HDC hdc);
 
 public:
-   face_trap( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   face_trap &operator=(const face_trap &src) = delete;
-   face_trap(const face_trap&) = delete;
-   face_trap(face_trap&&) = delete;
-   face_trap& operator=(face_trap&&) = delete;
+   face_trap();
    ~face_trap() override = default;
 
    void update_display(void) override ;
@@ -459,13 +351,7 @@ class ascii: public graph_object {
 private:
 
 public:
-   ascii( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   ascii &operator=(const ascii &src) = delete;
-   ascii(const ascii&) = delete;
-   ascii(ascii&&) = delete;
-   ascii& operator=(ascii&&) = delete;
+   ascii();
    ~ascii() override = default;
 
    void update_display(void) override ;
@@ -490,15 +376,9 @@ private:
    void box_point (HDC hdc, int ccol, int rrow, int ssiz);
 
 public:
-   sglass( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   sglass& operator=(sglass const &src) = delete;
-   sglass(const sglass&) = delete;
-   sglass(sglass&&) = delete;
-   sglass& operator=(sglass&&) = delete;
-
+   sglass();
    ~sglass() override = default;
+   
    void update_display(void) override ;
 } ;
 
@@ -507,13 +387,7 @@ class wincolors: public graph_object {
 private:
 
 public:
-   wincolors( ) ;
-   //  disable copy and assignment operators
-   //  for classes with pointer members
-   wincolors &operator=(const wincolors &src) = delete;
-   wincolors(const wincolors&) = delete;
-   wincolors(wincolors&&) = delete;
-   wincolors& operator=(wincolors&&) = delete;
+   wincolors();
    ~wincolors() override = default;
 
    void update_display(void) override ;
