@@ -37,6 +37,7 @@ Checks: >
   -cppcoreguidelines-pro-type-union-access,
   -cppcoreguidelines-narrowing-conversions,
   -cppcoreguidelines-use-default-member-init,
+  cppcoreguidelines-special-member-functions,
   modernize-*,
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
@@ -54,3 +55,7 @@ Checks: >
   performance-*,
   -performance-no-int-to-ptr,
   
+CheckOptions:
+  - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctionsWhenCopyIsDeleted
+    value: true
+      

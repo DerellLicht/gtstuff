@@ -15,8 +15,8 @@ public:
    graph_object(const graph_object&) = delete;
    //  disable move operators too (rule of five --
    //  cppcoreguidelines-special-member-functions)
-   graph_object(graph_object&&) = delete;
-   graph_object& operator=(graph_object&&) = delete;
+   // graph_object(graph_object&&) = delete;
+   // graph_object& operator=(graph_object&&) = delete;
 
    virtual ~graph_object() = default ;
    virtual void update_display(void) = 0 ;
