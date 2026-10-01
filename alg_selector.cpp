@@ -218,22 +218,20 @@ void run_selected_gobject(HWND hwndGObjList)
 //     not per msec.
 //***********************************************************************
 static u64 ti = 0 ;
-static uint elapsed_secs = 0 ;
+static u64 elapsed_secs = 0 ;
 
 static void display_cycle_counter(void)
 {
-   unsigned tf_msec = (unsigned) ((proc_time () - ti) / get_clocks_per_msec ());
+   u64 tf_msec = (proc_time () - ti) / get_clocks_per_msec () ;
    if (tf_msec == 0) {
       tf_msec = 1 ;
    }
-   uint esecs = tf_msec / 1000 ;
+   u64 esecs = tf_msec / 1000 ;
    if (esecs != elapsed_secs) {
       elapsed_secs = esecs ;
-      unsigned cycles_per_sec = (unsigned) ((u64) cycle_count * 1000 / tf_msec) ;
-      // wsprintf(tempstr, "cycle_count=%u, %u msec, %u cycles/sec", 
-      //    cycle_count, tf_msec, cycles_per_sec) ;
+      u64 cycles_per_sec = (u64) cycle_count * 1000 / tf_msec ;
       char tempstr[81];
-      wsprintf(tempstr, "%u cycles/sec", cycles_per_sec) ;
+      sprintf(tempstr, "%llu cycles/sec", cycles_per_sec) ;
       status_message(tempstr);
    }
 }
