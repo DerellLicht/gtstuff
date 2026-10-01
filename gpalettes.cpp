@@ -12,14 +12,6 @@
 #include "cheetah.def"
 #include "hometown.def"
 
-//***********************************************************************
-gpalettes::gpalettes() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
-
 //************************************************************************
 void gpalettes::update_display()
 {

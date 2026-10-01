@@ -7,14 +7,6 @@
 #include "gfuncs.h"     //  graphics primitives
 #include "alg_selector.h"
 
-//***********************************************************************
-bitblt::bitblt() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
-
 //************************************************************************
 //*                         
 //* Concentric_Rect(l, t, r, b)                  

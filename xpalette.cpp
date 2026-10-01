@@ -8,14 +8,6 @@
 #include "alg_selector.h"
 #include "rgb_data.h"
 
-//***********************************************************************
-xpalette::xpalette() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
-
 //************************************************************************
 void xpalette::update_display()
 {

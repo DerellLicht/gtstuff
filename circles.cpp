@@ -10,14 +10,6 @@
 
 #define  MAX_CIRCLE_DIAM   60
 
-//***********************************************************************
-circles::circles() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
-
 //************************************************************************
 void circles::update_display(void)
 {

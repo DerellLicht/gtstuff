@@ -10,14 +10,6 @@
 
 #define  MAX_BOX_EDGE   100
 
-//***********************************************************************
-squares::squares() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
-
 //************************************************************************
 void squares::update_display(void)
 {

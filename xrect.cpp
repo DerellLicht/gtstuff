@@ -16,14 +16,6 @@
 #define  XSCALE   90
 #define  YSCALE   90
 
-//***********************************************************************
-xrect::xrect() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
-
 //************************************************************************
 void xrect::Solid_XRect(HDC hdc, int xl, int yu, int xr, int yl, int Color)
 {

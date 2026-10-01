@@ -46,7 +46,7 @@ class circles: public graph_object {
 private:
 
 public:
-   circles();
+   circles() = default;
    ~circles() override = default;
 
    void update_display(void) override ;
@@ -57,7 +57,7 @@ class squares: public graph_object {
 private:
 
 public:
-   squares();
+   squares() = default;
    ~squares() override = default;
 
    void update_display(void) override ;
@@ -68,7 +68,7 @@ class polygon: public graph_object {
 private:
 
 public:
-   polygon();
+   polygon() = default;
    ~polygon() override = default;
 
    void update_display(void) override ;
@@ -107,7 +107,7 @@ class colorbars: public graph_object {
 private:
 
 public:
-   colorbars();
+   colorbars() = default;
    ~colorbars() override = default;
 
    void update_display(void) override ;
@@ -118,7 +118,7 @@ class xpalette: public graph_object {
 private:
 
 public:
-   xpalette();
+   xpalette() = default;
    ~xpalette() override = default;
 
    void update_display(void) override ;
@@ -132,7 +132,7 @@ private:
    void Concentric_Rect(HDC hdc, int l, int t, int width, int height);
 
 public:
-   bitblt();
+   bitblt() = default;
    ~bitblt() override = default;
 
    void update_display(void) override ;
@@ -143,7 +143,7 @@ class xnpalette: public graph_object {
 private:
 
 public:
-   xnpalette();
+   xnpalette() = default;
    ~xnpalette() override = default;
 
    void update_display(void) override ;
@@ -157,7 +157,7 @@ private:
    void Solid_XRect(HDC hdc, int xl, int yu, int xr, int yl, int Color);
 
 public:
-   xrect();
+   xrect() = default;
    ~xrect() override = default;
 
    void update_display(void) override ;
@@ -168,7 +168,7 @@ class gpalettes: public graph_object {
 private:
 
 public:
-   gpalettes();
+   gpalettes() = default;
    ~gpalettes() override = default;
 
    void update_display(void) override ;
@@ -187,7 +187,7 @@ private:
    void release_cached_pens() ;
    
 public:
-   triangles();
+   triangles() = default;
    ~triangles() override = default;
 
    void update_display(void) override ;
@@ -357,7 +357,7 @@ class ascii: public graph_object {
 private:
 
 public:
-   ascii();
+   ascii() = default;
    ~ascii() override = default;
 
    void update_display(void) override ;
@@ -396,7 +396,7 @@ class wincolors: public graph_object {
 private:
 
 public:
-   wincolors();
+   wincolors() = default;
    ~wincolors() override = default;
 
    void update_display(void) override ;

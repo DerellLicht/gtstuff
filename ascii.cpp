@@ -16,13 +16,6 @@
 #define  DAT_FH   25
 
 static char ascii_font_name[LF_FULLFACESIZE+1] = "Wingdings" ;
-//***********************************************************************
-ascii::ascii() 
-: graph_object() 
-//  per http://www.acm.org/crossroads/xrds1-4/ovp.html
-// , _v1(v1), _v2(v2), _v3(v3)
-{ 
-}
 
 //************************************************************************
 void ascii::set_font_name(char const *new_font_name)

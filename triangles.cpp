@@ -12,12 +12,6 @@
 #define  DLG_DX   5
 #define  DLG_DY   6
 
-//***********************************************************************
-triangles::triangles() 
-: graph_object() 
-{ 
-}
-
 //************************************************************************
 //  Claude - free any cached pens from a previous palette so they can be
 //  recreated (lazily, on next use) with the new palette's colors. Safe
